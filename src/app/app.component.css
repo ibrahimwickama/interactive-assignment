@@ -1,0 +1,97 @@
+.table {
+  border: none;
+}
+
+.table-definition thead th:first-child {
+  pointer-events: none;
+  background: white;
+  border: none;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.page-item > * {
+  border: none;
+}
+
+.custom-checkbox {
+  min-height: 1rem;
+  padding-left: 0;
+  margin-right: 0;
+  cursor: pointer;
+}
+.custom-checkbox .custom-control-indicator {
+  content: "";
+  display: inline-block;
+  position: relative;
+  width: 30px;
+  height: 10px;
+  background-color: #818181;
+  border-radius: 15px;
+  margin-right: 10px;
+  -webkit-transition: background .3s ease;
+  transition: background .3s ease;
+  vertical-align: middle;
+  margin: 0 16px;
+  box-shadow: none;
+}
+.custom-checkbox .custom-control-indicator:after {
+  content: "";
+  position: absolute;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  /*background-color: #dc3573;*/
+  background-color: rgba(214,44,50,0.91);
+  border-radius: 21px;
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4);
+  left: -2px;
+  top: -4px;
+  -webkit-transition: left .3s ease, background .3s ease, box-shadow .1s ease;
+  transition: left .3s ease, background .3s ease, box-shadow .1s ease;
+}
+.custom-checkbox .custom-control-input:checked ~ .custom-control-indicator {
+  background-color: #28b496;
+  background-image: none;
+  box-shadow: none !important;
+}
+.custom-checkbox .custom-control-input:checked ~ .custom-control-indicator:after {
+  background-color: #28b496;
+  left: 15px;
+}
+.custom-checkbox .custom-control-input:focus ~ .custom-control-indicator {
+  box-shadow: none !important;
+}
+
+
+.parameter-header{
+  height: 50px;
+  padding: 10px;
+  font-size: larger;
+  text-align: center;
+  font-weight: bold;
+  background-color: #f7f7f7;
+}
+
+.parameter-section{
+  height: 60px;
+  padding-top: 10px;
+  padding-left: 8px;
+  padding-right: 8px;
+  text-align: center;
+}
+
+.parameter-selector{
+  background-color: #f7f7f7;
+  height: 0;
+  width: 100%;
+  /*position: fixed; !* Stay in place *!*/
+  z-index: 1; /* Stay on top */
+  /*top: 0; !* Stay at the top *!*/
+  /*left: 0;*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  /*padding-top: 60px; !* Place content 60px from the top *!*/
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}

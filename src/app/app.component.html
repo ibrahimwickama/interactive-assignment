@@ -1,20 +1,94 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{title}}!
-  </h1>
-  <img width="300" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<dhis-menu></dhis-menu>
 
+
+<main class="container pt-5" style="margin-top: 10px">
+
+  <div class="card mb-5">
+    <div class="parameter-header">Choose assignments</div>
+    <div class="parameter-section">
+      <div class="btn btn-outline-primary {{orgUintActive}}" (click)="showOrgunit()">Organisation Unit</div>
+      <div class="btn btn-outline-primary {{dataSetActive}}" (click)="showDataSet()">Data Sets</div>
+      <div class="btn btn-outline-primary {{programActive}}" (click)="showProgram()">Program</div>
+    </div>
+
+    <div class="parameter-selector" [ngStyle]="{height: sheetHeight}">
+      <div *ngIf="showOrgUnits"></div>
+      <div *ngIf="showDataSets">
+        <app-data-sets (exportedDataset)="receiveData($event)"></app-data-sets>
+      </div>
+      <div *ngIf="showPrograms">
+        <app-programs (exportedProgram)="receiveData($event)"></app-programs>
+      </div>
+    </div>
+  </div>
+
+        <!--table section begins-->
+  <div class="card mb-5">
+    <div class="card-header">Fearures</div>
+    <div class="card-block p-0">
+
+      <table class="table table-bordered table-sm m-0">
+        <thead class="">
+        <tr>
+          <th>OrgUnit / DataSets</th>
+          <th *ngFor="let data of selectedData">{{data.displayName}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>orgUnit</td>
+          <td *ngFor="let dataCount of temp">
+            <label class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input">
+              <span class="custom-control-indicator"></span>
+              </label>
+            </td>
+          </tr>
+
+          <!--<tr>-->
+          <!--<td>-->
+            <!--<label class="custom-control custom-checkbox">-->
+              <!--<input type="checkbox" class="custom-control-input">-->
+              <!--<span class="custom-control-indicator"></span>-->
+            <!--</label>-->
+          <!--</td>-->
+          <!--<td>John Lilki</td>-->
+          <!--<td>September 14, 2013</td>-->
+          <!--<td>jhlilk22@yahoo.com</td>-->
+          <!--<td>No</td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+          <!--<td>-->
+            <!--<label class="custom-control custom-checkbox">-->
+              <!--<input type="checkbox" class="custom-control-input">-->
+              <!--<span class="custom-control-indicator"></span>-->
+            <!--</label>-->
+          <!--</td>-->
+          <!--<td>John Lilki</td>-->
+          <!--<td>September 14, 2013</td>-->
+          <!--<td>jhlilk22@yahoo.com</td>-->
+          <!--<td>No</td>-->
+        <!--</tr>-->
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer p-0">
+      <nav aria-label="...">
+        <ul class="pagination justify-content-end mt-3 mr-3">
+          <li class="page-item disabled">
+            <span class="page-link">Previous</span>
+          </li>
+          <li class="page-item active"><a class="page-link" href="#">1</a></li>
+          <li class="page-item">
+                            <span class="page-link">2<span class="sr-only">(current)</span>
+                            </span>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#">Next</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</main>

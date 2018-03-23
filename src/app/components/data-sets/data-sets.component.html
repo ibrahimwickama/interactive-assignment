@@ -1,0 +1,11 @@
+
+<div class="data-list">
+  <div style="margin-bottom: 5px">
+    <input type="text" class="form-control" placeholder="Search dataSet..." (input)="getFilteredList($event)">
+  </div>
+
+  <ul class="list-group"  >
+    <li class="list-group-item" *ngFor="let dataSet of initDataSets" (click)="selectedDataSet(dataSet)">{{dataSet.displayName}}</li>
+  </ul>
+</div>
+

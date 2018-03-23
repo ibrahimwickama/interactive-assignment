@@ -2,15 +2,22 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
+import {MenuModule} from "./modules/menu/menu.module";
+import {FormsModule} from "@angular/forms";
+import {HttpProviderService} from "./services/http-provider.service";
+import { DataSetsComponent } from './components/data-sets/data-sets.component';
+import { ProgramsComponent } from './components/programs/programs.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    DataSetsComponent,
+    ProgramsComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,MenuModule,FormsModule
   ],
-  providers: [],
+  providers: [HttpProviderService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
