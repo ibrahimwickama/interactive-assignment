@@ -12,7 +12,9 @@
     </div>
 
     <div class="parameter-selector" [ngStyle]="{height: sheetHeight}">
-      <div *ngIf="showOrgUnits"></div>
+      <div *ngIf="showOrgUnits">
+        <app-org-unit-filter></app-org-unit-filter>
+      </div>
       <div *ngIf="showDataSets">
         <app-data-sets (exportedDataset)="receiveData($event)"></app-data-sets>
       </div>
@@ -24,7 +26,7 @@
 
         <!--table section begins-->
   <div class="card mb-5">
-    <div class="card-header">Fearures</div>
+    <div class="card-header">Organisation Unit Assignment</div>
     <div class="card-block p-0">
 
       <table class="table table-bordered table-sm m-0">
