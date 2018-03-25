@@ -99,9 +99,9 @@ export class AppComponent implements OnInit{
 
           if (dataSetOrgUnit.filter(e => e.id === tempOrg.id).length > 0) {
             /* vendors contains the element we're looking for */
-            tempOrg.checked = 'checked';
+            tempOrg.checked = true;
           }else {
-            tempOrg.checked = '';
+            tempOrg.checked = false;
           }
 
 
