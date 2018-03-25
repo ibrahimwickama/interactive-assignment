@@ -37,7 +37,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let orgUnit of tempOrgUnuits " >
+        <tr *ngFor="let orgUnit of tempOrgUnuits | paginate: { id: 'listing_pagination',itemsPerPage: 10,currentPage: page,totalItems: totalRec }">
+
           <td>{{orgUnit.displayName}}</td>
           <td *ngFor="let dataOrgUnit of orgUnit.assigned">
             <label class="custom-control custom-checkbox">
@@ -45,29 +46,37 @@
               <span class="custom-control-indicator"></span>
               </label>
             </td>
-
           </tr>
 
         </tbody>
       </table>
     </div>
+    <!--<div class="card-footer p-0">-->
+      <!--<nav aria-label="...">-->
+        <!--<ul class="pagination justify-content-end mt-3 mr-3">-->
+          <!--<li class="page-item disabled">-->
+            <!--<span class="page-link">Previous</span>-->
+          <!--</li>-->
+          <!--<li class="page-item active"><a class="page-link" href="#">1</a></li>-->
+          <!--<li class="page-item">-->
+                            <!--<span class="page-link">2<span class="sr-only">(current)</span>-->
+                            <!--</span>-->
+          <!--</li>-->
+          <!--<li class="page-item"><a class="page-link" href="#">3</a></li>-->
+          <!--<li class="page-item">-->
+            <!--<a class="page-link" href="#">Next</a>-->
+          <!--</li>-->
+        <!--</ul>-->
+      <!--</nav>-->
+    <!--</div>-->
+
     <div class="card-footer p-0">
       <nav aria-label="...">
         <ul class="pagination justify-content-end mt-3 mr-3">
-          <li class="page-item disabled">
-            <span class="page-link">Previous</span>
-          </li>
-          <li class="page-item active"><a class="page-link" href="#">1</a></li>
-          <li class="page-item">
-                            <span class="page-link">2<span class="sr-only">(current)</span>
-                            </span>
-          </li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item">
-            <a class="page-link" href="#">Next</a>
-          </li>
+      <pagination-controls  id="listing_pagination" maxSize="5" directionLinks="true" (pageChange)="page = $event"></pagination-controls>
         </ul>
       </nav>
     </div>
+
   </div>
 </main>

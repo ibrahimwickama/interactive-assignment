@@ -7,6 +7,7 @@ import {FormsModule} from "@angular/forms";
 import {HttpProviderService} from "./services/http-provider.service";
 import { DataSetsComponent } from './components/data-sets/data-sets.component';
 import { ProgramsComponent } from './components/programs/programs.component';
+import {NgxPaginationModule} from "ngx-pagination";
 // import {OrgUnitFilterComponent} from "./components/org-unit-filter/org-unit-filter.component";
 
 @NgModule({
@@ -16,7 +17,7 @@ import { ProgramsComponent } from './components/programs/programs.component';
     ProgramsComponent
   ],
   imports: [
-    BrowserModule,MenuModule,FormsModule
+    BrowserModule,MenuModule,FormsModule,NgxPaginationModule
   ],
   providers: [HttpProviderService],
   bootstrap: [AppComponent]

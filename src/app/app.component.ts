@@ -20,6 +20,8 @@ export class AppComponent implements OnInit{
   tempOrgUnuits = [];
   checkedTrue:string = 'true';
   checkedTFalse:string = 'false';
+  totalRec:any;
+  page: number = 1;
 
   constructor(private httpProvider: HttpProviderService){
 
@@ -45,6 +47,8 @@ export class AppComponent implements OnInit{
   }
 
   showDataSet(){
+    this.tempOrgUnuits = [];
+    this.tempOrgUnuits = this.httpProvider.organisationUnits;
     this.selectedData = [];
     this.temp = [];
     this.sheetHeight = '0px';
@@ -62,6 +66,8 @@ export class AppComponent implements OnInit{
   }
 
   showProgram(){
+    this.tempOrgUnuits = null;
+    this.tempOrgUnuits = this.httpProvider.organisationUnits;
     this.selectedData = [];
     this.temp = [];
     this.sheetHeight = '0px';
@@ -114,13 +120,13 @@ export class AppComponent implements OnInit{
    // console.log("Total edited OrgUnits "+JSON.stringify(this.tempOrgUnuits));
     // this.temp.push(dataSet.organisationUnits)
     this.temp.push(this.tempOrgUnuits)
+    this.totalRec = this.tempOrgUnuits.length
   }
 
 
   checkBoxChanged(orgUnit,dataOrgUnit,assignedState,event){
     let eventt = event.target.checked
-    console.log("changed state is: "+JSON.stringify(eventt))
-
+    //console.log("changed state is: "+JSON.stringify(eventt))
     this.tempOrgUnuits.forEach((tempOrg:any)=>{
       if(tempOrg.id == orgUnit.id){
         tempOrg.assigned.forEach((orgUnitAssigned:any)=>{
@@ -129,11 +135,8 @@ export class AppComponent implements OnInit{
           }
         })
       }
-
     });
-
-
-    console.log("tempOrgUnit state is: "+JSON.stringify(this.tempOrgUnuits))
+    //console.log("tempOrgUnit state is: "+JSON.stringify(this.tempOrgUnuits))
   }
 
 
