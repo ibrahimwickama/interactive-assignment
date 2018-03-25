@@ -242,7 +242,7 @@ export class HttpProviderService {
   }
 
   programCaller(){
-    let url = '../../../api/programs.json?paging=false';
+    let url = '../../../api/programs.json?fields=[*]&paging=false';
     return this.http.get(url)
       .map((response:Response)=>{
       var temp = response.json()
