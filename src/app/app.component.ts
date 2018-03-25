@@ -84,12 +84,11 @@ export class AppComponent implements OnInit{
 
     // make complex functions
     dataSetOrgUnit = dataSet.organisationUnits;
-    console.log("DataSet OrgUnits "+JSON.stringify(dataSetOrgUnit));
-    console.log("Temp OrgUnits "+JSON.stringify(this.tempOrgUnuits));
+    //console.log("DataSet OrgUnits "+JSON.stringify(dataSetOrgUnit));
+   //console.log("Temp OrgUnits "+JSON.stringify(this.tempOrgUnuits));
 
 
       this.tempOrgUnuits.forEach((tempOrg:any)=>{
-        // dataSetOrgUnit.forEach((dataSetOrgnit:any)=>{
 
           if (dataSetOrgUnit.filter(e => e.id === tempOrg.id).length > 0) {
             tempOrg.checked = true;
@@ -110,14 +109,34 @@ export class AppComponent implements OnInit{
               tempOrg.assigned = this.removeDuplicates(tempOrg.assigned,'id');
             }
           }
-
-      // });
     });
 
-    console.log("Total edited OrgUnits "+JSON.stringify(this.tempOrgUnuits));
+   // console.log("Total edited OrgUnits "+JSON.stringify(this.tempOrgUnuits));
     // this.temp.push(dataSet.organisationUnits)
     this.temp.push(this.tempOrgUnuits)
   }
+
+
+  checkBoxChanged(orgUnit,dataOrgUnit,assignedState,event){
+    let eventt = event.target.checked
+    console.log("changed state is: "+JSON.stringify(eventt))
+
+    this.tempOrgUnuits.forEach((tempOrg:any)=>{
+      if(tempOrg.id == orgUnit.id){
+        tempOrg.assigned.forEach((orgUnitAssigned:any)=>{
+          if(orgUnitAssigned.id == dataOrgUnit.id ){
+            orgUnitAssigned.assigned = eventt;
+          }
+        })
+      }
+
+    });
+
+
+    console.log("tempOrgUnit state is: "+JSON.stringify(this.tempOrgUnuits))
+  }
+
+
 
 
   removeDuplicates(originalArray, key) {
