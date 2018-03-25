@@ -89,7 +89,7 @@ export class AppComponent implements OnInit{
 
 
       this.tempOrgUnuits.forEach((tempOrg:any)=>{
-        dataSetOrgUnit.forEach((dataSetOrgnit:any)=>{
+        // dataSetOrgUnit.forEach((dataSetOrgnit:any)=>{
 
           if (dataSetOrgUnit.filter(e => e.id === tempOrg.id).length > 0) {
             tempOrg.checked = true;
@@ -111,7 +111,7 @@ export class AppComponent implements OnInit{
             }
           }
 
-      });
+      // });
     });
 
     console.log("Total edited OrgUnits "+JSON.stringify(this.tempOrgUnuits));
