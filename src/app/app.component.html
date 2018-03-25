@@ -13,7 +13,7 @@
 
     <div class="parameter-selector" [ngStyle]="{height: sheetHeight}">
       <div *ngIf="showOrgUnits">
-        <app-org-unit-filter></app-org-unit-filter>
+
       </div>
       <div *ngIf="showDataSets">
         <app-data-sets (exportedDataset)="receiveData($event)"></app-data-sets>
@@ -37,40 +37,19 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>orgUnit</td>
+        <tr *ngFor="let orgUnit of tempOrgUnuits " >
+          <td>{{orgUnit.displayName}}  {{orgUnit.checked}}</td>
           <td *ngFor="let dataCount of temp">
             <label class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input">
+              <input type="checkbox"  class="custom-control-input" ngModel="orgUnit.checked" ng-true-value="'checked'" ng-false-value="''" >
+              <!--<input type="checkbox"  class="custom-control-input" value="{{orgUnit.checked}}" >-->
+              <!--<input type="checkbox"  class="custom-control-input" value="{{(dataCount.search(e => e.[id] === orgUnit.id).length >0)? checkedTrue:checkedTFalse}}" >-->
+              <!--<input type="checkbox"  class="custom-control-input" value="{{dataCount.filter( dataCoun => dataCoun['Name'] === 'Magenic' )? checkedTrue:checkedTFalse}}" >-->
               <span class="custom-control-indicator"></span>
               </label>
             </td>
           </tr>
 
-          <!--<tr>-->
-          <!--<td>-->
-            <!--<label class="custom-control custom-checkbox">-->
-              <!--<input type="checkbox" class="custom-control-input">-->
-              <!--<span class="custom-control-indicator"></span>-->
-            <!--</label>-->
-          <!--</td>-->
-          <!--<td>John Lilki</td>-->
-          <!--<td>September 14, 2013</td>-->
-          <!--<td>jhlilk22@yahoo.com</td>-->
-          <!--<td>No</td>-->
-        <!--</tr>-->
-        <!--<tr>-->
-          <!--<td>-->
-            <!--<label class="custom-control custom-checkbox">-->
-              <!--<input type="checkbox" class="custom-control-input">-->
-              <!--<span class="custom-control-indicator"></span>-->
-            <!--</label>-->
-          <!--</td>-->
-          <!--<td>John Lilki</td>-->
-          <!--<td>September 14, 2013</td>-->
-          <!--<td>jhlilk22@yahoo.com</td>-->
-          <!--<td>No</td>-->
-        <!--</tr>-->
         </tbody>
       </table>
     </div>

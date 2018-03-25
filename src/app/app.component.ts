@@ -17,7 +17,9 @@ export class AppComponent implements OnInit{
   showPrograms:boolean = false;
   selectedData = [];
   temp = [];
-
+  tempOrgUnuits = [];
+  checkedTrue:string = 'true';
+  checkedTFalse:string = 'false';
 
   constructor(private httpProvider: HttpProviderService){
 
@@ -37,6 +39,8 @@ export class AppComponent implements OnInit{
     this.showDataSets = false;
     this.showPrograms = false;
     this.sheetHeight = '400px';
+
+    this.tempOrgUnuits = this.httpProvider.organisationUnits;
   });
   }
 
@@ -74,9 +78,45 @@ export class AppComponent implements OnInit{
   }
 
   receiveData(dataSet){
+    let dataSetOrgUnit = [];
     this.selectedData.push(dataSet);
     this.selectedData = this.removeDuplicates(this.selectedData, 'id');
-    this.temp.push(this.selectedData.length)
+
+    // make complex functions
+    dataSetOrgUnit = dataSet.organisationUnits;
+    console.log("DataSet OrgUnits "+JSON.stringify(dataSetOrgUnit));
+    console.log("Temp OrgUnits "+JSON.stringify(this.tempOrgUnuits));
+
+
+    // if (vendors.filter(e => e.name === 'Magenic').length > 0) {
+    //   /* vendors contains the element we're looking for */
+    // }
+
+
+
+      this.tempOrgUnuits.forEach((tempOrg:any)=>{
+        dataSetOrgUnit.forEach((dataSetOrgnit:any)=>{
+
+          if (dataSetOrgUnit.filter(e => e.id === tempOrg.id).length > 0) {
+            /* vendors contains the element we're looking for */
+            tempOrg.checked = 'checked';
+          }else {
+            tempOrg.checked = '';
+          }
+
+
+        // if(dataSetOrgnit['id'] == tempOrg['id'] ){
+        //   tempOrg.checked = 'checked';
+        //   ///console.log("was checked true "+JSON.stringify(tempOrg.checked));
+        // }else {
+        //   tempOrg.checked = '';
+        //   //console.log("was checked false "+JSON.stringify(tempOrg.checked));
+        // }
+      });
+    });
+
+    console.log("Total edited OrgUnits "+JSON.stringify(this.tempOrgUnuits));
+    this.temp.push(dataSet.organisationUnits)
   }
 
 
