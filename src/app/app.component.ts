@@ -88,35 +88,35 @@ export class AppComponent implements OnInit{
     console.log("Temp OrgUnits "+JSON.stringify(this.tempOrgUnuits));
 
 
-    // if (vendors.filter(e => e.name === 'Magenic').length > 0) {
-    //   /* vendors contains the element we're looking for */
-    // }
-
-
-
       this.tempOrgUnuits.forEach((tempOrg:any)=>{
         dataSetOrgUnit.forEach((dataSetOrgnit:any)=>{
 
           if (dataSetOrgUnit.filter(e => e.id === tempOrg.id).length > 0) {
-            /* vendors contains the element we're looking for */
             tempOrg.checked = true;
+
+            if(!tempOrg.assigned){
+              tempOrg.assigned = [{id:dataSet.id, displayName:dataSet.displayName, assigned: true}]
+            }else {
+              tempOrg.assigned.push({id:dataSet.id, displayName:dataSet.displayName, assigned: true})
+              tempOrg.assigned = this.removeDuplicates(tempOrg.assigned,'id');
+            }
+
           }else {
             tempOrg.checked = false;
+            if(!tempOrg.assigned){
+              tempOrg.assigned = [{id:dataSet.id, displayName:dataSet.displayName, assigned: false}]
+            }else {
+              tempOrg.assigned.push({id:dataSet.id, displayName:dataSet.displayName, assigned: false})
+              tempOrg.assigned = this.removeDuplicates(tempOrg.assigned,'id');
+            }
           }
 
-
-        // if(dataSetOrgnit['id'] == tempOrg['id'] ){
-        //   tempOrg.checked = 'checked';
-        //   ///console.log("was checked true "+JSON.stringify(tempOrg.checked));
-        // }else {
-        //   tempOrg.checked = '';
-        //   //console.log("was checked false "+JSON.stringify(tempOrg.checked));
-        // }
       });
     });
 
     console.log("Total edited OrgUnits "+JSON.stringify(this.tempOrgUnuits));
-    this.temp.push(dataSet.organisationUnits)
+    // this.temp.push(dataSet.organisationUnits)
+    this.temp.push(this.tempOrgUnuits)
   }
 
 
