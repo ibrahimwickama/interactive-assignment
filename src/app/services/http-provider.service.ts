@@ -236,8 +236,11 @@ export class HttpProviderService {
     let url = '../../../api/dataSets.json?fields=[*]&paging=false';
     return this.http.get(url)
       .map((response:Response)=>{
-      var temp = response.json()
+      var temp = response.json();
         this.dataSetsFromServer = temp.dataSets;
+        this.dataSetsFromServer.forEach((dataSet:any)=>{
+          dataSet.formType = 'dataSet';
+        })
       //console.log("the dataSets are: "+JSON.stringify(this.dataSetsFromServer))
     }
       ).catch(this.handleError);
@@ -247,8 +250,11 @@ export class HttpProviderService {
     let url = '../../../api/programs.json?fields=[*]&paging=false';
     return this.http.get(url)
       .map((response:Response)=>{
-      var temp = response.json()
+      var temp = response.json();
         this.programsFromServer = temp.programs;
+        this.programsFromServer.forEach((program:any)=>{
+          program.formType = 'program';
+        })
     }
       ).catch(this.handleError);
   }

@@ -23,6 +23,7 @@ export class AppComponent implements OnInit{
   itemsOnPage: number = 10;
   dataAssign:any = {id:'',dataSet:'', orgUnits:{organisationUnits:[]}};
   dataSetToUpdate:any ={dataSets:[]};
+  programToUpdate:any ={programs:[]};
 
   constructor(private httpProvider: HttpProviderService){
 
@@ -101,18 +102,18 @@ export class AppComponent implements OnInit{
             tempOrg.checked = true;
 
             if(!tempOrg.assigned){
-              tempOrg.assigned = [{id:dataSet.id, displayName:dataSet.displayName, assigned: true}]
+              tempOrg.assigned = [{id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: true}]
             }else {
-              tempOrg.assigned.push({id:dataSet.id, displayName:dataSet.displayName, assigned: true})
+              tempOrg.assigned.push({id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: true})
               tempOrg.assigned = this.removeDuplicates(tempOrg.assigned,'id');
             }
 
           }else {
             tempOrg.checked = false;
             if(!tempOrg.assigned){
-              tempOrg.assigned = [{id:dataSet.id, displayName:dataSet.displayName, assigned: false}]
+              tempOrg.assigned = [{id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: false}]
             }else {
-              tempOrg.assigned.push({id:dataSet.id, displayName:dataSet.displayName, assigned: false})
+              tempOrg.assigned.push({id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: false})
               tempOrg.assigned = this.removeDuplicates(tempOrg.assigned,'id');
             }
           }
@@ -120,7 +121,7 @@ export class AppComponent implements OnInit{
 
    // console.log("Total edited OrgUnits "+JSON.stringify(this.tempOrgUnuits));
     // this.temp.push(dataSet.organisationUnits)
-    this.temp.push(this.tempOrgUnuits)
+    this.temp.push(this.tempOrgUnuits);
     this.totalRec = this.tempOrgUnuits.length
   }
 
@@ -128,7 +129,6 @@ export class AppComponent implements OnInit{
   checkBoxChanged(orgUnit,dataOrgUnit,assignedState,event){
     let eventt = event.target.checked;
     let orgUnitChanges = [];
-    //console.log("changed state is: "+JSON.stringify(eventt))
     this.tempOrgUnuits.forEach((tempOrg:any)=>{
       if(tempOrg.id == orgUnit.id){
         tempOrg.assigned.forEach((orgUnitAssigned:any)=>{
@@ -138,16 +138,10 @@ export class AppComponent implements OnInit{
         })
       }
     });
-    // console.log("tempOrgUnit state is: "+JSON.stringify(this.tempOrgUnuits))
-    // console.log("dataOrgUnit is: "+JSON.stringify(dataOrgUnit))
-
-    //prepare importation object
 
     this.tempOrgUnuits.forEach((tempOrg:any)=>{
       tempOrg.assigned.forEach((orgUnitAssigned:any)=>{
         if(orgUnitAssigned.id === dataOrgUnit.id){
-          // console.log("orgUnitAssigned.id is: "+JSON.stringify(orgUnitAssigned.id)+" and dataOrgUnit.id is: "+JSON.stringify(dataOrgUnit.id));
-          // console.log("orgUnitAssigned.id is: "+JSON.stringify(orgUnitAssigned.assigned));
           if(orgUnitAssigned.assigned){
             orgUnitChanges.push({id: tempOrg.id})
           }
@@ -158,29 +152,49 @@ export class AppComponent implements OnInit{
     this.dataAssign.id = dataOrgUnit.id;
     this.dataAssign.dataSet = dataOrgUnit.displayName;
     this.dataAssign.orgUnits.organisationUnits = orgUnitChanges;
-    console.log("OrgUnitChanges is: "+JSON.stringify(this.dataAssign));
+    //console.log("OrgUnitChanges is: "+JSON.stringify(this.dataAssign));
 
-    let dataSets = [];
-    this.dataSetToUpdate = {dataSets:[]};
-    dataSets = this.httpProvider.dataSetsFromServer;
 
-    dataSets.forEach((dataSet:any)=>{
-      if(dataSet.id == this.dataAssign.id){
-        dataSet.organisationUnits = orgUnitChanges;
-        delete dataSet.lastUpdated;
-        delete dataSet.created;
-        delete dataSet.href;
+    if(dataOrgUnit.formType == 'dataSet'){
+      let dataSets = [];
+      this.dataSetToUpdate = {dataSets:[]};
+      dataSets = this.httpProvider.dataSetsFromServer;
 
-        this.dataSetToUpdate.dataSets.push(dataSet);
-        console.log("DataSet To Import: "+JSON.stringify(this.dataSetToUpdate));
-        this.httpProvider.initialImport(this.dataSetToUpdate).subscribe(response=>{
-          console.log("did it work: "+JSON.stringify(response));
-        })
-      }
-    })
-    // this.httpProvider.uploadDataAssignmentChangesToServer(this.dataAssign).subscribe(response=>{
-    //   console.log("did it work: "+JSON.stringify(response));
-    // })
+      dataSets.forEach((dataSet:any)=>{
+        if(dataSet.id == this.dataAssign.id){
+          dataSet.organisationUnits = orgUnitChanges;
+          delete dataSet.lastUpdated;
+          delete dataSet.created;
+          delete dataSet.href;
+          delete dataSet.formType;
+          this.dataSetToUpdate.dataSets.push(dataSet);
+          //console.log("DataSet To Import: "+JSON.stringify(this.dataSetToUpdate));
+          this.httpProvider.initialImport(this.dataSetToUpdate).subscribe(response=>{
+            //console.log("did it work: "+JSON.stringify(response));
+          })
+        }
+      });
+    }else if(dataOrgUnit.formType == 'program'){
+      let programs = [];
+      this.programToUpdate = {programs:[]};
+      programs = this.httpProvider.programsFromServer;
+
+      programs.forEach((program:any)=>{
+        if(program.id == this.dataAssign.id){
+          program.organisationUnits = orgUnitChanges;
+          delete program.lastUpdated;
+          delete program.created;
+          delete program.href;
+          delete program.formType;
+          this.programToUpdate.programs.push(program);
+          //console.log("DataSet To Import: "+JSON.stringify(this.dataSetToUpdate));
+          this.httpProvider.initialImport(this.programToUpdate).subscribe(response=>{
+            //console.log("did it work: "+JSON.stringify(response));
+          })
+        }
+      });
+    }
+
 
   }
 
@@ -188,7 +202,7 @@ export class AppComponent implements OnInit{
     let pageSize = event.target.value;
     if(pageSize == 'All'){
       this.itemsOnPage = this.tempOrgUnuits.length;
-      console.log("PageSize: "+JSON.stringify(pageSize))
+      //console.log("PageSize: "+JSON.stringify(pageSize))
     }else{
       this.itemsOnPage = pageSize;
     }
