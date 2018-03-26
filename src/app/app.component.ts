@@ -18,10 +18,11 @@ export class AppComponent implements OnInit{
   selectedData = [];
   temp = [];
   tempOrgUnuits = [];
-  checkedTrue:string = 'true';
-  checkedTFalse:string = 'false';
   totalRec:any;
   page: number = 1;
+  itemsOnPage: number = 10;
+  dataAssign:any = {id:'',dataSet:'', orgUnits:{organisationUnits:[]}};
+  dataSetToUpdate:any ={dataSets:[]};
 
   constructor(private httpProvider: HttpProviderService){
 
@@ -125,7 +126,8 @@ export class AppComponent implements OnInit{
 
 
   checkBoxChanged(orgUnit,dataOrgUnit,assignedState,event){
-    let eventt = event.target.checked
+    let eventt = event.target.checked;
+    let orgUnitChanges = [];
     //console.log("changed state is: "+JSON.stringify(eventt))
     this.tempOrgUnuits.forEach((tempOrg:any)=>{
       if(tempOrg.id == orgUnit.id){
@@ -136,10 +138,62 @@ export class AppComponent implements OnInit{
         })
       }
     });
-    //console.log("tempOrgUnit state is: "+JSON.stringify(this.tempOrgUnuits))
+    // console.log("tempOrgUnit state is: "+JSON.stringify(this.tempOrgUnuits))
+    // console.log("dataOrgUnit is: "+JSON.stringify(dataOrgUnit))
+
+    //prepare importation object
+
+    this.tempOrgUnuits.forEach((tempOrg:any)=>{
+      tempOrg.assigned.forEach((orgUnitAssigned:any)=>{
+        if(orgUnitAssigned.id === dataOrgUnit.id){
+          // console.log("orgUnitAssigned.id is: "+JSON.stringify(orgUnitAssigned.id)+" and dataOrgUnit.id is: "+JSON.stringify(dataOrgUnit.id));
+          // console.log("orgUnitAssigned.id is: "+JSON.stringify(orgUnitAssigned.assigned));
+          if(orgUnitAssigned.assigned){
+            orgUnitChanges.push({id: tempOrg.id})
+          }
+        }
+      });
+    });
+
+    this.dataAssign.id = dataOrgUnit.id;
+    this.dataAssign.dataSet = dataOrgUnit.displayName;
+    this.dataAssign.orgUnits.organisationUnits = orgUnitChanges;
+    console.log("OrgUnitChanges is: "+JSON.stringify(this.dataAssign));
+
+    let dataSets = [];
+    this.dataSetToUpdate = {dataSets:[]};
+    dataSets = this.httpProvider.dataSetsFromServer;
+
+    dataSets.forEach((dataSet:any)=>{
+      if(dataSet.id == this.dataAssign.id){
+        dataSet.organisationUnits = orgUnitChanges;
+        delete dataSet.lastUpdated;
+        delete dataSet.created;
+        delete dataSet.href;
+
+        this.dataSetToUpdate.dataSets.push(dataSet);
+        console.log("DataSet To Import: "+JSON.stringify(this.dataSetToUpdate));
+        this.httpProvider.initialImport(this.dataSetToUpdate).subscribe(response=>{
+          console.log("did it work: "+JSON.stringify(response));
+        })
+      }
+    })
+    // this.httpProvider.uploadDataAssignmentChangesToServer(this.dataAssign).subscribe(response=>{
+    //   console.log("did it work: "+JSON.stringify(response));
+    // })
+
   }
 
+  pageSizeChange(event){
+    let pageSize = event.target.value;
+    if(pageSize == 'All'){
+      this.itemsOnPage = this.tempOrgUnuits.length;
+      console.log("PageSize: "+JSON.stringify(pageSize))
+    }else{
+      this.itemsOnPage = pageSize;
+    }
 
+  }
 
 
   removeDuplicates(originalArray, key) {

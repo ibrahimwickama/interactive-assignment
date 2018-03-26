@@ -37,7 +37,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let orgUnit of tempOrgUnuits | paginate: { id: 'listing_pagination',itemsPerPage: 10,currentPage: page,totalItems: totalRec }">
+        <tr *ngFor="let orgUnit of tempOrgUnuits | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }">
 
           <td>{{orgUnit.displayName}}</td>
           <td *ngFor="let dataOrgUnit of orgUnit.assigned">
@@ -71,11 +71,26 @@
     <!--</div>-->
 
     <div class="card-footer p-0">
-      <nav aria-label="...">
-        <ul class="pagination justify-content-end mt-3 mr-3">
+      <nav aria-label="..." >
+
+        <ul class="pagination justify-content-center mt-3 mr-3" >
+          <div class="justify-content-start" style="display: inline-flex; padding: 5px">Show
+            <select name="list-count" id="list-count" class="form-control" style="margin-left: 6px" (change)="pageSizeChange($event)">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="All">All</option>
+            </select>
+          </div>
       <pagination-controls  id="listing_pagination" maxSize="5" directionLinks="true" (pageChange)="page = $event"></pagination-controls>
         </ul>
+
+        <div class="justify-content-center save-cancel-section">
+          <div class="btn btn-primary ">Save</div>
+          <div class="btn btn-primary ">Cancel</div>
+        </div>
       </nav>
+
     </div>
 
   </div>

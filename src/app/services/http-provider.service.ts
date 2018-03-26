@@ -253,6 +253,20 @@ export class HttpProviderService {
       ).catch(this.handleError);
   }
 
+  uploadDataAssignmentChangesToServer(newDataSetInfo){
+    let url='../../../api/dataSets/'+newDataSetInfo.id+'.json?fields=organisationUnits';
+    return this.http.put(url,newDataSetInfo.orgUnits)
+      .map((response:Response)=> response.json()
+    ).catch(this.handleError);
+  }
+
+  initialImport(payload){
+    let url='../../../api/metadata';
+    return this.http.post(url,payload)
+      .map((response:Response)=> response.json()
+      ).catch(this.handleError);
+  }
+
 
 
   handleError(error: Response | any) {
