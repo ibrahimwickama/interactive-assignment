@@ -33,9 +33,17 @@ export class AppComponent implements OnInit{
 
   }
 
-  showOrgunit(){
-    this.sheetHeight = '0px';
+  ngOnDestroy(){
 
+  }
+
+  showOrgunit(){
+
+    if(this.orgUintActive == 'active'){
+      this.sheetHeight = '0px';
+      this.orgUintActive = '';
+    }else {
+    this.sheetHeight = '0px';
     // delays a function for a period of time
     Observable.interval(500).take(4).subscribe(() => {
     this.showOrgUnits = true;
@@ -46,43 +54,57 @@ export class AppComponent implements OnInit{
 
     this.tempOrgUnuits = this.httpProvider.organisationUnits;
   });
+
+    }
   }
 
   showDataSet(){
-    this.tempOrgUnuits = [];
-    this.tempOrgUnuits = this.httpProvider.organisationUnits;
-    this.selectedData = [];
-    this.temp = [];
-    this.sheetHeight = '0px';
-    // delays a function for a period of time
-    Observable.interval(500).take(4).subscribe(() => {
-      this.showDataSets = true;
-      this.dataSetActive = 'active';
-      this.orgUintActive = '';
-      this.programActive = '';
-      this.showOrgUnits = false;
-      this.showPrograms = false;
-      this.sheetHeight = '400px';
-    });
+    if(this.dataSetActive == 'active'){
+      this.sheetHeight = '0px';
+      this.dataSetActive = '';
+    }else{
+      this.tempOrgUnuits = null;
+      this.tempOrgUnuits = this.httpProvider.organisationUnits;
+      this.selectedData = [];
+      this.temp = [];
+      this.sheetHeight = '0px';
+      // delays a function for a period of time
+      Observable.interval(500).take(4).subscribe(() => {
+        this.showDataSets = true;
+        this.dataSetActive = 'active';
+        this.orgUintActive = '';
+        this.programActive = '';
+        this.showOrgUnits = false;
+        this.showPrograms = false;
+        this.sheetHeight = '400px';
+      });
+    }
 
   }
 
   showProgram(){
-    this.tempOrgUnuits = null;
-    this.tempOrgUnuits = this.httpProvider.organisationUnits;
-    this.selectedData = [];
-    this.temp = [];
-    this.sheetHeight = '0px';
-    // delays a function for a period of time
-    Observable.interval(500).take(4).subscribe(() => {
-    this.showPrograms = true;
-    this.programActive = 'active';
-    this.dataSetActive = '';
-    this.orgUintActive = '';
-    this.showOrgUnits = false;
-    this.showDataSets = false;
-    this.sheetHeight = '400px';
-    });
+    if(this.programActive == 'active'){
+      this.sheetHeight = '0px';
+      this.programActive = '';
+    } else{
+      this.tempOrgUnuits = null;
+      this.tempOrgUnuits = this.httpProvider.organisationUnits;
+      this.selectedData = [];
+      this.temp = [];
+      this.sheetHeight = '0px';
+      // delays a function for a period of time
+      Observable.interval(500).take(4).subscribe(() => {
+        this.showPrograms = true;
+        this.programActive = 'active';
+        this.dataSetActive = '';
+        this.orgUintActive = '';
+        this.showOrgUnits = false;
+        this.showDataSets = false;
+        this.sheetHeight = '400px';
+      });
+    }
+
+
   }
 
   receiveData(dataSet){
@@ -92,9 +114,6 @@ export class AppComponent implements OnInit{
 
     // make complex functions
     dataSetOrgUnit = dataSet.organisationUnits;
-    //console.log("DataSet OrgUnits "+JSON.stringify(dataSetOrgUnit));
-   //console.log("Temp OrgUnits "+JSON.stringify(this.tempOrgUnuits));
-
 
       this.tempOrgUnuits.forEach((tempOrg:any)=>{
 
@@ -119,8 +138,6 @@ export class AppComponent implements OnInit{
           }
     });
 
-   // console.log("Total edited OrgUnits "+JSON.stringify(this.tempOrgUnuits));
-    // this.temp.push(dataSet.organisationUnits)
     this.temp.push(this.tempOrgUnuits);
     this.totalRec = this.tempOrgUnuits.length
   }
@@ -152,8 +169,6 @@ export class AppComponent implements OnInit{
     this.dataAssign.id = dataOrgUnit.id;
     this.dataAssign.dataSet = dataOrgUnit.displayName;
     this.dataAssign.orgUnits.organisationUnits = orgUnitChanges;
-    //console.log("OrgUnitChanges is: "+JSON.stringify(this.dataAssign));
-
 
     if(dataOrgUnit.formType == 'dataSet'){
       let dataSets = [];
@@ -168,7 +183,6 @@ export class AppComponent implements OnInit{
           delete dataSet.href;
           delete dataSet.formType;
           this.dataSetToUpdate.dataSets.push(dataSet);
-          //console.log("DataSet To Import: "+JSON.stringify(this.dataSetToUpdate));
           this.httpProvider.initialImport(this.dataSetToUpdate).subscribe(response=>{
             //console.log("did it work: "+JSON.stringify(response));
           })
@@ -187,7 +201,6 @@ export class AppComponent implements OnInit{
           delete program.href;
           delete program.formType;
           this.programToUpdate.programs.push(program);
-          //console.log("DataSet To Import: "+JSON.stringify(this.dataSetToUpdate));
           this.httpProvider.initialImport(this.programToUpdate).subscribe(response=>{
             //console.log("did it work: "+JSON.stringify(response));
           })
