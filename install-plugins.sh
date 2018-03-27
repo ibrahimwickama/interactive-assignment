@@ -4,3 +4,4 @@ npm install --save font-awesome
 npm install --save @angular/cli@latest
 npm install --save @ngrx/store
 npm install --save ngx-pagination
+npm install --save angular-tree-component
