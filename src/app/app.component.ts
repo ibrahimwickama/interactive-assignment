@@ -121,6 +121,7 @@ export class AppComponent implements OnInit{
   getNewOrgUnit(newOrgUnit){
     this.tempOrgUnuits.push(newOrgUnit);
     this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits,'id');
+
   }
 
   receiveData(dataSet){

@@ -1,0 +1,21 @@
+{
+    "version": "1.0.0",
+    "name": "Organisation Unit Assignment",
+    "description": "Organisation Unit Assignment",
+    "launch_path": "index.html",
+    "icons": {
+        "16": "favicon.ico",
+        "48": "favicon.ico",
+        "128": "favicon.ico"
+    },
+    "developer": {
+        "name": "HISPTZ",
+        "url": "https://hisptanzania.org"
+    },
+    "default_locale": "en",
+    "activities": {
+        "dhis": {
+            "href": "../../.."
+        }
+    }
+}

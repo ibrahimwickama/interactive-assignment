@@ -296,8 +296,9 @@ export class OrgUnitFilterComponent implements OnInit {
     }
     this.selected_orgunits = [$event.node.data];
 
+      // here its were selected orgUnit is captured & passed to appComponent as selected
     if(this.selected_orgunits[0].level !== 1){
-      console.log("Listening to: "+JSON.stringify(this.selected_orgunits[0]));
+      //console.log("Listening to: "+JSON.stringify(this.selected_orgunits[0]));
        this.selectedOrgUnit.emit(this.selected_orgunits[0]);
     }
     if (!this.checkOrgunitAvailabilty($event.node.data, this.orgunit_model.selected_orgunits)) {
