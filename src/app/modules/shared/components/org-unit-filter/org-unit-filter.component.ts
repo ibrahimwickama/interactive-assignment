@@ -87,7 +87,7 @@ export class OrgUnitFilterComponent implements OnInit {
         const actionMapping: IActionMapping = {
           mouse: {
             dblClick: TREE_ACTIONS.TOGGLE_EXPANDED,
-            click: (node, tree, $event) => TREE_ACTIONS.TOGGLE_SELECTED(node, tree, $event)
+            click: (node, tree, $event) => TREE_ACTIONS.TOGGLE_ACTIVE(node, tree, $event)
           }
         };
         this.customTemplateStringOrgunitOptions = {actionMapping};
@@ -120,7 +120,7 @@ export class OrgUnitFilterComponent implements OnInit {
       const actionMapping: IActionMapping = {
         mouse: {
           // dblClick: TREE_ACTIONS.TOGGLE_EXPANDED,
-          dblClick: TREE_ACTIONS.TOGGLE_SELECTED,
+          dblClick: TREE_ACTIONS.TOGGLE_ACTIVE,
           click: (node, tree, $event) => TREE_ACTIONS.TOGGLE_SELECTED(node, tree, $event)
         },
         // mouse: {
