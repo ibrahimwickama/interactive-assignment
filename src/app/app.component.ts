@@ -9,6 +9,7 @@ import {Observable} from "rxjs/Observable";
 })
 export class AppComponent implements OnInit{
   sheetHeight:any;
+  sheetWidth:any;
   orgUintActive:string;
   dataSetActive:string;
   programActive:string;
@@ -41,6 +42,7 @@ export class AppComponent implements OnInit{
 
     if(this.orgUintActive == 'active'){
       this.sheetHeight = '0px';
+      this.sheetWidth = '400px';
       this.orgUintActive = '';
     }else {
     this.sheetHeight = '0px';
@@ -51,7 +53,7 @@ export class AppComponent implements OnInit{
     this.showDataSets = false;
     this.showPrograms = false;
     this.sheetHeight = '400px';
-
+    this.sheetWidth = '100%';
     this.tempOrgUnuits = this.httpProvider.organisationUnits;
   });
 
@@ -61,12 +63,13 @@ export class AppComponent implements OnInit{
   showDataSet(){
     if(this.dataSetActive == 'active'){
       this.sheetHeight = '0px';
+      this.sheetWidth = '400px';
       this.dataSetActive = '';
     }else{
-      this.tempOrgUnuits = null;
-      this.tempOrgUnuits = this.httpProvider.organisationUnits;
-      this.selectedData = [];
-      this.temp = [];
+      //this.tempOrgUnuits = null;
+      //this.tempOrgUnuits = this.httpProvider.organisationUnits;
+      //this.selectedData = [];
+      //this.temp = [];
       this.sheetHeight = '0px';
       // delays a function for a period of time
       Observable.interval(500).take(4).subscribe(() => {
@@ -77,6 +80,7 @@ export class AppComponent implements OnInit{
         this.showOrgUnits = false;
         this.showPrograms = false;
         this.sheetHeight = '400px';
+        this.sheetWidth = '100%';
       });
     }
 
@@ -85,12 +89,13 @@ export class AppComponent implements OnInit{
   showProgram(){
     if(this.programActive == 'active'){
       this.sheetHeight = '0px';
+      this.sheetWidth = '400px';
       this.programActive = '';
     } else{
-      this.tempOrgUnuits = null;
-      this.tempOrgUnuits = this.httpProvider.organisationUnits;
-      this.selectedData = [];
-      this.temp = [];
+      //this.tempOrgUnuits = null;
+      //this.tempOrgUnuits = this.httpProvider.organisationUnits;
+      //this.selectedData = [];
+      //this.temp = [];
       this.sheetHeight = '0px';
       // delays a function for a period of time
       Observable.interval(500).take(4).subscribe(() => {
@@ -101,10 +106,9 @@ export class AppComponent implements OnInit{
         this.showOrgUnits = false;
         this.showDataSets = false;
         this.sheetHeight = '400px';
+        this.sheetWidth = '100%';
       });
     }
-
-
   }
 
   receiveData(dataSet){

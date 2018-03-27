@@ -3,7 +3,8 @@
 
 <main class="container pt-5" style="margin-top: 10px;max-width: 1840px;">
 
-  <div class="card mb-5">
+  <div class="card mr-auto data-chooser" [ngStyle]="{width: sheetWidth}" >
+  <!--<div class="card mb-5">-->
     <div class="parameter-header">Choose assignments</div>
     <div class="parameter-section">
       <div class="btn btn-outline-primary {{orgUintActive}}" (click)="showOrgunit()">Organisation Unit</div>
