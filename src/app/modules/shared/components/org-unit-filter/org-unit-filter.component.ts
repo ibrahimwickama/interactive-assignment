@@ -42,6 +42,7 @@ export class OrgUnitFilterComponent implements OnInit {
   @Output() onOrgUnitUpdate: EventEmitter<any> = new EventEmitter<any>();
   @Output() onOrgUnitChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() onOrgUnitModelUpdate: EventEmitter<any> = new EventEmitter<any>();
+  @Output() selectedOrgUnit = new EventEmitter();
 
   orgUnit: any = {};
   root_url = '../../../';
@@ -118,9 +119,13 @@ export class OrgUnitFilterComponent implements OnInit {
     }else {
       const actionMapping: IActionMapping = {
         mouse: {
-          dblClick: TREE_ACTIONS.TOGGLE_EXPANDED,
+          // dblClick: TREE_ACTIONS.TOGGLE_EXPANDED,
+          dblClick: TREE_ACTIONS.TOGGLE_SELECTED,
           click: (node, tree, $event) => TREE_ACTIONS.TOGGLE_SELECTED(node, tree, $event)
-        }
+        },
+        // mouse: {
+        //   click: TREE_ACTIONS.TOGGLE_SELECTED
+        // },
       };
       this.customTemplateStringOrgunitOptions = {actionMapping};
     }
@@ -290,6 +295,11 @@ export class OrgUnitFilterComponent implements OnInit {
       this.period_selector.reset();
     }
     this.selected_orgunits = [$event.node.data];
+
+    if(this.selected_orgunits[0].level !== 1){
+      console.log("Listening to: "+JSON.stringify(this.selected_orgunits[0]));
+       this.selectedOrgUnit.emit(this.selected_orgunits[0]);
+    }
     if (!this.checkOrgunitAvailabilty($event.node.data, this.orgunit_model.selected_orgunits)) {
       this.orgunit_model.selected_orgunits.push($event.node.data);
     }

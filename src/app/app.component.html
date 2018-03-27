@@ -22,6 +22,7 @@
           [orgunit_model] = "scorecard.data.orgunit_settings"
           [showUpdate]="false"
           (onOrgUnitModelUpdate) = "updateOrgUnitModel($event)"
+          (selectedOrgUnit)="getNewOrgUnit($event)"
         ></app-org-unit-filter>
         <!--end of organisation unit tree-->
 
@@ -55,7 +56,7 @@
         <tbody>
         <tr *ngFor="let orgUnit of tempOrgUnuits | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }">
 
-          <td>{{orgUnit.displayName}}</td>
+          <td>{{orgUnit.name}}</td>
           <td *ngFor="let dataOrgUnit of orgUnit.assigned">
             <label class="custom-control custom-checkbox">
               <input type="checkbox"  class="custom-control-input" [checked]="dataOrgUnit.assigned" (change)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" >

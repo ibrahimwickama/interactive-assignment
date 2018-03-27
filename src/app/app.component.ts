@@ -40,6 +40,7 @@ export class AppComponent implements OnInit{
        // orgUnit issues
   updateOrgUnitModel(ouModel) {
     this.scorecard.data.orgunit_settings = ouModel;
+    // console.log("Listening to: "+JSON.stringify(ouModel))
   }
 
   // orgUnit issues
@@ -52,15 +53,15 @@ export class AppComponent implements OnInit{
       this.orgUintActive = '';
     }else {
     this.sheetHeight = '0px';
-    // delays a function for a period of time
+    // delays a function for a period of timee
     Observable.interval(500).take(4).subscribe(() => {
     this.showOrgUnits = true;
     this.orgUintActive = 'active';
     this.showDataSets = false;
     this.showPrograms = false;
     this.sheetHeight = '400px';
-    this.sheetWidth = '100%';
-    this.tempOrgUnuits = this.httpProvider.organisationUnits;
+    this.sheetWidth = '500px';
+    //this.tempOrgUnuits = this.httpProvider.organisationUnits;
   });
 
     }
@@ -115,6 +116,11 @@ export class AppComponent implements OnInit{
         this.sheetWidth = '100%';
       });
     }
+  }
+
+  getNewOrgUnit(newOrgUnit){
+    this.tempOrgUnuits.push(newOrgUnit);
+    this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits,'id');
   }
 
   receiveData(dataSet){
