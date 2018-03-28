@@ -8,15 +8,7 @@ import {HttpProviderService} from "./services/http-provider.service";
 import { DataSetsComponent } from './components/data-sets/data-sets.component';
 import { ProgramsComponent } from './components/programs/programs.component';
 import {NgxPaginationModule} from "ngx-pagination";
-import {TreeModule} from 'angular-tree-component';
-import {SharedModule} from "./modules/shared/shared.module";
-import {OrgUnitService} from "./modules/shared/services/org-unit.service";
-import {HttpClientService} from "./modules/shared/services/http-client.service";
-import {HttpClient, HttpClientModule} from "@angular/common/http";
-import {getInitialState} from "./modules/store/application.state";
-import {reducers} from "./modules/store/reducers/reducers";
-import {StoreModule} from "@ngrx/store";
-// import {OrgUnitFilterComponent} from "./components/org-unit-filter/org-unit-filter.component";
+import {OrgUnitModule} from "./modules/orgUnitModel/orgUnitSettings/orgUnit.module";
 
 @NgModule({
   declarations: [
@@ -25,11 +17,8 @@ import {StoreModule} from "@ngrx/store";
     ProgramsComponent
   ],
   imports: [
-    BrowserModule,MenuModule,FormsModule,NgxPaginationModule,
-    TreeModule,SharedModule,HttpClientModule,
-    StoreModule.forRoot(reducers, {
-      initialState: getInitialState
-    }),
+    BrowserModule,MenuModule,FormsModule,NgxPaginationModule,OrgUnitModule,
+
   ],
   providers: [HttpProviderService],
   bootstrap: [AppComponent]

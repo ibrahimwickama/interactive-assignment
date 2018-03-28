@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpProviderService} from "./services/http-provider.service";
 import {Observable} from "rxjs/Observable";
-import {ScoreCard} from "./modules/shared/models/scorecard";
-import {ScorecardService} from "./modules/shared/services/scorecard.service";
+import {OrgUnitService} from "./modules/orgUnitModel/orgUnitSettings/services/org-unit.service";
+import {OrgUnitData} from "./modules/orgUnitModel/orgUnitSettings/models/orgUnits";
 
 @Component({
   selector: 'app-root',
@@ -27,10 +27,10 @@ export class AppComponent implements OnInit{
   dataAssign:any = {id:'',dataSet:'', orgUnits:{organisationUnits:[]}};
   dataSetToUpdate:any ={dataSets:[]};
   programToUpdate:any ={programs:[]};
-  scorecard: ScoreCard;
+  orgUnit: OrgUnitData;
 
-  constructor(private httpProvider: HttpProviderService, private scorecardService: ScorecardService){
-    this.scorecard = this.scorecardService.getEmptyScoreCard();
+  constructor(private httpProvider: HttpProviderService, private orgUnitService: OrgUnitService){
+    this.orgUnit = this.orgUnitService.getAallOrgUnitStructure();
   }
 
   ngOnInit(){
@@ -39,7 +39,7 @@ export class AppComponent implements OnInit{
 
        // orgUnit issues
   updateOrgUnitModel(ouModel) {
-    this.scorecard.data.orgunit_settings = ouModel;
+    this.orgUnit.data.orgunit_settings = ouModel;
     // console.log("Listening to: "+JSON.stringify(ouModel))
   }
 

@@ -1,0 +1,33 @@
+Step1: import the whole model to your project inside app/yourModels/
+
+Step2: go your app.module.ts and add " OrgUnitModule " inside imports:[ ]
+
+Step3: open terminal and npm this repos
+npm install --save @ngrx/store@4.1.0
+npm install --save ngx-pagination
+npm install --save angular-tree-component
+
+Step4: go where you want to use the Dhis OrgUnitTree and paste this
+ <app-org-unit-filter
+          [orgunit_model] = "orgUnit.data.orgunit_settings"
+          [showUpdate]="false"
+          (onOrgUnitModelUpdate) = "updateOrgUnitModel($event)"
+          (selectedOrgUnit)="createFunctionReceivingOrgUnit($event)"
+        ></app-org-unit-filter>
+
+ ---> inside the .ts file on which OrgUnit model was used on the html file the use the snippet below
+    orgUnit: OrgUnitData;
+
+      constructor(private orgUnitService: OrgUnitService){
+        this.orgUnit = this.orgUnitService.getAallOrgUnitStructure();
+      }
+
+      updateOrgUnitModel(ouModel) {
+        this.orgUnit.data.orgunit_settings = ouModel;
+
+      }
+
+Step5: in the project go to app/styles.css and the line
+  @import '~angular-tree-component/dist/angular-tree-component.css';
+
+Step6: You are done...
