@@ -9,6 +9,8 @@ import {HttpProviderService} from "../../services/http-provider.service";
 export class ProgramsComponent implements OnInit {
   initPrograms:any = [];
   initProgramsBackUp:any = [];
+  loaderMessage:string = 'fetching programs...';
+  showLoader:boolean = false;
 
   @Output() exportedProgram = new EventEmitter();
 
@@ -20,7 +22,9 @@ export class ProgramsComponent implements OnInit {
 
   callPrograms(){
     if(this.httpProvider.programsFromServer.length <= 0) {
+      this.showLoader = true;
       this.httpProvider.programCaller().subscribe(response => {
+        this.showLoader = false;
         this.initPrograms = this.httpProvider.programsFromServer;
         this.initProgramsBackUp = this.httpProvider.programsFromServer;
       });

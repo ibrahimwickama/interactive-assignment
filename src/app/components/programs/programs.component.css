@@ -8,3 +8,9 @@
 .list-group-item:hover{
   background-color: #f7f7f7;
 }
+
+.loaderInfo{
+  text-align: center;
+  font-size: 40px;
+  color: #CCC;
+}

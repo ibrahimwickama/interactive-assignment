@@ -10,6 +10,8 @@ export class DataSetsComponent implements OnInit {
   initDataSets:any = [];
   initDataSetsBackUp:any = [];
   selectedDataSetColor:any;
+  loaderMessage:string = 'fetching dataSets...';
+  showLoader:boolean = false;
 
   @Output() exportedDataset = new EventEmitter();
 
@@ -22,7 +24,9 @@ export class DataSetsComponent implements OnInit {
 
   callDataSets(){
     if(this.httpProvider.dataSetsFromServer.length <= 0){
+      this.showLoader = true;
       this.httpProvider.dataSetCaller().subscribe(response =>{
+        this.showLoader = false;
         this.initDataSets = this.httpProvider.dataSetsFromServer;
         this.initDataSetsBackUp = this.httpProvider.dataSetsFromServer;
       });
