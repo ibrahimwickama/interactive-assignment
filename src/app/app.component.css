@@ -111,3 +111,24 @@
   text-align: center;
   margin-bottom: 10px;
 }
+
+.close {
+  font-size: 30px;
+  text-shadow: none;
+  color: #000;
+  opacity: 1;
+  position: absolute;
+  right: -15px;
+  top: -15px;
+}
+
+.table-close-icon{
+  height: 30px;
+  width: 30px;
+}
+
+.table-close-icon:hover{
+  height: 34px;
+  width: 34px;
+  transition: width 0.1s, height 0.1s;
+}

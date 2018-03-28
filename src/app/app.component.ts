@@ -240,6 +240,11 @@ export class AppComponent implements OnInit{
   }
 
 
+  closeSession(){
+    location.reload();
+  }
+
+
   removeDuplicates(originalArray, key) {
     let newArray = [];
     let lookupObject  = {};

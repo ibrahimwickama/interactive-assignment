@@ -14,9 +14,6 @@
 
     <div class="parameter-selector" [ngStyle]="{height: sheetHeight}">
       <div *ngIf="showOrgUnits">
-
-
-
         <!--organisation unit tree-->
         <app-org-unit-filter
           [orgunit_model] = "scorecard.data.orgunit_settings"
@@ -25,11 +22,6 @@
           (selectedOrgUnit)="getNewOrgUnit($event)"
         ></app-org-unit-filter>
         <!--end of organisation unit tree-->
-
-
-
-
-
       </div>
       <div *ngIf="showDataSets">
         <app-data-sets (exportedDataset)="receiveData($event)"></app-data-sets>
@@ -43,7 +35,28 @@
 
         <!--table section begins-->
   <div class="card mb-5">
-    <div class="card-header">Organisation Unit Assignment</div>
+
+
+    <button type="button" class="close close-chat mr-1" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true"> <img src="./assets/cancel.png" class="table-close-icon" alt="" (click)="closeSession()"> </span>
+    </button>
+    <div class="card-header">Organisation Unit Assignment Table</div>
+
+
+    <!--<div class="card-header bg-info  border-0 py-3 d-flex align-items-center">-->
+      <!--<img src="http://placehold.it/45x45" class="rounded-circle align-self-start mr-3">-->
+      <!--<div>-->
+        <!--<h4 class="card-title mb-0">Card title</h4>-->
+        <!--<h6 class="card-subtitle text-muted">Card subtitle</h6>-->
+      <!--</div>-->
+      <!--<span class="badge badge-success ml-auto px-4">Success</span>-->
+    <!--</div>-->
+
+
+
+
+
+
     <div class="card-block p-0">
 
       <table class="table table-bordered table-sm m-0">
