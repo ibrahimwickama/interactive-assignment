@@ -121,7 +121,14 @@ export class AppComponent implements OnInit{
   getNewOrgUnit(newOrgUnit){
     this.tempOrgUnuits.push(newOrgUnit);
     this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits,'id');
+  }
 
+  removeDeselectedOrgUnit(event){
+    this.tempOrgUnuits.forEach((tempOrg,index)=>{
+      if(tempOrg.id == event.id){
+        this.tempOrgUnuits.splice(index,1);
+      }
+    });
   }
 
   receiveData(dataSet){
@@ -241,7 +248,10 @@ export class AppComponent implements OnInit{
 
 
   closeSession(){
-    location.reload();
+     location.reload();
+    // let tableData = document.querySelector( '#data-table-row' ).remove();
+    // this.tempOrgUnuits = [];
+    // this.selectedData = [];
   }
 
 

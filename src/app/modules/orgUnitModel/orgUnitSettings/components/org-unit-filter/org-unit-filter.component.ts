@@ -9,6 +9,8 @@ import { OrgUnitService } from '../../services/org-unit.service';
   styleUrls: ['./org-unit-filter.component.css']
 })
 export class OrgUnitFilterComponent implements OnInit {
+  // thisrow:boolean = false;
+
   // the object that will carry the output value you can send one from outside to config start values
   @Input() orgunit_model: any =  {
     selection_mode: 'Usr_orgUnit',
@@ -43,6 +45,7 @@ export class OrgUnitFilterComponent implements OnInit {
   @Output() onOrgUnitChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() onOrgUnitModelUpdate: EventEmitter<any> = new EventEmitter<any>();
   @Output() selectedOrgUnit = new EventEmitter();
+  @Output() deSelectedOrgUnit = new EventEmitter();
 
   orgUnit: any = {};
   root_url = '../../../';
@@ -87,7 +90,8 @@ export class OrgUnitFilterComponent implements OnInit {
         const actionMapping: IActionMapping = {
           mouse: {
             dblClick: TREE_ACTIONS.TOGGLE_EXPANDED,
-            click: (node, tree, $event) => TREE_ACTIONS.TOGGLE_ACTIVE(node, tree, $event)
+            // click: (node, tree, $event) => TREE_ACTIONS.TOGGLE_ACTIVE(node, tree, $event)
+              click: TREE_ACTIONS.TOGGLE_ACTIVE_MULTI
           }
         };
         this.customTemplateStringOrgunitOptions = {actionMapping};
@@ -108,7 +112,8 @@ export class OrgUnitFilterComponent implements OnInit {
           mouse: {
             click: (node, tree, $event) => {
               $event.shiftKey
-                ? TREE_ACTIONS.TOGGLE_SELECTED(node, tree, $event)
+                ? TREE_ACTIONS.TOGGLE_ACTIVE_MULTI(node, tree, $event)
+                // ? TREE_ACTIONS.TOGGLE_SELECTED(node, tree, $event)
                 : TREE_ACTIONS.TOGGLE_SELECTED(node, tree, $event);
             }
           }
@@ -252,6 +257,8 @@ export class OrgUnitFilterComponent implements OnInit {
       if (node) {
         node.setIsActive(false, true);
       }
+
+
     }, 0);
     if ( event !== null) {
       event.stopPropagation();
@@ -278,6 +285,8 @@ export class OrgUnitFilterComponent implements OnInit {
     }
     this.orgunit_model.selected_orgunits.forEach((item, index) => {
       if ( $event.node.data.id === item.id ) {
+          // fires an event to remove this OrgUnit to the list
+        this.deSelectedOrgUnit.emit(item);
         this.orgunit_model.selected_orgunits.splice(index, 1);
       }
     });
