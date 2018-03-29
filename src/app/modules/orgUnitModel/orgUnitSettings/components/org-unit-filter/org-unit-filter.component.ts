@@ -10,6 +10,7 @@ import { OrgUnitService } from '../../services/org-unit.service';
 })
 export class OrgUnitFilterComponent implements OnInit {
   // thisrow:boolean = false;
+  showOrgUnitTypes:boolean = false;
 
   // the object that will carry the output value you can send one from outside to config start values
   @Input() orgunit_model: any =  {
@@ -38,7 +39,7 @@ export class OrgUnitFilterComponent implements OnInit {
     placeholder: 'Select Organisation Unit'
   };
 
-  @Input() showUpdate: boolean = false;
+  @Input() showUpdate: boolean = true;
   @Input() pickChildren: boolean = true;
 
   @Output() onOrgUnitUpdate: EventEmitter<any> = new EventEmitter<any>();
@@ -46,6 +47,7 @@ export class OrgUnitFilterComponent implements OnInit {
   @Output() onOrgUnitModelUpdate: EventEmitter<any> = new EventEmitter<any>();
   @Output() selectedOrgUnit = new EventEmitter();
   @Output() deSelectedOrgUnit = new EventEmitter();
+  // @Output() hideOrgUnitSelection = new EventEmitter();
 
   orgUnit: any = {};
   root_url = '../../../';
@@ -209,6 +211,14 @@ export class OrgUnitFilterComponent implements OnInit {
     this.emit(true);
   }
 
+  showOrgUnitTypesList(){
+    if(this.showOrgUnitTypes){
+      this.showOrgUnitTypes = false;
+    }else if(!this.showOrgUnitTypes){
+      this.showOrgUnitTypes = true;
+    }
+  }
+
   clearAll() {
     for (const active_orgunit of this.orgunit_model.selected_orgunits) {
       this.deActivateNode(active_orgunit.id, this.orgtree, null);
@@ -217,6 +227,7 @@ export class OrgUnitFilterComponent implements OnInit {
 
   setType(type: string) {
     this.orgunit_model.selection_mode = type;
+    // this.showOrgUnitTypes = false;
     if ( type !== 'orgUnit' ) {
       this.orgunit_model.selected_user_orgunit = [];
     }
@@ -226,10 +237,12 @@ export class OrgUnitFilterComponent implements OnInit {
     if ( type !== 'Group' ) {
       this.orgunit_model.selected_groups = [];
     }
+
   }
   // display Orgunit Tree
   displayOrgTree() {
     this.showOrgTree = !this.showOrgTree;
+    // this.hideOrgUnitSelection.emit(true)
   }
   filterNodes(value, tree) {
     tree.treeModel.filterNodes((node) => {
@@ -290,10 +303,7 @@ export class OrgUnitFilterComponent implements OnInit {
         this.orgunit_model.selected_orgunits.splice(index, 1);
       }
     });
-
     this.emit(false);
-
-    // $event.node.isFocused = false;
   }
 
   // add item to array of selected items when item is selected

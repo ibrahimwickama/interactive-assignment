@@ -17,7 +17,7 @@
         <!--organisation unit tree-->
         <app-org-unit-filter
           [orgunit_model] = "orgUnit.data.orgunit_settings"
-          [showUpdate]="false"
+          [showUpdate]="true"
           (onOrgUnitModelUpdate) = "updateOrgUnitModel($event)"
           (selectedOrgUnit)="getNewOrgUnit($event)"
           (deSelectedOrgUnit)="removeDeselectedOrgUnit($event)"
@@ -121,3 +121,8 @@
 
   </div>
 </main>
+
+
+
+
+

@@ -133,3 +133,27 @@
   width: 34px;
   transition: width 0.1s, height 0.1s;
 }
+
+
+
+
+
+
+
+
+.dropdown-menu > .dropdown {
+  position: relative;
+}
+
+.dropdown-menu > .dropdown a::after {
+  transform: rotate(-90deg);
+  position: absolute;
+  right: .9rem;
+  top: .9rem;
+}
+
+.dropdown-menu > .dropdown .dropdown-menu {
+  top: -.7rem;
+  left: 100%;
+  border-radius: 0 .25rem .25rem .25rem;
+}

@@ -131,6 +131,14 @@ export class AppComponent implements OnInit{
     });
   }
 
+  // shutdownOrgUnitSelection(event){
+  //   if(this.orgUintActive == 'active'){
+  //     this.sheetHeight = '0px';
+  //     this.sheetWidth = '400px';
+  //     this.orgUintActive = '';
+  //   }
+  //}
+
   receiveData(dataSet){
     let dataSetOrgUnit = [];
     this.selectedData.push(dataSet);
