@@ -119,16 +119,47 @@ export class AppComponent implements OnInit{
   }
 
   getNewOrgUnit(newOrgUnit){
-    this.tempOrgUnuits.push(newOrgUnit);
-    this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits,'id');
+    console.log("Listening to from Live-App: "+JSON.stringify(newOrgUnit))
+
+    if(newOrgUnit.children){
+      newOrgUnit.children.forEach((childOrgUnit:any)=>{
+        this.tempOrgUnuits.push(childOrgUnit);
+        this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits,'id');
+      })
+    }else {
+      this.tempOrgUnuits.push(newOrgUnit);
+      this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits,'id');
+    }
+
   }
 
-  removeDeselectedOrgUnit(event){
-    this.tempOrgUnuits.forEach((tempOrg,index)=>{
-      if(tempOrg.id == event.id){
-        this.tempOrgUnuits.splice(index,1);
-      }
-    });
+  removeDeselectedOrgUnit(orgUnitDeselected){
+
+    if(orgUnitDeselected.children){
+      orgUnitDeselected.children.forEach((childOrgUnit:any)=>{
+        this.tempOrgUnuits.forEach((tempOrg,index)=>{
+          if(tempOrg.id == childOrgUnit.id){
+            this.tempOrgUnuits.splice(index,1);
+          }
+        });
+      });
+    }else {
+      this.tempOrgUnuits.forEach((tempOrg,index)=>{
+        if(tempOrg.id == orgUnitDeselected.id){
+          this.tempOrgUnuits.splice(index,1);
+        }
+      });
+    }
+
+
+
+    // this.tempOrgUnuits.forEach((tempOrg,index)=>{
+    //   if(tempOrg.id == orgUnitDeselected.id){
+    //     this.tempOrgUnuits.splice(index,1);
+    //   }
+    // });
+
+
   }
 
   // shutdownOrgUnitSelection(event){
