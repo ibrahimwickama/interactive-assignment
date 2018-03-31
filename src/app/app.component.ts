@@ -28,6 +28,9 @@ export class AppComponent implements OnInit{
   dataSetToUpdate:any ={dataSets:[]};
   programToUpdate:any ={programs:[]};
   orgUnit: OrgUnitData;
+  selectedOrgUnitWithChildren = [];
+  showFilters:boolean = false;
+
 
   constructor(private httpProvider: HttpProviderService, private orgUnitService: OrgUnitService){
     this.orgUnit = this.orgUnitService.getAallOrgUnitStructure();
@@ -53,7 +56,7 @@ export class AppComponent implements OnInit{
       this.orgUintActive = '';
     }else {
     this.sheetHeight = '0px';
-    // delays a function for a period of timee
+    // delays aa function for a period of timee
     Observable.interval(500).take(4).subscribe(() => {
     this.showOrgUnits = true;
     this.orgUintActive = 'active';
@@ -119,22 +122,23 @@ export class AppComponent implements OnInit{
   }
 
   getNewOrgUnit(newOrgUnit){
-    console.log("Listening to from Live-App: "+JSON.stringify(newOrgUnit))
+    console.log("Listening to from Live-App: "+JSON.stringify(newOrgUnit));
 
     if(newOrgUnit.children){
       newOrgUnit.children.forEach((childOrgUnit:any)=>{
         this.tempOrgUnuits.push(childOrgUnit);
         this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits,'id');
-      })
+      });
+      this.selectedOrgUnitWithChildren.push(newOrgUnit);
+      this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
+
     }else {
       this.tempOrgUnuits.push(newOrgUnit);
       this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits,'id');
     }
-
   }
 
   removeDeselectedOrgUnit(orgUnitDeselected){
-
     if(orgUnitDeselected.children){
       orgUnitDeselected.children.forEach((childOrgUnit:any)=>{
         this.tempOrgUnuits.forEach((tempOrg,index)=>{
@@ -143,6 +147,12 @@ export class AppComponent implements OnInit{
           }
         });
       });
+      this.selectedOrgUnitWithChildren.forEach((orgUnit,index)=>{
+        if(orgUnit.id == orgUnitDeselected.id){
+          this.selectedOrgUnitWithChildren.splice(index,1);
+        }
+      })
+
     }else {
       this.tempOrgUnuits.forEach((tempOrg,index)=>{
         if(tempOrg.id == orgUnitDeselected.id){
@@ -150,16 +160,6 @@ export class AppComponent implements OnInit{
         }
       });
     }
-
-
-
-    // this.tempOrgUnuits.forEach((tempOrg,index)=>{
-    //   if(tempOrg.id == orgUnitDeselected.id){
-    //     this.tempOrgUnuits.splice(index,1);
-    //   }
-    // });
-
-
   }
 
   // shutdownOrgUnitSelection(event){
@@ -291,6 +291,18 @@ export class AppComponent implements OnInit{
     // let tableData = document.querySelector( '#data-table-row' ).remove();
     // this.tempOrgUnuits = [];
     // this.selectedData = [];
+  }
+
+  toggleFilters(e){
+    // e.stopPropagation();
+    // this.showFilters = !this.showFilters;
+
+
+    if(this.showFilters){
+      this.showFilters = false;
+    }else{
+      this.showFilters = true;
+    }
   }
 
 

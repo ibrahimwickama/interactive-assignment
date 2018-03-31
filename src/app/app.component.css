@@ -134,13 +134,6 @@
   transition: width 0.1s, height 0.1s;
 }
 
-
-
-
-
-
-
-
 .dropdown-menu > .dropdown {
   position: relative;
 }
@@ -157,3 +150,115 @@
   left: 100%;
   border-radius: 0 .25rem .25rem .25rem;
 }
+
+
+
+.visualization-filter-section {
+  width: 100%;
+}
+
+.visualization-filter-buttons {
+  display: flex;
+
+}
+
+.visualization-filter-btn img {
+  display: block;
+  margin: auto;
+  height: 15px;
+}
+
+.no-borders {
+  box-shadow: none;
+}
+
+.no-borders img {
+  height: 15px;
+}
+
+.period-filter-btn img {
+  display: block;
+  margin: auto;
+  height: 15px;
+}
+
+.visualization-filter-btn,
+.data-filter-btn,
+.period-filter-btn,
+.org-unit-filter-btn,
+.layout-filter-btn {
+  margin-right: 5px;
+  display: flex;
+  width: auto;
+  font-size: 12px;
+  font-weight: bold;
+  color: black;
+  border-radius: 15px;
+  opacity: 0.5;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.data-filter-btn img {
+  display: block;
+  margin: auto;
+  height: 15px;
+}
+
+.org-unit-filter-btn img {
+  display: block;
+  margin: auto;
+  height: 15px;
+}
+
+.layout-filter-btn img {
+  display: block;
+  margin: auto;
+  height: 15px;
+}
+
+.visualization-filter-btn:hover{
+  background-color: #e0ecfc;
+}
+
+.data-filter-btn:hover{
+  background-color: #e0ecfc;
+}
+
+.period-filter-btn:hover{
+  background-color: #e0ecfc;
+}
+
+.org-unit-filter-btn:hover{
+  background-color: #e0ecfc;
+}
+
+.layout-filter-btn:hover{
+  background-color: #e0ecfc;
+}
+
+.visualization-filter-list {
+  display: flex;
+  margin-left: 5px;
+}
+
+.visualization-filter-body {
+  background-color: rgba(255, 255, 255, 0.95);
+  position: absolute;
+  padding: 5px;
+  top: 40px;
+  width: 400px;
+  height: 350px;
+  z-index: 1200;
+}
+
+.active-filter {
+  background-color: #f1f1f1;
+}
+
+@media (max-width: 500px) {
+  .visualization-filter-body {
+    width: 95%;
+  }
+}
+
