@@ -29,6 +29,9 @@ export class DataFilterComponent implements OnInit, OnDestroy {
   @Input() functionMappings: any[] = [];
   @Input() hiddenDataElements: any[] = [];
   @Input() singleSelection: boolean = false;
+
+  @Output() updatedListToTable = new EventEmitter();
+
   private _selectedItems: any[];
   selectedItems$: Observable<any>;
   querystring: string = null;
@@ -64,6 +67,7 @@ export class DataFilterComponent implements OnInit, OnDestroy {
 
   dataSetsFromServer = [];
   programsFromServer = [];
+
 
   constructor(private dataFilterService: DataFilterService) {
     this.dataFilterOptions = DATA_FILTER_OPTIONS;
@@ -183,14 +187,15 @@ export class DataFilterComponent implements OnInit, OnDestroy {
       this.availableItems = this.programsFromServer;
       this.availableItems = this.removeDuplicates(this.availableItems, 'id');
     }
-
-    // this.selectedGroup = { id: 'ALL', name: '[ All ]' };
-    // this.dataGroups = this.groupList();
-    //
-    // this.availableItems = this.dataItemList(this._selectedItems, this.selectedGroup);
-    // this.p = 1;
-    // this.listchanges = '';
   }
+
+
+  updateSelectedToTable(){
+    this.updatedListToTable.emit(this.selectedItems$['value']);
+    // console.log("Selected items: "+JSON.stringify(this.selectedItems$['value']));
+
+  }
+
 
   removeDataArraysInObject(selectedObject){
     selectedObject.forEach((objectToRemove)=>{

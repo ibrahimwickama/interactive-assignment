@@ -123,7 +123,7 @@ export class AppComponent implements OnInit{
   }
 
   getNewOrgUnit(newOrgUnit){
-    console.log("Listening to from Live-App: "+JSON.stringify(newOrgUnit));
+    // console.log("Listening to from Live-App: "+JSON.stringify(newOrgUnit));
 
     if(newOrgUnit.children){
       newOrgUnit.children.forEach((childOrgUnit:any)=>{
@@ -138,6 +138,11 @@ export class AppComponent implements OnInit{
       this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits,'id');
     }
   }
+
+  // reiceveNewDataList(newList){
+  //   this.
+  // }
+
 
   removeDeselectedOrgUnit(orgUnitDeselected){
     if(orgUnitDeselected.children){
@@ -175,7 +180,13 @@ export class AppComponent implements OnInit{
 
   }
 
-  receiveData(dataSet){
+  receiveData(dataList){
+    this.removeCheckBoxes();
+
+    this.selectedData = [];
+
+    dataList.forEach((dataSet)=>{
+
     let dataSetOrgUnit = [];
     this.selectedData.push(dataSet);
     this.selectedData = this.removeDuplicates(this.selectedData, 'id');
@@ -204,6 +215,8 @@ export class AppComponent implements OnInit{
               tempOrg.assigned = this.removeDuplicates(tempOrg.assigned,'id');
             }
           }
+    });
+
     });
 
     this.temp.push(this.tempOrgUnuits);
@@ -296,6 +309,18 @@ export class AppComponent implements OnInit{
     // let tableData = document.querySelector( '#data-table-row' ).remove();
     // this.tempOrgUnuits = [];
     // this.selectedData = [];
+
+    this.tempOrgUnuits.forEach((tempOrg:any)=>{
+      if(tempOrg.assigned) {
+        tempOrg.assigned.forEach((dataSet: any) => {
+          let td_id = tempOrg.id + '-' + dataSet.id;
+          document.getElementById(td_id.toString()).innerHTML = '';
+                    // document.querySelector('#' + tempOrg.id + '-' + dataSet.id).remove();
+          //document.querySelector('#'+td_id).remove();
+          console.log("td id----- : "+td_id);
+        });
+      }
+    });
   }
 
   toggleFilters(e){
@@ -320,7 +345,24 @@ export class AppComponent implements OnInit{
     return newArray;
   }
 
+  removeCheckBoxes(){
+    this.tempOrgUnuits.forEach((tempOrg:any)=>{
+      if(tempOrg.assigned) {
+        tempOrg.assigned.forEach((dataSet: any) => {
+          let td_id = tempOrg.id + '-' + dataSet.id;
 
-
+          try{
+            document.getElementById(td_id).hidden = true;
+          } catch (e){
+            console.log('Error: '+e);
+          }
+          // var remover =  document.getElementById(td_id.toString());
+           // remover.remove();
+          // document.querySelector('#' + tempOrg.id + '-' + dataSet.id).remove();
+          //document.querySelector('#'+td_id).remove();
+        });
+      }
+      });
+  }
 
 }

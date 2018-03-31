@@ -84,7 +84,10 @@
                              (selectedOrgUnit)="getNewOrgUnit($event)"
                              (deSelectedOrgUnit)="removeDeselectedOrgUnit($event)"
         ></app-org-unit-filter>
-        <app-data-filter *ngIf="selectedFilter === 'DATA'" ></app-data-filter>
+
+        <app-data-filter *ngIf="selectedFilter === 'DATA'" (updatedListToTable)="receiveData($event)" ></app-data-filter>
+
+
         <app-layout *ngIf="selectedFilter === 'LAYOUT'" ></app-layout>
       </div>
 
@@ -128,10 +131,10 @@
         </tr>
         </thead>
         <tbody>
-        <tr id="data-table-row" *ngFor="let orgUnit of tempOrgUnuits | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }">
+        <tr  *ngFor="let orgUnit of tempOrgUnuits | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{orgUnit.id}}" >
 
           <td>{{orgUnit.name}}</td>
-          <td *ngFor="let dataOrgUnit of orgUnit.assigned" >
+          <td *ngFor="let dataOrgUnit of orgUnit.assigned" id="{{orgUnit.id+'-'+dataOrgUnit.id}}" >
             <label class="custom-control custom-checkbox" >
               <input type="checkbox"  class="custom-control-input" [checked]="dataOrgUnit.assigned" (change)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" >
               <span class="custom-control-indicator"></span>
@@ -142,28 +145,10 @@
         </tbody>
       </table>
     </div>
-    <!--<div class="card-footer p-0">-->
-      <!--<nav aria-label="...">-->
-        <!--<ul class="pagination justify-content-end mt-3 mr-3">-->
-          <!--<li class="page-item disabled">-->
-            <!--<span class="page-link">Previous</span>-->
-          <!--</li>-->
-          <!--<li class="page-item active"><a class="page-link" href="#">1</a></li>-->
-          <!--<li class="page-item">-->
-                            <!--<span class="page-link">2<span class="sr-only">(current)</span>-->
-                            <!--</span>-->
-          <!--</li>-->
-          <!--<li class="page-item"><a class="page-link" href="#">3</a></li>-->
-          <!--<li class="page-item">-->
-            <!--<a class="page-link" href="#">Next</a>-->
-          <!--</li>-->
-        <!--</ul>-->
-      <!--</nav>-->
-    <!--</div>-->
+
 
     <div class="card-footer p-0">
       <nav aria-label="..." >
-
         <ul class="pagination justify-content-center mt-3 mr-3" >
           <div class="justify-content-start" style="display: inline-flex; padding: 5px">Show
             <select name="list-count" id="list-count" class="form-control" style="margin-left: 6px" (change)="pageSizeChange($event)">
@@ -176,7 +161,6 @@
       <pagination-controls  id="listing_pagination" maxSize="5" directionLinks="true" (pageChange)="page = $event"></pagination-controls>
         </ul>
       </nav>
-
     </div>
 
   </div>

@@ -77,14 +77,14 @@
         <a (click)="addSelected(item, $event)">{{ item.name }}</a>
       </li>
 
-      <li *ngIf="(availableItems | filterByName:listchanges).length >= 25">
-        <a>
-          <pagination-controls  id="foo"
-                                (pageChange)="p = $event"
-                                maxSize="0">
-          </pagination-controls>
-        </a>
-      </li>
+      <!--<li *ngIf="(availableItems | filterByName:listchanges).length >= 25">-->
+        <!--<a>-->
+          <!--<pagination-controls  id="foo"-->
+                                <!--(pageChange)="p = $event"-->
+                                <!--maxSize="0">-->
+          <!--</pagination-controls>-->
+        <!--</a>-->
+      <!--</li>-->
     </ul>
   </div>
 
@@ -103,7 +103,7 @@
           class="{{item.hasOwnProperty('programType') ? 'auto-growing' : ''}}"> {{ item.name }} </a>
       </li>
       <li *ngIf="(selectedItems$ | async).length > 100">
-        <pagination-controls id ='selectedlist' maxSize="0" (pageChange)="k = $event"></pagination-controls>
+        <!--<pagination-controls id ='selectedlist' maxSize="0" (pageChange)="k = $event"></pagination-controls>-->
       </li>
     </ul>
   </div>
@@ -115,6 +115,6 @@
     <button
       class="btn btn-outline-secondary btn-sm"
       [disabled]="(selectedItems$ | async).length === 0"
-      (click)="emit($event)">Update</button>
+      (click)="updateSelectedToTable()">Update</button>
   </div>
 </div>
