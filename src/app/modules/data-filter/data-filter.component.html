@@ -17,39 +17,39 @@
     </ul>
   </div>
 
-  <div
-    class="data-filter-group-selection"
-    appClickOutside (clickOutside)="showGroups = false"
-  >
-    <!--Group selection button-->
-    <button
-      class="btn btn-outline-secondary btn-sm data-filter-group-btn"
-      (click)="toggleDataFilterGroupList($event)"
-    >
-      <span>{{ selectedGroup?.name || 'Select'}}</span>
-      <span><img src="assets/icons/arrow-down.png" alt=""></span>
-    </button>
+  <!--<div-->
+    <!--class="data-filter-group-selection"-->
+    <!--appClickOutside (clickOutside)="showGroups = false"-->
+  <!--&gt;-->
+    <!--&lt;!&ndash;Group selection button&ndash;&gt;-->
+    <!--<button-->
+      <!--class="btn btn-outline-secondary btn-sm data-filter-group-btn"-->
+      <!--(click)="toggleDataFilterGroupList($event)"-->
+    <!--&gt;-->
+      <!--<span>{{ selectedGroup?.name || 'Select'}}</span>-->
+      <!--<span><img src="assets/icons/arrow-down.png" alt=""></span>-->
+    <!--</button>-->
 
-    <!--Group selection list-->
-    <div
-      class="data-filter-group-panel"
-      *ngIf="showGroups"
-    >
-      <div class="panel-body data-filter-group-panel-body">
-        <input
-          type="search"
-          class="form-control form-control-sm"
-          placeholder="Search"
-          [(ngModel)]="querystring">
-        <ul class="data-filter-group-list">
-          <li
-            *ngFor="let item of dataGroups | filterByName: querystring"
-          ><a (click)="setSelectedGroup(item, scrollse, $event)">{{ item.name }}</a></li>
-        </ul>
-      </div>
-    </div>
-    <!--end of Group selection list-->
-  </div>
+    <!--&lt;!&ndash;Group selection list&ndash;&gt;-->
+    <!--<div-->
+      <!--class="data-filter-group-panel"-->
+      <!--*ngIf="showGroups"-->
+    <!--&gt;-->
+      <!--<div class="panel-body data-filter-group-panel-body">-->
+        <!--<input-->
+          <!--type="search"-->
+          <!--class="form-control form-control-sm"-->
+          <!--placeholder="Search"-->
+          <!--[(ngModel)]="querystring">-->
+        <!--<ul class="data-filter-group-list">-->
+          <!--<li-->
+            <!--*ngFor="let item of dataGroups | filterByName: querystring"-->
+          <!--&gt;<a (click)="setSelectedGroup(item, scrollse, $event)">{{ item.name }}</a></li>-->
+        <!--</ul>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--&lt;!&ndash;end of Group selection list&ndash;&gt;-->
+  <!--</div>-->
 
   <div class="data-filter-list-search">
     <input type="text" class="form-control form-control-sm" (focus)="showBody = true" (keyup)="searchChanged()" placeholder="Search" [(ngModel)]="listchanges">

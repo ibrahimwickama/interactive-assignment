@@ -30,6 +30,7 @@ export class AppComponent implements OnInit{
   orgUnit: OrgUnitData;
   selectedOrgUnitWithChildren = [];
   showFilters:boolean = false;
+  selectedFilter:string;
 
 
   constructor(private httpProvider: HttpProviderService, private orgUnitService: OrgUnitService){
@@ -162,13 +163,17 @@ export class AppComponent implements OnInit{
     }
   }
 
-  // shutdownOrgUnitSelection(event){
-  //   if(this.orgUintActive == 'active'){
-  //     this.sheetHeight = '0px';
-  //     this.sheetWidth = '400px';
-  //     this.orgUintActive = '';
-  //   }
-  //}
+  toggleCurrentFilter(e, selectedFilter) {
+    e.stopPropagation();
+    // this.selectedFilter = selectedFilter;
+    if(this.selectedFilter == ''){
+      this.selectedFilter = selectedFilter;
+    }else{
+      this.selectedFilter = '';
+    }
+
+
+  }
 
   receiveData(dataSet){
     let dataSetOrgUnit = [];
@@ -294,10 +299,6 @@ export class AppComponent implements OnInit{
   }
 
   toggleFilters(e){
-    // e.stopPropagation();
-    // this.showFilters = !this.showFilters;
-
-
     if(this.showFilters){
       this.showFilters = false;
     }else{

@@ -62,6 +62,9 @@ export class DataFilterComponent implements OnInit, OnDestroy {
   hideMonth = false;
   hideQuarter = false;
 
+  dataSetsFromServer = [];
+  programsFromServer = [];
+
   constructor(private dataFilterService: DataFilterService) {
     this.dataFilterOptions = DATA_FILTER_OPTIONS;
     this.showGroups = false;
@@ -83,18 +86,15 @@ export class DataFilterComponent implements OnInit, OnDestroy {
 
   initiateData() {
     this.subscription = this.dataFilterService.initiateData().subscribe(items => {
+      this.dataSetsFromServer = items[0];
+      this.programsFromServer = items[2];
+      // console.log("Downloaded dataSets items: "+JSON.stringify(items[0]));
+      // console.log("Downloaded programs items: "+JSON.stringify(items[2]));
       this.dataItems = Object.assign(
         {},
         {
-          dataElements: items[0],
-          indicators: items[1],
-          dataElementGroups: items[3],
-          indicatorGroups: items[2],
-          categoryOptions: items[5],
-          dataSets: items[4],
-          programs: items[6],
-          programIndicators: items[7],
-          functions: items[8],
+          dataSets: items[0],
+          programs: items[2],
           dataSetGroups: [
             { id: '', name: 'Reporting Rate' },
             { id: '.REPORTING_RATE_ON_TIME', name: 'Reporting Rate on time' },
@@ -106,7 +106,8 @@ export class DataFilterComponent implements OnInit, OnDestroy {
       );
       this.loading = false;
       this.dataGroups = this.groupList();
-      this.availableItems = this.dataItemList(this._selectedItems, this.selectedGroup);
+      // this.availableItems = this.dataItemList(this._selectedItems, this.selectedGroup);
+      this.availableItems = this.dataSetsFromServer
 
       // /**
       //  * Detect changes manually
@@ -114,6 +115,71 @@ export class DataFilterComponent implements OnInit, OnDestroy {
       // this.changeDetector.detectChanges();
     });
   }
+
+
+  // MyOwn functions working for me only
+
+  toggleDataFilterOption(toggledOption, event) {
+    event.stopPropagation();
+     const multipleSelection = event.ctrlKey ? true : false;
+
+    this.dataFilterOptions = this.dataFilterOptions.map(option => {
+      const newOption: any = { ...option };
+
+      if (toggledOption.prefix === 'ALL') {
+        if (newOption.prefix !== 'ALL') {
+          newOption.selected = false;
+        } else {
+          newOption.selected = !toggledOption.selected;
+        }
+      } else {
+        if (newOption.prefix === toggledOption.prefix) {
+          newOption.selected = !newOption.selected;
+        }
+
+        if (toggledOption.prefix === 'ALL') {
+          if (newOption.prefix !== 'ALL' && toggledOption.selected) {
+            newOption.selected = false;
+          }
+        } else {
+          if (newOption.prefix === 'ALL') {
+            newOption.selected = false;
+          }
+        }
+
+        if (!multipleSelection && toggledOption.prefix !== newOption.prefix) {
+          newOption.selected = false;
+        }
+      }
+
+      return newOption;
+    });
+
+    console.log("Downloaded programs items: "+JSON.stringify(toggledOption));
+
+    if(toggledOption.prefix == 'ALL'){
+
+    }else if(toggledOption.prefix == 'ds'){
+
+    }else if(toggledOption.prefix == 'pr'){
+
+    }
+
+    // this.selectedGroup = { id: 'ALL', name: '[ All ]' };
+    // this.dataGroups = this.groupList();
+    //
+    // this.availableItems = this.dataItemList(this._selectedItems, this.selectedGroup);
+    // this.p = 1;
+    // this.listchanges = '';
+  }
+
+
+
+
+
+
+  // MyOwn functions working for me only
+
 
   setSelectedGroup(group, listArea, event) {
     event.stopPropagation();
@@ -204,11 +270,11 @@ export class DataFilterComponent implements OnInit, OnDestroy {
   // Helper function to get data groups
   getData() {
     return {
-      dx: this.dataItems.dataElementGroups,
-      in: this.dataItems.indicatorGroups,
+      // dx: this.dataItems.dataElementGroups,
+      // in: this.dataItems.indicatorGroups,
       ds: this.dataItems.dataSetGroups,
       pr: this.dataItems.programs,
-      fn: this.dataItems.functions
+      // fn: this.dataItems.functions
     };
   }
 
@@ -218,33 +284,33 @@ export class DataFilterComponent implements OnInit, OnDestroy {
     const selectedOptions = this.getSelectedOption();
     const data: any = this.getDataItems();
 
-    // check if data element is in a selected group
-    if (_.includes(selectedOptions, 'ALL') || _.includes(selectedOptions, 'de')) {
-      if (group.id === 'ALL') {
-        currentList.push(...data.de);
-      } else {
-        if (group.hasOwnProperty('dataElements')) {
-          const newArray = _.filter(data.de, dataElement => {
-            return _.includes(_.map(group.dataElements, 'id'), dataElement.dataElementId);
-          });
-          currentList.push(...newArray);
-        }
-      }
-    }
-
-    // check if data indicators are in a selected group
-    if (_.includes(selectedOptions, 'ALL') || _.includes(selectedOptions, 'in')) {
-      if (group.id === 'ALL') {
-        currentList.push(...data.in);
-      } else {
-        if (group.hasOwnProperty('indicators')) {
-          const newArray = _.filter(data.in, indicator => {
-            return _.includes(_.map(group.indicators, 'id'), indicator['id']);
-          });
-          currentList.push(...newArray);
-        }
-      }
-    }
+    // // check if data element is in a selected group
+    // if (_.includes(selectedOptions, 'ALL') || _.includes(selectedOptions, 'de')) {
+    //   if (group.id === 'ALL') {
+    //     currentList.push(...data.de);
+    //   } else {
+    //     if (group.hasOwnProperty('dataElements')) {
+    //       const newArray = _.filter(data.de, dataElement => {
+    //         return _.includes(_.map(group.dataElements, 'id'), dataElement.dataElementId);
+    //       });
+    //       currentList.push(...newArray);
+    //     }
+    //   }
+    // }
+    //
+    // // check if data indicators are in a selected group
+    // if (_.includes(selectedOptions, 'ALL') || _.includes(selectedOptions, 'in')) {
+    //   if (group.id === 'ALL') {
+    //     currentList.push(...data.in);
+    //   } else {
+    //     if (group.hasOwnProperty('indicators')) {
+    //       const newArray = _.filter(data.in, indicator => {
+    //         return _.includes(_.map(group.indicators, 'id'), indicator['id']);
+    //       });
+    //       currentList.push(...newArray);
+    //     }
+    //   }
+    // }
 
     // check if data data sets are in a selected group
     if (_.includes(selectedOptions, 'ALL') || _.includes(selectedOptions, 'ds')) {
@@ -264,6 +330,8 @@ export class DataFilterComponent implements OnInit, OnDestroy {
         );
       }
     }
+
+
     // check if program
     if (_.includes(selectedOptions, 'ALL') || _.includes(selectedOptions, 'pr')) {
       if (group.id === 'ALL') {
@@ -311,25 +379,25 @@ export class DataFilterComponent implements OnInit, OnDestroy {
     const options = this.getSelectedOption();
     const data = this.getData();
 
-    if (_.includes(options, 'ALL') || _.includes(options, 'de')) {
-      currentGroupList.push(...data.dx);
-    }
+    // if (_.includes(options, 'ALL') || _.includes(options, 'de')) {
+    //   currentGroupList.push(...data.dx);
+    // }
 
-    if (_.includes(options, 'ALL') || _.includes(options, 'in')) {
-      if (options.length === 1 && _.includes(options, 'in')) {
-        currentGroupList.push(...data.in);
-      } else {
-        currentGroupList.push(
-          ...data.in.map(indicatorGroup => {
-            return {
-              id: indicatorGroup.id,
-              name: indicatorGroup.name + ' - Computed',
-              indicators: indicatorGroup.indicators
-            };
-          })
-        );
-      }
-    }
+    // if (_.includes(options, 'ALL') || _.includes(options, 'in')) {
+      // if (options.length === 1 && _.includes(options, 'in')) {
+      //   currentGroupList.push(...data.in);
+      // } else {
+      //   currentGroupList.push(
+      //     ...data.in.map(indicatorGroup => {
+      //       return {
+      //         id: indicatorGroup.id,
+      //         name: indicatorGroup.name + ' - Computed',
+      //         indicators: indicatorGroup.indicators
+      //       };
+      //     })
+      //   );
+      // }
+    // }
 
     if (_.includes(options, 'ALL') || _.includes(options, 'pr')) {
       currentGroupList.push(...data.pr);
@@ -339,9 +407,9 @@ export class DataFilterComponent implements OnInit, OnDestroy {
       currentGroupList.push(...data.ds);
     }
 
-    if (_.includes(options, 'ALL') || _.includes(options, 'fn')) {
-      currentGroupList.push(...data.fn);
-    }
+    // if (_.includes(options, 'ALL') || _.includes(options, 'fn')) {
+    //   currentGroupList.push(...data.fn);
+    // }
 
     if (_.includes(options, 'ds')) {
       this.need_groups = false;
@@ -551,49 +619,49 @@ export class DataFilterComponent implements OnInit, OnDestroy {
     this.onDataFilterClose.emit(true);
   }
 
-  toggleDataFilterOption(toggledOption, event) {
-    event.stopPropagation();
-    const multipleSelection = event.ctrlKey ? true : false;
-
-    this.dataFilterOptions = this.dataFilterOptions.map(option => {
-      const newOption: any = { ...option };
-
-      if (toggledOption.prefix === 'ALL') {
-        if (newOption.prefix !== 'ALL') {
-          newOption.selected = false;
-        } else {
-          newOption.selected = !toggledOption.selected;
-        }
-      } else {
-        if (newOption.prefix === toggledOption.prefix) {
-          newOption.selected = !newOption.selected;
-        }
-
-        if (toggledOption.prefix === 'ALL') {
-          if (newOption.prefix !== 'ALL' && toggledOption.selected) {
-            newOption.selected = false;
-          }
-        } else {
-          if (newOption.prefix === 'ALL') {
-            newOption.selected = false;
-          }
-        }
-
-        if (!multipleSelection && toggledOption.prefix !== newOption.prefix) {
-          newOption.selected = false;
-        }
-      }
-
-      return newOption;
-    });
-
-    this.selectedGroup = { id: 'ALL', name: '[ All ]' };
-    this.dataGroups = this.groupList();
-
-    this.availableItems = this.dataItemList(this._selectedItems, this.selectedGroup);
-    this.p = 1;
-    this.listchanges = '';
-  }
+  // toggleDataFilterOption(toggledOption, event) {
+  //   event.stopPropagation();
+  //   const multipleSelection = event.ctrlKey ? true : false;
+  //
+  //   this.dataFilterOptions = this.dataFilterOptions.map(option => {
+  //     const newOption: any = { ...option };
+  //
+  //     if (toggledOption.prefix === 'ALL') {
+  //       if (newOption.prefix !== 'ALL') {
+  //         newOption.selected = false;
+  //       } else {
+  //         newOption.selected = !toggledOption.selected;
+  //       }
+  //     } else {
+  //       if (newOption.prefix === toggledOption.prefix) {
+  //         newOption.selected = !newOption.selected;
+  //       }
+  //
+  //       if (toggledOption.prefix === 'ALL') {
+  //         if (newOption.prefix !== 'ALL' && toggledOption.selected) {
+  //           newOption.selected = false;
+  //         }
+  //       } else {
+  //         if (newOption.prefix === 'ALL') {
+  //           newOption.selected = false;
+  //         }
+  //       }
+  //
+  //       if (!multipleSelection && toggledOption.prefix !== newOption.prefix) {
+  //         newOption.selected = false;
+  //       }
+  //     }
+  //
+  //     return newOption;
+  //   });
+  //
+  //   this.selectedGroup = { id: 'ALL', name: '[ All ]' };
+  //   this.dataGroups = this.groupList();
+  //
+  //   this.availableItems = this.dataItemList(this._selectedItems, this.selectedGroup);
+  //   this.p = 1;
+  //   this.listchanges = '';
+  // }
 
   toggleDataFilterGroupList(e) {
     e.stopPropagation();
