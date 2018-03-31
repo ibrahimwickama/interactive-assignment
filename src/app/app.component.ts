@@ -24,6 +24,7 @@ export class AppComponent implements OnInit{
   totalRec:any;
   page: number = 1;
   itemsOnPage: number = 10;
+  // itemsOnPage: number = this.tempOrgUnuits.length;
   dataAssign:any = {id:'',dataSet:'', orgUnits:{organisationUnits:[]}};
   dataSetToUpdate:any ={dataSets:[]};
   programToUpdate:any ={programs:[]};
@@ -31,10 +32,19 @@ export class AppComponent implements OnInit{
   selectedOrgUnitWithChildren = [];
   showFilters:boolean = false;
   selectedFilter:string;
+  dataSetsFromServer:any = [];
+  programsFromServer:any = [];
 
 
   constructor(private httpProvider: HttpProviderService, private orgUnitService: OrgUnitService){
     this.orgUnit = this.orgUnitService.getAallOrgUnitStructure();
+    this.httpProvider.dataSetCaller().subscribe((response)=>{
+      this.dataSetsFromServer = this.httpProvider.dataSetsFromServer;
+      //console.log("DataSets from provider: "+JSON.stringify(this.httpProvider.dataSetsFromServer))
+    });
+    this.httpProvider.programCaller().subscribe((response)=>{
+      this.programsFromServer = this.httpProvider.programsFromServer;
+    });
   }
 
   ngOnInit(){
@@ -185,6 +195,7 @@ export class AppComponent implements OnInit{
   }
 
   receiveData(dataList){
+    // console.log("DataSelected :"+JSON.stringify(dataList));
     this.selectedFilter = '';
     this.removeCheckBoxes();
 
@@ -234,6 +245,7 @@ export class AppComponent implements OnInit{
   checkBoxChanged(orgUnit,dataOrgUnit,assignedState,event){
     let eventt = event.target.checked;
     let orgUnitChanges = [];
+    let orgUnitChangesFalse = [];
     this.tempOrgUnuits.forEach((tempOrg:any)=>{
       if(tempOrg.id == orgUnit.id){
         tempOrg.assigned.forEach((orgUnitAssigned:any)=>{
@@ -249,6 +261,8 @@ export class AppComponent implements OnInit{
         if(orgUnitAssigned.id === dataOrgUnit.id){
           if(orgUnitAssigned.assigned){
             orgUnitChanges.push({id: tempOrg.id})
+          }else{
+            orgUnitChangesFalse.push({id: tempOrg.id})
           }
         }
       });
@@ -257,6 +271,7 @@ export class AppComponent implements OnInit{
     this.dataAssign.id = dataOrgUnit.id;
     this.dataAssign.dataSet = dataOrgUnit.displayName;
     this.dataAssign.orgUnits.organisationUnits = orgUnitChanges;
+    // console.log("orgUnuitChanges to dataSet: "+JSON.stringify(orgUnitChanges));
 
     if(dataOrgUnit.formType == 'dataSet'){
       let dataSets = [];
@@ -265,14 +280,26 @@ export class AppComponent implements OnInit{
 
       dataSets.forEach((dataSet:any)=>{
         if(dataSet.id == this.dataAssign.id){
-          dataSet.organisationUnits = orgUnitChanges;
+          orgUnitChanges.forEach((addNewOrgUnit)=>{
+            dataSet.organisationUnits.push(addNewOrgUnit)
+          });
+          orgUnitChangesFalse.forEach((removeorgUnit)=>{
+            dataSet.organisationUnits.forEach((orgUnit,index)=>{
+              if(removeorgUnit.id == orgUnit.id){
+                dataSet.organisationUnits.splice(index,1);
+              }
+            })
+          });
+
+
+          // dataSet.organisationUnits = orgUnitChanges;
           delete dataSet.lastUpdated;
           delete dataSet.created;
           delete dataSet.href;
           delete dataSet.formType;
           this.dataSetToUpdate.dataSets.push(dataSet);
           this.httpProvider.initialImport(this.dataSetToUpdate).subscribe(response=>{
-            //console.log("did it work: "+JSON.stringify(response));
+            //console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
           })
         }
       });
@@ -283,14 +310,24 @@ export class AppComponent implements OnInit{
 
       programs.forEach((program:any)=>{
         if(program.id == this.dataAssign.id){
-          program.organisationUnits = orgUnitChanges;
+          orgUnitChanges.forEach((addNewOrgUnit)=>{
+            program.organisationUnits.push(addNewOrgUnit)
+          });
+          orgUnitChangesFalse.forEach((removeorgUnit)=>{
+            program.organisationUnits.forEach((orgUnit,index)=>{
+              if(removeorgUnit.id == orgUnit.id){
+                program.organisationUnits.splice(index,1);
+              }
+            })
+          });
+          // program.organisationUnits = orgUnitChanges;
           delete program.lastUpdated;
           delete program.created;
           delete program.href;
           delete program.formType;
           this.programToUpdate.programs.push(program);
           this.httpProvider.initialImport(this.programToUpdate).subscribe(response=>{
-            //console.log("did it work: "+JSON.stringify(response));
+            //console.log("did it work program: "+JSON.stringify(this.programToUpdate));
           })
         }
       });

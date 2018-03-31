@@ -114,9 +114,11 @@ export class DataFilterComponent implements OnInit, OnDestroy {
       // this.availableItems = this.dataItemList(this._selectedItems, this.selectedGroup);
       // this.availableItems = this.dataSetsFromServer;
       this.dataSetsFromServer.forEach((dataSets)=>{
+        dataSets.formType = 'dataSet';
         this.availableItems.push(dataSets);
       });
       this.programsFromServer.forEach((programs)=>{
+        programs.formType = 'program';
         this.availableItems.push(programs);
       });
       this.availableItems = this.removeDuplicates(this.availableItems, 'id');
