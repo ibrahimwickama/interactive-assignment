@@ -80,6 +80,7 @@ export class DataFilterComponent implements OnInit, OnDestroy {
     // TODO revamp period filter to accomodate more data dimensions criterion
     this.initiateData();
     this._selectedItems = [...this.selectedItems];
+    // this.selectedItems$ = Observable.of(this._selectedItems);
     this.selectedItems$ = Observable.of(this._selectedItems);
   }
 

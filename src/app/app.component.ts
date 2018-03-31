@@ -47,6 +47,10 @@ export class AppComponent implements OnInit{
     // console.log("Listening to: "+JSON.stringify(ouModel))
   }
 
+  shutdownOrgUnitSelection(event){
+    this.selectedFilter = '';
+  }
+
   // orgUnit issues
 
   showOrgunit(){
@@ -181,6 +185,7 @@ export class AppComponent implements OnInit{
   }
 
   receiveData(dataList){
+    this.selectedFilter = '';
     this.removeCheckBoxes();
 
     this.selectedData = [];
@@ -220,7 +225,9 @@ export class AppComponent implements OnInit{
     });
 
     this.temp.push(this.tempOrgUnuits);
-    this.totalRec = this.tempOrgUnuits.length
+    this.totalRec = this.tempOrgUnuits.length;
+    // change pagination to 10;
+    this.itemsOnPage = 10;
   }
 
 
@@ -292,8 +299,9 @@ export class AppComponent implements OnInit{
 
   }
 
-  pageSizeChange(event){
-    let pageSize = event.target.value;
+  pageSizeChange(pageSize){
+    // console.log("PageSize: "+JSON.stringify(pageSize));
+    // let pageSize = event.target.value;
     if(pageSize == 'All'){
       this.itemsOnPage = this.tempOrgUnuits.length;
       //console.log("PageSize: "+JSON.stringify(pageSize))
@@ -305,22 +313,8 @@ export class AppComponent implements OnInit{
 
 
   closeSession(){
-     location.reload();
-    // let tableData = document.querySelector( '#data-table-row' ).remove();
-    // this.tempOrgUnuits = [];
-    // this.selectedData = [];
+     //location.reload();
 
-    this.tempOrgUnuits.forEach((tempOrg:any)=>{
-      if(tempOrg.assigned) {
-        tempOrg.assigned.forEach((dataSet: any) => {
-          let td_id = tempOrg.id + '-' + dataSet.id;
-          document.getElementById(td_id.toString()).innerHTML = '';
-                    // document.querySelector('#' + tempOrg.id + '-' + dataSet.id).remove();
-          //document.querySelector('#'+td_id).remove();
-          console.log("td id----- : "+td_id);
-        });
-      }
-    });
   }
 
   toggleFilters(e){
@@ -356,10 +350,6 @@ export class AppComponent implements OnInit{
           } catch (e){
             console.log('Error: '+e);
           }
-          // var remover =  document.getElementById(td_id.toString());
-           // remover.remove();
-          // document.querySelector('#' + tempOrg.id + '-' + dataSet.id).remove();
-          //document.querySelector('#'+td_id).remove();
         });
       }
       });

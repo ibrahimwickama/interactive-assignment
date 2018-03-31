@@ -47,7 +47,7 @@ export class OrgUnitFilterComponent implements OnInit {
   @Output() onOrgUnitModelUpdate: EventEmitter<any> = new EventEmitter<any>();
   @Output() selectedOrgUnit = new EventEmitter();
   @Output() deSelectedOrgUnit = new EventEmitter();
-  // @Output() hideOrgUnitSelection = new EventEmitter();
+   @Output() hideOrgUnitSelection = new EventEmitter();
 
   orgUnit: any = {};
   root_url = '../../../';
@@ -209,6 +209,7 @@ export class OrgUnitFilterComponent implements OnInit {
   updateOrgunits() {
     this.displayOrgTree();
     this.emit(true);
+    this.hideOrgUnitSelection.emit(true);
   }
 
   showOrgUnitTypesList(){
