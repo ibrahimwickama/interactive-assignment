@@ -9,6 +9,7 @@ import { DataSetsComponent } from './components/data-sets/data-sets.component';
 import { ProgramsComponent } from './components/programs/programs.component';
 import {NgxPaginationModule} from "ngx-pagination";
 import {OrgUnitModule} from "./modules/orgUnitModel/orgUnitSettings/orgUnit.module";
+import {DataFilterModule} from "./modules/data-filter/data-filter.module";
 
 @NgModule({
   declarations: [
@@ -17,7 +18,7 @@ import {OrgUnitModule} from "./modules/orgUnitModel/orgUnitSettings/orgUnit.modu
     ProgramsComponent
   ],
   imports: [
-    BrowserModule,MenuModule,FormsModule,NgxPaginationModule,OrgUnitModule,
+    BrowserModule,MenuModule,FormsModule,NgxPaginationModule,OrgUnitModule,DataFilterModule
 
   ],
   providers: [HttpProviderService],
