@@ -87,9 +87,9 @@ export class DataFilterComponent implements OnInit, OnDestroy {
   initiateData() {
     this.subscription = this.dataFilterService.initiateData().subscribe(items => {
       this.dataSetsFromServer = items[0];
-      this.programsFromServer = items[2];
+      this.programsFromServer = items[1];
       // console.log("Downloaded dataSets items: "+JSON.stringify(items[0]));
-      // console.log("Downloaded programs items: "+JSON.stringify(items[2]));
+       //console.log("Downloaded programs items: "+JSON.stringify(items[1]));
       this.dataItems = Object.assign(
         {},
         {
@@ -107,7 +107,14 @@ export class DataFilterComponent implements OnInit, OnDestroy {
       this.loading = false;
       this.dataGroups = this.groupList();
       // this.availableItems = this.dataItemList(this._selectedItems, this.selectedGroup);
-      this.availableItems = this.dataSetsFromServer
+      // this.availableItems = this.dataSetsFromServer;
+      this.dataSetsFromServer.forEach((dataSets)=>{
+        this.availableItems.push(dataSets);
+      });
+      this.programsFromServer.forEach((programs)=>{
+        this.availableItems.push(programs);
+      });
+      this.availableItems = this.removeDuplicates(this.availableItems, 'id');
 
       // /**
       //  * Detect changes manually
@@ -155,14 +162,26 @@ export class DataFilterComponent implements OnInit, OnDestroy {
       return newOption;
     });
 
-    console.log("Downloaded programs items: "+JSON.stringify(toggledOption));
+    //console.log("Downloaded programs items: "+JSON.stringify(toggledOption));
 
     if(toggledOption.prefix == 'ALL'){
-
+      this.dataSetsFromServer.forEach((dataSets)=>{
+        this.availableItems.push(dataSets);
+      });
+      this.programsFromServer.forEach((programs)=>{
+        this.availableItems.push(programs);
+      });
+      this.availableItems = this.removeDuplicates(this.availableItems, 'id');
     }else if(toggledOption.prefix == 'ds'){
-
+      // this.removeDataArraysInObject(this.dataSetsFromServer);
+      // this.availableItems = [];
+      this.availableItems = this.dataSetsFromServer
+      this.availableItems = this.removeDuplicates(this.availableItems, 'id');
     }else if(toggledOption.prefix == 'pr'){
-
+      // this.removeDataArraysInObject(this.programsFromServer);
+      // this.availableItems = [];
+      this.availableItems = this.programsFromServer;
+      this.availableItems = this.removeDuplicates(this.availableItems, 'id');
     }
 
     // this.selectedGroup = { id: 'ALL', name: '[ All ]' };
@@ -173,7 +192,29 @@ export class DataFilterComponent implements OnInit, OnDestroy {
     // this.listchanges = '';
   }
 
+  removeDataArraysInObject(selectedObject){
+    selectedObject.forEach((objectToRemove)=>{
+      this.availableItems.forEach((includedItem, index)=>{
+        if(includedItem.id == objectToRemove.id){
+          this.availableItems.splice(index,1);
+        }
+      })
+    });
 
+  }
+
+  removeDuplicates(originalArray, key) {
+    let newArray = [];
+    let lookupObject  = {};
+
+    for(var i in originalArray) {
+      lookupObject[originalArray[i][key]] = originalArray[i];
+    }
+    for(i in lookupObject) {
+      newArray.push(lookupObject[i]);
+    }
+    return newArray;
+  }
 
 
 

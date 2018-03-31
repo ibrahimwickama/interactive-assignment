@@ -18,11 +18,11 @@ export const DATA_FILTER_OPTIONS: any[] = [
     prefix: 'ds',
     selected: false
   },
-  // {
-  //   name: 'Program indicators',
-  //   prefix: 'pr',
-  //   selected: false
-  // },
+  {
+    name: 'Programs',
+    prefix: 'pr',
+    selected: false
+  }
   // {
   //   name: 'Functions',
   //   prefix: 'fn',
