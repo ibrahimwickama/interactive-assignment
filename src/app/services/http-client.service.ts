@@ -18,7 +18,7 @@ export class HttpClientService {
       const rootUrlPromise = useRootUrl ? this._getRootUrl() : this._getApiRootUrl();
 
       rootUrlPromise.subscribe((rootUrl: string) => {
-        this.httpClient.get(rootUrl + url)
+        this.httpClient.get('../../../api/' + url)
           .subscribe((response: any) => {
             observer.next(response);
             observer.complete();
@@ -36,7 +36,7 @@ export class HttpClientService {
       const rootUrlPromise = useRootUrl ? this._getRootUrl() : this._getApiRootUrl();
 
       rootUrlPromise.subscribe((rootUrl: string) => {
-        this.httpClient.post(rootUrl + url, data)
+        this.httpClient.post('../../../api/' + url, data)
           .subscribe((response: any) => {
             observer.next(response);
             observer.complete();
@@ -54,7 +54,7 @@ export class HttpClientService {
       const rootUrlPromise = useRootUrl ? this._getRootUrl() : this._getApiRootUrl();
 
       rootUrlPromise.subscribe((rootUrl: string) => {
-        this.httpClient.put(rootUrl + url, data)
+        this.httpClient.put('../../../api/' + url, data)
           .subscribe((response: any) => {
             observer.next(response);
             observer.complete();
@@ -72,7 +72,7 @@ export class HttpClientService {
       const rootUrlPromise = useRootUrl ? this._getRootUrl() : this._getApiRootUrl();
 
       rootUrlPromise.subscribe((rootUrl: string) => {
-        this.httpClient.delete(rootUrl + url)
+        this.httpClient.delete('../../../api/' + url)
           .subscribe((response: any) => {
             observer.next(response);
             observer.complete();
