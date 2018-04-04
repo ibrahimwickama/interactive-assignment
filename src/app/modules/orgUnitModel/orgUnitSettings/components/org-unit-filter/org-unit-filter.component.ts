@@ -210,6 +210,7 @@ export class OrgUnitFilterComponent implements OnInit {
     this.displayOrgTree();
     this.emit(true);
     this.hideOrgUnitSelection.emit(true);
+    //this.selectedOrgUnit.emit(this.selected_orgunits[0]);
   }
 
   showOrgUnitTypesList(){
@@ -317,10 +318,11 @@ export class OrgUnitFilterComponent implements OnInit {
     this.selected_orgunits = [$event.node.data];
 
       // here its were selected orgUnit is captured & passed to appComponent as selected
-    if(this.selected_orgunits[0].level !== 1){
+    // if(this.selected_orgunits[0].level !== 1){
       //console.log("Listening to: "+JSON.stringify(this.selected_orgunits[0]));
        this.selectedOrgUnit.emit(this.selected_orgunits[0]);
-    }
+   // this.updateOrgunits();
+    // }
     if (!this.checkOrgunitAvailabilty($event.node.data, this.orgunit_model.selected_orgunits)) {
       this.orgunit_model.selected_orgunits.push($event.node.data);
     }
@@ -379,6 +381,8 @@ export class OrgUnitFilterComponent implements OnInit {
   setSelectedUserOrg( selected_user_orgunit ) {
     this.orgunit_model.selected_user_orgunit = selected_user_orgunit;
     this.emit(false);
+    this.selectedOrgUnit.emit(this.selected_orgunits[0]);
+
   }
 
   // set selected groups

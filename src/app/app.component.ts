@@ -34,7 +34,7 @@ export class AppComponent implements OnInit{
   selectedFilter:string;
   dataSetsFromServer:any = [];
   programsFromServer:any = [];
-
+  pulseEffect:string = 'pulse';
 
   constructor(private httpProvider: HttpProviderService, private orgUnitService: OrgUnitService){
     this.orgUnit = this.orgUnitService.getAallOrgUnitStructure();
@@ -48,8 +48,35 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(){
+    Observable.interval(4000).take(1).subscribe(() => {
+      this.showFilters = true;
+      this.getInitialDataToDisplay();
+    });
 
   }
+
+  // initial Loader for Data
+  getInitialDataToDisplay(){
+    this.showFilters = true;
+    this.selectedFilter = 'ORG_UNIT';
+    Observable.interval(10000).take(1).subscribe(() => {
+    let initialDataHolder = [];
+    this.dataSetsFromServer.forEach((datasets)=>{
+      // dataSets sample dataSets from hispTz,Moh --- zeEp4Xu2GOm(ANC), v6wdME3ouXu(OPD), QntdhuQfgvT(DTC), qpcwPcj8D6u(IPD), GzvLb3XVZbR(L&D)
+      if(datasets.id == 'lyLU2wR22tC' || datasets.id == 'BfMAe6Itzgt' || datasets.id == 'TuL8IOPzpHh' || datasets.id == 'vc6nF5yZsPR' || datasets.id ==  'Nyh6laLdBEJ'){
+        initialDataHolder.push(datasets);
+      }
+    });
+    this.receiveData(initialDataHolder);
+
+    });
+
+  }
+
+
+
+
+
 
        // orgUnit issues
   updateOrgUnitModel(ouModel) {
@@ -58,7 +85,8 @@ export class AppComponent implements OnInit{
   }
 
   shutdownOrgUnitSelection(event){
-    this.selectedFilter = '';
+
+
   }
 
   // orgUnit issues
@@ -137,17 +165,27 @@ export class AppComponent implements OnInit{
   }
 
   getNewOrgUnit(newOrgUnit){
+    let tempOrg = [];
+    // this.removeCheckBoxes();
     // console.log("Listening to from Live-App: "+JSON.stringify(newOrgUnit));
 
     if(newOrgUnit.children){
       newOrgUnit.children.forEach((childOrgUnit:any)=>{
-        this.tempOrgUnuits.push(childOrgUnit);
-        this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits,'id');
+        tempOrg.push(childOrgUnit);
+        this.tempOrgUnuits = this.removeDuplicates(tempOrg,'id');
       });
-      this.selectedOrgUnitWithChildren.push(newOrgUnit);
-      this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
+      if(newOrgUnit.level !== 1){
+        this.selectedOrgUnitWithChildren.push(newOrgUnit);
+        this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
+      }
+
+      if(this.selectedOrgUnitWithChildren.length >1){
+        this.tempOrgUnuits = this.selectedOrgUnitWithChildren;
+      }
 
     }else {
+      tempOrg = [];
+      this.selectedOrgUnitWithChildren = this.tempOrgUnuits;
       this.tempOrgUnuits.push(newOrgUnit);
       this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits,'id');
     }
@@ -238,7 +276,8 @@ export class AppComponent implements OnInit{
     this.temp.push(this.tempOrgUnuits);
     this.totalRec = this.tempOrgUnuits.length;
     // change pagination to 10;
-    this.itemsOnPage = 10;
+    // this.itemsOnPage = 10;
+    this.pulseEffect = '';
   }
 
 

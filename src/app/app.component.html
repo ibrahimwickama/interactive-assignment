@@ -39,36 +39,37 @@
 
 
     <!--<button type="button" class="close close-chat mr-1" data-dismiss="modal" aria-label="Close">-->
-      <!--<span aria-hidden="true"> <img src="./assets/cancel.png" class="table-close-icon" alt="" (click)="closeSession()" title="deletes the orgUnit assignment table data"> </span>-->
+      <!--<span aria-hidden="true"> <img src="././assets/cancel.png" class="table-close-icon" alt="" (click)="closeSession()" title="deletes the orgUnit assignment table data"> </span>-->
     <!--</button>-->
-    <div class="card-header" style="display: inline-flex">
+    <!--<div class="card-header" style="display: inline-flex; background-color: #e9ebee">-->
+    <div class="card-header" style="display: inline-flex; background-color: white">
           <!--filter Section button-->
       <div class="visualization-filter-section" >
         <div class="visualization-filter-buttons">
           <button class="dashboard-btn visualization-filter-btn " title="Filter by different dimensions"
                   (click)="toggleFilters($event)"  >
-            <img src="assets/icons/filter.png" alt="" *ngIf="!showFilters">
-            <img *ngIf="showFilters" src="assets/icons/close.png" alt="" >
+            <img src="./assets/icons/filter.png" alt="" *ngIf="!showFilters" class=" filter-image " >
+            <img *ngIf="showFilters" src="./assets/icons/close.png" alt="" >
           </button>
           <div  class="visualization-filter-list" *ngIf="showFilters" >
             <button class="dashboard-btn org-unit-filter-btn "  title="Filter by organisation unit"
                     (click)="toggleCurrentFilter($event, 'ORG_UNIT')" >
-              <img src="assets/icons/tree.png" alt="">&nbsp;Org-Unit
+              <img src="./assets/icons/tree.png" alt="">&nbsp;Org-Unit
             </button>
 
             <button class="dashboard-btn data-filter-btn "
                     title="Filter by data" (click)="toggleCurrentFilter($event, 'DATA')" >
-              <img src="assets/icons/data.png" alt="">&nbsp;Data
+              <img src="./assets/icons/data.png" alt="">&nbsp;Data
             </button>
             <!--<button class="dashboard-btn period-filter-btn "  title="Filter by period"-->
                     <!--(click)="toggleCurrentFilter($event, '')"-->
             <!--&gt;-->
-              <!--<img src="assets/icons/period.png" alt="">&nbsp;Period-->
+              <!--<img src="./assets/icons/period.png" alt="">&nbsp;P eriod-->
             <!--</button>-->
 
             <button class="dashboard-btn layout-filter-btn "
                     title="Change layout" (click)="toggleCurrentFilter($event, 'LAYOUT')" >
-              <img src="assets/icons/layout.png" alt="">&nbsp;Layout
+              <img src="./assets/icons/layout.png" alt="">&nbsp;Layout
             </button>
           </div>
           <div style="margin-left: 20px; margin-top: 3px">Organisation Unit Assignment Table</div>
@@ -124,7 +125,7 @@
     </div>
 
 
-    <div class="card-footer p-0">
+    <div class="card-footer p-0"  style=" background-color: white">
       <nav aria-label="..." >
         <ul class="pagination justify-content-center mt-3 mr-3" >
           <div class="justify-content-start" style="display: inline-flex; padding: 5px">Show
@@ -142,6 +143,7 @@
 
   </div>
 </main>
+
 
 
 
