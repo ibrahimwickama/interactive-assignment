@@ -48,7 +48,7 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(){
-    Observable.interval(4000).take(1).subscribe(() => {
+    Observable.interval(10000).take(1).subscribe(() => {
       this.showFilters = true;
       this.getInitialDataToDisplay();
     });
@@ -59,7 +59,7 @@ export class AppComponent implements OnInit{
   getInitialDataToDisplay(){
     this.showFilters = true;
     this.selectedFilter = 'ORG_UNIT';
-    Observable.interval(10000).take(1).subscribe(() => {
+    Observable.interval(20000).take(1).subscribe(() => {
     let initialDataHolder = [];
     this.dataSetsFromServer.forEach((datasets)=>{
       // dataSets sample dataSets from hispTz,Moh --- zeEp4Xu2GOm(ANC), v6wdME3ouXu(OPD), QntdhuQfgvT(DTC), qpcwPcj8D6u(IPD), GzvLb3XVZbR(L&D)

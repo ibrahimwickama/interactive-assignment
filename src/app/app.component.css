@@ -155,6 +155,8 @@
 
 .visualization-filter-section {
   width: 100%;
+  height: 35px;
+  display: inline-flex;
 }
 
 .visualization-filter-buttons {
@@ -216,7 +218,8 @@
   border-radius: 15px;
   opacity: 0.5;
   background-color: white;
-  box-shadow: none;
+  /*box-shadow: none;*/
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.2);
 }
 
 .data-filter-btn img {
@@ -349,4 +352,13 @@
     -ms-transform: scale(0.8);
     transform: scale(0.8);
   }
+}
+
+.bottom-section{
+  /*visibility:hidden;*/
+  display: none;
+}
+
+.bottom-section:hover{
+  visibility:visible;
 }
