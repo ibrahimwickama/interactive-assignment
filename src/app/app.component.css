@@ -36,6 +36,7 @@
   vertical-align: middle;
   margin: 0 16px;
   box-shadow: none;
+
 }
 .custom-checkbox .custom-control-indicator:after {
   content: "";
@@ -361,4 +362,9 @@
 
 .bottom-section:hover{
   visibility:visible;
+}
+
+.circular-checkbox{
+  width: 10px;
+  height: 10px;
 }
