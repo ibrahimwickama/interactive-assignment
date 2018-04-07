@@ -38,6 +38,8 @@ export class AppComponent implements OnInit{
   pulseEffect:string = 'pulse';
   showTable:boolean = true;
   backUpDataList:any = [];
+  loaderMessage:string = 'Loading';
+  showLoader:boolean = true;
 
   // @Input() orgUnitcomp: OrgUnitFilterComponent;
 
@@ -53,9 +55,10 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(){
-     // this.orgUnitcomp.silentInitialization();
+    this.loaderMessage = 'Initializing';
     Observable.interval(10000).take(1).subscribe(() => {
       this.showFilters = true;
+      this.loaderMessage = 'Looking for Organisation Units';
       this.getInitialDataToDisplay();
     });
 
@@ -65,10 +68,7 @@ export class AppComponent implements OnInit{
   getInitialDataToDisplay(){
     this.showFilters = true;
      this.selectedFilter = 'ORG_UNIT';
-    // Observable.interval(3000).take(1).subscribe(() => {
-    //   this.selectedFilter = '';
-    // });
-
+    this.loaderMessage = 'Fetching initial data for assignment';
     Observable.interval(20000).take(1).subscribe(() => {
     let initialDataHolder = [];
     this.dataSetsFromServer.forEach((datasets)=>{
@@ -81,8 +81,9 @@ export class AppComponent implements OnInit{
         initialDataHolder.push(datasets);
       }
     });
-    this.receiveData(initialDataHolder);
-
+      this.loaderMessage = 'Finalizing...';
+      this.receiveData(initialDataHolder);
+    this.showLoader = false;
     });
 
   }

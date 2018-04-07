@@ -70,7 +70,7 @@
         <!--table section begins-->
   <div class="card mb-5 table-section">
 
-    <div class="card-header" style="display: inline-flex; background-color: white">
+    <div class="card-header" style="display: inline-flex; background-color: white; padding: 2px">
 
 
       <div class="visualization-filter-body dashboard-border" appClickOutside  *ngIf="selectedFilter">
@@ -94,7 +94,55 @@
         <app-layout *ngIf="selectedFilter === 'LAYOUT'" ></app-layout>
       </div>
 
+
+
+
+      <!--LOADER ANIMATIONS-->
+      <div class="loader-holder" *ngIf="showLoader" >
+        <div  style="text-align:center;height: 50px">
+          <svg width='70px' height='50px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"
+               preserveAspectRatio="xMidYMid" class="uil-balls">
+            <rect x="0" y="0" width="100" height="100" fill="none" class="bk"></rect>
+            <g transform="rotate(0 50 50)">
+              <circle r="5" cx="30" cy="50">
+                <animateTransform attributeName="transform" type="translate" begin="0s" repeatCount="indefinite"
+                                  dur="0.5s" values="0 0;29.999999999999996 -17.320508075688775"
+                                  keyTimes="0;1"/>
+                <animate attributeName="fill" dur="0.5s" begin="0s" repeatCount="indefinite" keyTimes="0;1"
+                         values="#c5523f;#f2b736"/>
+              </circle>
+            </g>
+            <g transform="rotate(120 50 50)">
+              <circle r="5" cx="30" cy="50">
+                <animateTransform attributeName="transform" type="translate" begin="0s" repeatCount="indefinite"
+                                  dur="0.5s" values="0 0;29.999999999999996 -17.320508075688775"
+                                  keyTimes="0;1"/>
+                <animate attributeName="fill" dur="0.5s" begin="0s" repeatCount="indefinite" keyTimes="0;1"
+                         values="#f2b736;#499255"/>
+              </circle>
+            </g>
+            <g transform="rotate(240 50 50)">
+              <circle r="5" cx="30" cy="50">
+                <animateTransform attributeName="transform" type="translate" begin="0s" repeatCount="indefinite"
+                                  dur="0.5s" values="0 0;29.999999999999996 -17.320508075688775"
+                                  keyTimes="0;1"/>
+                <animate attributeName="fill" dur="0.5s" begin="0s" repeatCount="indefinite" keyTimes="0;1"
+                         values="#499255;#c5523f"/>
+              </circle>
+            </g>
+          </svg>
+        </div>
+        <div class="loaderInfo">{{loaderMessage}}</div>
       </div>
+
+
+
+      </div>
+
+
+
+
+
 
     <div class="card-block p-0">
 
@@ -142,6 +190,8 @@
 
   </div>
 </main>
+
+
 
 
 

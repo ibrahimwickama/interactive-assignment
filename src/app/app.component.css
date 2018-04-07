@@ -377,4 +377,17 @@ main:hover .bottom-section{
   right: 2px;
 }
 
+.loader-holder{
+  text-align:center;
+  display: inline-flex;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.loaderInfo{
+  text-align: center;
+  font-size: 20px;
+  color: #CCC;
+  margin-top: 9px;
+}
 
