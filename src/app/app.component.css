@@ -356,14 +356,11 @@
 }
 
 .bottom-section{
-  /*visibility:hidden;*/
   display: none;
-  border-radius: 20px;
 }
-
-/*.bottom-section:hover{*/
-  /*visibility:visible;*/
-/*}*/
+.table-section{
+  border: none;
+}
 
 .circular-checkbox{
   width: 25px;
@@ -377,4 +374,7 @@
 
 main:hover .bottom-section{
   display : inline-flex;
+  right: 2px;
 }
+
+

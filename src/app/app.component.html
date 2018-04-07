@@ -68,47 +68,10 @@
 
 
         <!--table section begins-->
-  <div class="card mb-5">
+  <div class="card mb-5 table-section">
 
-
-    <!--<button type="button" class="close close-chat mr-1" data-dismiss="modal" aria-label="Close">-->
-      <!--<span aria-hidden="true"> <img src="././assets/cancel.png" class="table-close-icon" alt="" (click)="closeSession()" title="deletes the orgUnit assignment table data"> </span>-->
-    <!--</button>-->
-    <!--<div class="card-header" style="display: inline-flex; background-color: #e9ebee">-->
     <div class="card-header" style="display: inline-flex; background-color: white">
-          <!--filter Section button-->
-      <!--<div class="visualization-filter-section" >-->
-        <!--<div class="visualization-filter-buttons">-->
-          <!--<button class="dashboard-btn visualization-filter-btn " title="Filter by different dimensions"-->
-                  <!--(click)="toggleFilters($event)"  >-->
-            <!--<img src="./assets/icons/filter.png" alt="" *ngIf="!showFilters" class=" filter-image " >-->
-            <!--<img *ngIf="showFilters" src="./assets/icons/close.png" alt="" >-->
-          <!--</button>-->
-          <!--<div  class="visualization-filter-list" *ngIf="showFilters" >-->
-            <!--<button class="dashboard-btn org-unit-filter-btn "  title="Filter by organisation unit"-->
-                    <!--(click)="toggleCurrentFilter($event, 'ORG_UNIT')" >-->
-              <!--<img src="./assets/icons/tree.png" alt="">&nbsp;Org-Unit-->
-            <!--</button>-->
 
-            <!--<button class="dashboard-btn data-filter-btn "-->
-                    <!--title="Filter by data" (click)="toggleCurrentFilter($event, 'DATA')" >-->
-              <!--<img src="./assets/icons/data.png" alt="">&nbsp;Data-->
-            <!--</button>-->
-            <!--&lt;!&ndash;<button class="dashboard-btn period-filter-btn "  title="Filter by period"&ndash;&gt;-->
-                    <!--&lt;!&ndash;(click)="toggleCurrentFilter($event, '')"&ndash;&gt;-->
-            <!--&lt;!&ndash;&gt;&ndash;&gt;-->
-              <!--&lt;!&ndash;<img src="./assets/icons/period.png" alt="">&nbsp;P eriod&ndash;&gt;-->
-            <!--&lt;!&ndash;</button>&ndash;&gt;-->
-
-            <!--<button class="dashboard-btn layout-filter-btn "-->
-                    <!--title="Change layout" (click)="toggleCurrentFilter($event, 'LAYOUT')" >-->
-              <!--<img src="./assets/icons/layout.png" alt="">&nbsp;Layout-->
-            <!--</button>-->
-          <!--</div>-->
-          <!--<div style="margin-left: 20px; margin-top: 3px">Organisation Unit Assignment Table</div>-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--filter Section button-->
 
       <div class="visualization-filter-body dashboard-border" appClickOutside  *ngIf="selectedFilter">
         <app-org-unit-filter *ngIf="selectedFilter === 'ORG_UNIT'"
@@ -161,11 +124,12 @@
       </table>
     </div>
 
-
-    <div class="card-footer p-0 below-section"  style=" background-color: white">
+    <!--card-footer p-0-->
+    <div class="  below-section"  style=" background-color: white">
       <nav aria-label="..." >
-        <ul class="pagination justify-content-center mt-3 mr-3 bottom-section" *ngIf="totalRec>2">
-          <div class="justify-content-start" style="display: inline-flex; padding: 5px">Show
+        <!--<ul class="pagination justify-content-end mt-3 mr-3 bottom-section" *ngIf="totalRec>2">-->
+        <ul class="pagination float-right bottom-section" *ngIf="totalRec>20">
+          <div class="justify-content-end" style="display: inline-flex; padding: 5px">Show
             <select name="list-count" id="list-count" class="form-control" style="margin-left: 6px" [(ngModel)]="itemsOnPage" (change)="pageSizeChange($event.target.value)">
               <option value="20">20</option>
               <option value="All">All</option>
