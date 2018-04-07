@@ -12,6 +12,16 @@
   vertical-align: middle;
 }
 
+thead tr th:nth-child(n+2),
+tbody tr td:nth-child(n+2){
+  width: 1em;
+  min-width: 1em;
+  max-width: 1em;
+  word-break: break-all;
+  padding: 0 2px 1px 2px;
+  text-align: center;
+}
+
 .page-item > * {
   border: none;
 }

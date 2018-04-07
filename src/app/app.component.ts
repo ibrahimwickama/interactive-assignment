@@ -55,10 +55,10 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(){
-    this.loaderMessage = 'Initializing';
+    this.loaderMessage = 'Initializing data...';
     Observable.interval(10000).take(1).subscribe(() => {
       this.showFilters = true;
-      this.loaderMessage = 'Looking for Organisation Units';
+      this.loaderMessage = 'Looking for Organisation Units...';
       this.getInitialDataToDisplay();
     });
 
@@ -68,7 +68,7 @@ export class AppComponent implements OnInit{
   getInitialDataToDisplay(){
     this.showFilters = true;
      this.selectedFilter = 'ORG_UNIT';
-    this.loaderMessage = 'Fetching initial data for assignment';
+    this.loaderMessage = 'Fetching data for assignment...';
     Observable.interval(20000).take(1).subscribe(() => {
     let initialDataHolder = [];
     this.dataSetsFromServer.forEach((datasets)=>{
@@ -189,11 +189,12 @@ export class AppComponent implements OnInit{
 
  }
 
-  getNewOrgUnit(newOrgUnit){
+  getNewOrgUnit(receivedOrgUnits){
     this.showTable = false;
     let tempOrg = [];
     // this.removeCheckBoxes();
     // console.log("Listening to from Live-App: "+JSON.stringify(newOrgUnit));
+    receivedOrgUnits.forEach((newOrgUnit:any)=>{
 
     if(newOrgUnit.children){
       newOrgUnit.children.forEach((childOrgUnit:any)=>{
@@ -216,9 +217,11 @@ export class AppComponent implements OnInit{
       this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits,'id');
     }
 
+    });
+
     this.receiveData(this.backUpDataList);
     this.selectedFilter == 'ORG_UNIT';
-    // console.log("getNewOrgUnit was fired");
+    // console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(newOrgUnit));
   }
 
   // reiceveNewDataList(newList){
@@ -255,7 +258,7 @@ export class AppComponent implements OnInit{
     // this.selectedFilter = selectedFilter;
     if(this.selectedFilter == ''){
       this.selectedFilter = selectedFilter;
-      console.log("Toggle filtered was fired");
+      //console.log("Toggle filtered was fired");
     }else{
       this.selectedFilter = '';
     }
