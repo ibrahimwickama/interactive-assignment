@@ -162,8 +162,8 @@
           <td>{{orgUnit.name}}</td>
           <td *ngFor="let dataOrgUnit of orgUnit.assigned" id="{{orgUnit.id+'-'+dataOrgUnit.id}}" >
             <div style="height: 29px;">
-            <img *ngIf="dataOrgUnit.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" >
-            <img *ngIf="!dataOrgUnit.assigned" class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" >
+            <img *ngIf="dataOrgUnit.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >
+            <img *ngIf="!dataOrgUnit.assigned" class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >
             </div>
             </td>
           </tr>
