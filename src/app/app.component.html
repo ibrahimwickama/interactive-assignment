@@ -110,12 +110,13 @@
       <!--</div>-->
       <!--filter Section button-->
 
-      <div class="visualization-filter-body dashboard-border"  *ngIf="selectedFilter">
+      <div class="visualization-filter-body dashboard-border" appClickOutside  *ngIf="selectedFilter">
         <app-org-unit-filter *ngIf="selectedFilter === 'ORG_UNIT'"
                              [orgunit_model] = "orgUnit.data.orgunit_settings"
                              [showUpdate]="true"
                              (onOrgUnitModelUpdate) = "updateOrgUnitModel($event)"
                              (selectedOrgUnit)="getNewOrgUnit($event)"
+                             (wasFirstEmitted)="initOrgUnits($event)"
                              (deSelectedOrgUnit)="removeDeselectedOrgUnit($event)"
                              (hideOrgUnitSelection)="shutdownOrgUnitSelection($event)"
         ></app-org-unit-filter>
@@ -136,22 +137,23 @@
 
       <table class="table table-bordered table-sm m-0" id="assignment-table">
         <thead class="">
-        <tr>
+        <tr *ngIf="showTable">
           <th width="100px"  >OrgUnit / DataSets</th>
           <th *ngFor="let data of selectedData" width="100px"  >{{data.displayName}}</th>
         </tr>
+        <tr *ngIf="!showTable">
+          <th width="100px"  >OrgUnit / DataSets</th>
+        </tr>
         </thead>
-        <tbody>
+        <tbody *ngIf="showTable">
         <tr  *ngFor="let orgUnit of tempOrgUnuits | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{orgUnit.id}}" >
 
           <td>{{orgUnit.name}}</td>
           <td *ngFor="let dataOrgUnit of orgUnit.assigned" id="{{orgUnit.id+'-'+dataOrgUnit.id}}" >
-            <!--<label class="custom-control custom-checkbox" >-->
-              <!--<input type="checkbox"  class="custom-control-input" [checked]="dataOrgUnit.assigned" (change)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" >-->
-              <!--<span class="custom-control-indicator"></span>-->
-              <!--</label>-->
+            <div style="height: 29px;">
             <img *ngIf="dataOrgUnit.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" >
             <img *ngIf="!dataOrgUnit.assigned" class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" >
+            </div>
             </td>
           </tr>
 
@@ -160,12 +162,12 @@
     </div>
 
 
-    <div class="card-footer p-0 bottom-section"  style=" background-color: white">
+    <div class="card-footer p-0 below-section"  style=" background-color: white">
       <nav aria-label="..." >
-        <ul class="pagination justify-content-center mt-3 mr-3" >
+        <ul class="pagination justify-content-center mt-3 mr-3 bottom-section" *ngIf="totalRec>2">
           <div class="justify-content-start" style="display: inline-flex; padding: 5px">Show
             <select name="list-count" id="list-count" class="form-control" style="margin-left: 6px" [(ngModel)]="itemsOnPage" (change)="pageSizeChange($event.target.value)">
-              <option value="10">10</option>
+              <option value="20">20</option>
               <option value="All">All</option>
             </select>
           </div>

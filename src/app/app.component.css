@@ -358,13 +358,23 @@
 .bottom-section{
   /*visibility:hidden;*/
   display: none;
+  border-radius: 20px;
 }
 
-.bottom-section:hover{
-  visibility:visible;
-}
+/*.bottom-section:hover{*/
+  /*visibility:visible;*/
+/*}*/
 
 .circular-checkbox{
-  width: 10px;
-  height: 10px;
+  width: 25px;
+  height: 25px;
+}
+
+.circular-checkbox:hover{
+  width: 28px;
+  height: 28px;
+}
+
+main:hover .bottom-section{
+  display : inline-flex;
 }
