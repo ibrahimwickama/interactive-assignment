@@ -26,56 +26,6 @@ tbody tr td:nth-child(n+2){
   border: none;
 }
 
-.custom-checkbox {
-  min-height: 1rem;
-  padding-left: 0;
-  margin-right: 0;
-  cursor: pointer;
-}
-.custom-checkbox .custom-control-indicator {
-  content: "";
-  display: inline-block;
-  position: relative;
-  width: 30px;
-  height: 10px;
-  background-color: #818181;
-  border-radius: 15px;
-  margin-right: 10px;
-  -webkit-transition: background .3s ease;
-  transition: background .3s ease;
-  vertical-align: middle;
-  margin: 0 16px;
-  box-shadow: none;
-
-}
-.custom-checkbox .custom-control-indicator:after {
-  content: "";
-  position: absolute;
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  /*background-color: #dc3573;*/
-  background-color: rgba(214,44,50,0.91);
-  border-radius: 21px;
-  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4);
-  left: -2px;
-  top: -4px;
-  -webkit-transition: left .3s ease, background .3s ease, box-shadow .1s ease;
-  transition: left .3s ease, background .3s ease, box-shadow .1s ease;
-}
-.custom-checkbox .custom-control-input:checked ~ .custom-control-indicator {
-  background-color: #28b496;
-  background-image: none;
-  box-shadow: none !important;
-}
-.custom-checkbox .custom-control-input:checked ~ .custom-control-indicator:after {
-  background-color: #28b496;
-  left: 15px;
-}
-.custom-checkbox .custom-control-input:focus ~ .custom-control-indicator {
-  box-shadow: none !important;
-}
-
 .data-chooser{
   width: 400px;
   margin-bottom: 10px;
@@ -230,7 +180,9 @@ tbody tr td:nth-child(n+2){
   opacity: 0.5;
   background-color: white;
   /*box-shadow: none;*/
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.2);
+  /*box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);*/
+  border: 30px black;
+  /*border-width: 20px;*/
 }
 
 .data-filter-btn img {
@@ -293,75 +245,6 @@ tbody tr td:nth-child(n+2){
 @media (max-width: 500px) {
   .visualization-filter-body {
     width: 95%;
-  }
-}
-
-@keyframes wiggle {
-  0% { transform: rotate(0deg); }
-  80% { transform: rotate(0deg); }
-  85% { transform: rotate(5deg); }
-  95% { transform: rotate(-5deg); }
-  100% { transform: rotate(0deg); }
-}
-
-.wiggle {
-  display: inline-block;
-  animation: wiggle 2.5s infinite;
-}
-
-.wiggle:hover {
-  animation: none;
-}
-
-.pulse {
-  display: inline-block;
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-
-  -webkit-animation-name: pulse;
-  animation-name: pulse;
-  -webkit-animation-duration: 2s;
-  animation-duration: 2s;
-  -webkit-animation-timing-function: linear;
-  animation-timing-function: linear;
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
-}
-
-.pulse:hover {
-  -webkit-animation-name: pulse;
-  animation-name: pulse;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
-  -webkit-animation-timing-function: linear;
-  animation-timing-function: linear;
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
-}
-
-@-webkit-keyframes pulse {
-  25% {
-    -webkit-transform: scale(1.2);
-    transform: scale(1.2);
-  }
-  75% {
-    -webkit-transform: scale(0.8);
-    transform: scale(0.8);
-  }
-}
-
-@keyframes pulse {
-  25% {
-    -webkit-transform: scale(1.2);
-    -ms-transform: scale(1.2);
-    transform: scale(1.2);
-  }
-  75% {
-    -webkit-transform: scale(0.8);
-    -ms-transform: scale(0.8);
-    transform: scale(0.8);
   }
 }
 

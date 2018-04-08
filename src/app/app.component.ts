@@ -192,10 +192,7 @@ export class AppComponent implements OnInit{
   getNewOrgUnit(receivedOrgUnits){
     this.showTable = false;
     let tempOrg = [];
-    // this.removeCheckBoxes();
-    // console.log("Listening to from Live-App: "+JSON.stringify(newOrgUnit));
     receivedOrgUnits.forEach((newOrgUnit:any)=>{
-
     if(newOrgUnit.children){
       newOrgUnit.children.forEach((childOrgUnit:any)=>{
         tempOrg.push(childOrgUnit);
@@ -205,28 +202,20 @@ export class AppComponent implements OnInit{
         this.selectedOrgUnitWithChildren.push(newOrgUnit);
         this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
       }
-
       if(this.selectedOrgUnitWithChildren.length >1){
         this.tempOrgUnuits = this.selectedOrgUnitWithChildren;
       }
-
     }else {
       tempOrg = [];
       this.selectedOrgUnitWithChildren = this.tempOrgUnuits;
       this.tempOrgUnuits.push(newOrgUnit);
       this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits,'id');
     }
-
     });
-
     this.receiveData(this.backUpDataList);
     this.selectedFilter == 'ORG_UNIT';
     // console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(newOrgUnit));
   }
-
-  // reiceveNewDataList(newList){
-  //   this.
-  // }
 
 
   removeDeselectedOrgUnit(orgUnitDeselected){
@@ -242,8 +231,7 @@ export class AppComponent implements OnInit{
         if(orgUnit.id == orgUnitDeselected.id){
           this.selectedOrgUnitWithChildren.splice(index,1);
         }
-      })
-
+      });
     }else {
       this.tempOrgUnuits.forEach((tempOrg,index)=>{
         if(tempOrg.id == orgUnitDeselected.id){
@@ -255,10 +243,8 @@ export class AppComponent implements OnInit{
 
   toggleCurrentFilter(e, selectedFilter) {
     e.stopPropagation();
-    // this.selectedFilter = selectedFilter;
     if(this.selectedFilter == ''){
       this.selectedFilter = selectedFilter;
-      //console.log("Toggle filtered was fired");
     }else{
       this.selectedFilter = '';
     }
@@ -268,14 +254,7 @@ export class AppComponent implements OnInit{
 
   receiveData(dataList){
     this.backUpDataList = dataList;
-    // console.log("DataSelected :"+JSON.stringify(dataList));
     this.selectedFilter = '';
-
-    // if(this.selectedFilter == 'ORG_UNIT'){
-    //
-    // }else{
-    //   this.selectedFilter = '';
-    // }
     this.removeCheckBoxes();
     this.selectedData = [];
     dataList.forEach((dataSet)=>{
@@ -312,8 +291,6 @@ export class AppComponent implements OnInit{
 
     this.temp.push(this.tempOrgUnuits);
     this.totalRec = this.tempOrgUnuits.length;
-    // change pagination to 10;
-    // this.itemsOnPage = 10;
     this.pulseEffect = '';
     this.showTable = true;
   }
@@ -372,8 +349,6 @@ export class AppComponent implements OnInit{
             })
           });
 
-
-          // dataSet.organisationUnits = orgUnitChanges;
           delete dataSet.lastUpdated;
           delete dataSet.created;
           delete dataSet.href;
@@ -401,7 +376,6 @@ export class AppComponent implements OnInit{
               }
             })
           });
-          // program.organisationUnits = orgUnitChanges;
           delete program.lastUpdated;
           delete program.created;
           delete program.href;
@@ -418,22 +392,14 @@ export class AppComponent implements OnInit{
   }
 
   pageSizeChange(pageSize){
-    // console.log("PageSize: "+JSON.stringify(pageSize));
-    // let pageSize = event.target.value;
     if(pageSize == 'All'){
       this.itemsOnPage = this.tempOrgUnuits.length;
-      //console.log("PageSize: "+JSON.stringify(pageSize))
     }else{
       this.itemsOnPage = pageSize;
     }
 
   }
 
-
-  closeSession(){
-     //location.reload();
-
-  }
 
   toggleFilters(e){
     if(this.showFilters){
