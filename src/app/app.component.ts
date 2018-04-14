@@ -388,15 +388,15 @@ export class AppComponent implements OnInit{
     this.dataAssign.dataSet = dataOrgUnit.displayName;
     this.dataAssign.orgUnits.organisationUnits = orgUnitChanges;
     console.log("orgUnuitChanges to dataSet: "+JSON.stringify(orgUnitChanges));
-    // console.log("dataSet: "+JSON.stringify(dataSet.formType));
+     console.log("dataSet: "+JSON.stringify(selectedDataSet.formType));
 
     if(selectedDataSet.formType === 'dataSet'){
       console.log("dataSet: "+JSON.stringify(selectedDataSet.formType));
       let dataSets = [];
       this.dataSetToUpdate = {dataSets:[]};
-      dataSets = this.httpProvider.dataSetsFromServer;
+      // dataSets = this.httpProvider.dataSetsFromServer;
 
-      dataSets.forEach((dataSet:any)=>{
+      this.dataSetsFromServer.forEach((dataSet:any)=>{
         if(dataSet.id == selectedDataSet.id){
           orgUnitChanges.forEach((addNewOrgUnit)=>{
             dataSet.organisationUnits.push(addNewOrgUnit)
@@ -413,12 +413,12 @@ export class AppComponent implements OnInit{
           delete dataSet.lastUpdated;
           delete dataSet.created;
           delete dataSet.href;
-          delete dataSet.formType;
+         // delete dataSet.formType;
           this.dataSetToUpdate.dataSets.push(dataSet);
           console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
 
           // this.httpProvider.initialImport(this.dataSetToUpdate).subscribe(response=>{
-          //   //console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
+          //  //console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
           // })
         }
       });
