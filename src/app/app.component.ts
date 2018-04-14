@@ -366,23 +366,29 @@ export class AppComponent implements OnInit{
       }
     });
 
+    // this.
+
     this.tableRowData.forEach((tableRow:any)=>{
-      tableRow.assigned.forEach((orgUnitAssigned:any)=>{
-        if(orgUnitAssigned.id === dataOrgUnit.id){
-          if(orgUnitAssigned.assigned){
-            orgUnitChanges.push({id: dataOrgUnit.displayName});
-            //orgUnitChanges = this.removeDuplicates(orgUnitChanges,'id');
-          }else{
-            orgUnitChangesFalse.push({id: dataOrgUnit.id, name: dataOrgUnit.displayName})
+      if(tableRow.id == dataSet.id){
+        tableRow.assigned.forEach((orgUnitAssigned:any)=>{
+          if(orgUnitAssigned.id === dataOrgUnit.id){
+            if(orgUnitAssigned.assigned){
+              orgUnitChanges.push({id: dataOrgUnit.id});
+              //orgUnitChanges = this.removeDuplicates(orgUnitChanges,'id');
+            }else{
+              orgUnitChangesFalse.push({id: dataOrgUnit.id});
+            }
           }
-        }
-      });
+        });
+      }
+
     });
 
     this.dataAssign.id = dataOrgUnit.id;
     this.dataAssign.dataSet = dataOrgUnit.displayName;
     this.dataAssign.orgUnits.organisationUnits = orgUnitChanges;
     console.log("orgUnuitChanges to dataSet: "+JSON.stringify(orgUnitChanges));
+    console.log("dataSet: "+JSON.stringify(dataSet));
 
     if(dataSet.formType == 'dataSet'){
       let dataSets = [];
