@@ -18,7 +18,7 @@ export class AppComponent implements OnInit{
   programActive:string;
   showOrgUnits:boolean = false;
   showDataSets:boolean = false;
-  showPrograms:boolean = false;
+  tableDefault:boolean = true;
   tableHeadData = [];
   temp = [];
   tableRowData = [];
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit{
   backUpDataList:any = [];
   loaderMessage:string = 'Loading';
   showLoader:boolean = true;
-  temporarlyChecking:any = [];
+  tableMode:string = 'default';
 
   // @Input() orgUnitcomp: OrgUnitFilterComponent;
 
@@ -66,6 +66,14 @@ export class AppComponent implements OnInit{
 
   }
 
+  layOutRouter(){
+    if(this.tableMode == 'default'){
+      this.tableDefault = true;
+    }else if(this.tableMode == 'transposed'){
+      this.tableDefault = false;
+    }
+  }
+
   // initial Loader for Data
   getInitialDataToDisplay(){
     this.showFilters = true;
@@ -84,9 +92,11 @@ export class AppComponent implements OnInit{
       }
     });
       this.loaderMessage = 'Finalizing...';
-      // this.receiveData(initialDataHolder);
-      this.dataSetHolder = initialDataHolder
-      this.receiveLayoutChangesOnData(initialDataHolder);
+      if(this.tableDefault){
+        this.receiveData(initialDataHolder);
+      }else{
+        this.receiveLayoutChangesOnData(initialDataHolder);
+      }
     this.showLoader = false;
     });
 
