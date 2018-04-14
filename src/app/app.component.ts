@@ -19,13 +19,13 @@ export class AppComponent implements OnInit{
   showOrgUnits:boolean = false;
   showDataSets:boolean = false;
   showPrograms:boolean = false;
-  selectedData = [];
+  tableHeadData = [];
   temp = [];
-  tempOrgUnuits = [];
+  tableRowData = [];
   totalRec:any;
   page: number = 1;
   itemsOnPage: number = 20;
-  // itemsOnPage: number = this.tempOrgUnuits.length;
+  // itemsOnPage: number = this.tableRowData.length;
   dataAssign:any = {id:'',dataSet:'', orgUnits:{organisationUnits:[]}};
   dataSetToUpdate:any ={dataSets:[]};
   programToUpdate:any ={programs:[]};
@@ -112,7 +112,7 @@ export class AppComponent implements OnInit{
   }
 
  initOrgUnits(newOrgUnit){
-    if(this.tempOrgUnuits.length == 0 && this.selectedData.length == 0){
+    if(this.tableRowData.length == 0 && this.tableHeadData.length == 0){
       this.showTable = false;
       let tempOrg = [];
       // this.removeCheckBoxes();
@@ -121,7 +121,7 @@ export class AppComponent implements OnInit{
       if(newOrgUnit.children){
         newOrgUnit.children.forEach((childOrgUnit:any)=>{
           tempOrg.push(childOrgUnit);
-          this.tempOrgUnuits = this.removeDuplicates(tempOrg,'id');
+          this.tableRowData = this.removeDuplicates(tempOrg,'id');
         });
         if(newOrgUnit.level !== 1){
           this.selectedOrgUnitWithChildren.push(newOrgUnit);
@@ -129,14 +129,14 @@ export class AppComponent implements OnInit{
         }
 
         if(this.selectedOrgUnitWithChildren.length >1){
-          this.tempOrgUnuits = this.selectedOrgUnitWithChildren;
+          this.tableRowData = this.selectedOrgUnitWithChildren;
         }
 
       }else {
         tempOrg = [];
-        this.selectedOrgUnitWithChildren = this.tempOrgUnuits;
-        this.tempOrgUnuits.push(newOrgUnit);
-        this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits,'id');
+        this.selectedOrgUnitWithChildren = this.tableRowData;
+        this.tableRowData.push(newOrgUnit);
+        this.tableRowData = this.removeDuplicates(this.tableRowData,'id');
       }
 
       this.receiveData(this.backUpDataList);
@@ -154,20 +154,20 @@ export class AppComponent implements OnInit{
     if(newOrgUnit.children){
       newOrgUnit.children.forEach((childOrgUnit:any)=>{
         tempOrg.push(childOrgUnit);
-        this.tempOrgUnuits = this.removeDuplicates(tempOrg,'id');
+        this.tableRowData = this.removeDuplicates(tempOrg,'id');
       });
       if(newOrgUnit.level !== 1){
         this.selectedOrgUnitWithChildren.push(newOrgUnit);
         this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
       }
       if(this.selectedOrgUnitWithChildren.length >1){
-        this.tempOrgUnuits = this.selectedOrgUnitWithChildren;
+        this.tableRowData = this.selectedOrgUnitWithChildren;
       }
     }else {
       tempOrg = [];
-      this.selectedOrgUnitWithChildren = this.tempOrgUnuits;
-      this.tempOrgUnuits.push(newOrgUnit);
-      this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits,'id');
+      this.selectedOrgUnitWithChildren = this.tableRowData;
+      this.tableRowData.push(newOrgUnit);
+      this.tableRowData = this.removeDuplicates(this.tableRowData,'id');
     }
     });
     this.receiveData(this.backUpDataList);
@@ -179,9 +179,9 @@ export class AppComponent implements OnInit{
   removeDeselectedOrgUnit(orgUnitDeselected){
     if(orgUnitDeselected.children){
       orgUnitDeselected.children.forEach((childOrgUnit:any)=>{
-        this.tempOrgUnuits.forEach((tempOrg,index)=>{
+        this.tableRowData.forEach((tempOrg, index)=>{
           if(tempOrg.id == childOrgUnit.id){
-            this.tempOrgUnuits.splice(index,1);
+            this.tableRowData.splice(index,1);
           }
         });
       });
@@ -191,9 +191,9 @@ export class AppComponent implements OnInit{
         }
       });
     }else {
-      this.tempOrgUnuits.forEach((tempOrg,index)=>{
+      this.tableRowData.forEach((tempOrg, index)=>{
         if(tempOrg.id == orgUnitDeselected.id){
-          this.tempOrgUnuits.splice(index,1);
+          this.tableRowData.splice(index,1);
         }
       });
     }
@@ -212,15 +212,15 @@ export class AppComponent implements OnInit{
     this.backUpDataList = dataList;
     this.selectedFilter = '';
     this.removeCheckBoxes();
-    this.selectedData = [];
+    this.tableHeadData = [];
     dataList.forEach((dataSet)=>{
     let dataSetOrgUnit = [];
-    this.selectedData.push(dataSet);
-    this.selectedData = this.removeDuplicates(this.selectedData, 'id');
+    this.tableHeadData.push(dataSet);
+    this.tableHeadData = this.removeDuplicates(this.tableHeadData, 'id');
     // make complex functions
     dataSetOrgUnit = dataSet.organisationUnits;
 
-      this.tempOrgUnuits.forEach((tempOrg:any)=>{
+      this.tableRowData.forEach((tempOrg:any)=>{
 
           if (dataSetOrgUnit.filter(e => e.id === tempOrg.id).length > 0) {
             tempOrg.checked = true;
@@ -245,8 +245,8 @@ export class AppComponent implements OnInit{
 
     });
 
-    this.temp.push(this.tempOrgUnuits);
-    this.totalRec = this.tempOrgUnuits.length;
+    this.temp.push(this.tableRowData);
+    this.totalRec = this.tableRowData.length;
     this.pulseEffect = '';
     this.showTable = true;
   }
@@ -256,7 +256,7 @@ export class AppComponent implements OnInit{
     let eventt = event.target.checked;
     let orgUnitChanges = [];
     let orgUnitChangesFalse = [];
-    this.tempOrgUnuits.forEach((tempOrg:any)=>{
+    this.tableRowData.forEach((tempOrg:any)=>{
       if(tempOrg.id == orgUnit.id){
         tempOrg.assigned.forEach((orgUnitAssigned:any)=>{
           if(orgUnitAssigned.id == dataOrgUnit.id ){
@@ -270,7 +270,7 @@ export class AppComponent implements OnInit{
       }
     });
 
-    this.tempOrgUnuits.forEach((tempOrg:any)=>{
+    this.tableRowData.forEach((tempOrg:any)=>{
       tempOrg.assigned.forEach((orgUnitAssigned:any)=>{
         if(orgUnitAssigned.id === dataOrgUnit.id){
           if(orgUnitAssigned.assigned){
@@ -349,7 +349,7 @@ export class AppComponent implements OnInit{
 
   pageSizeChange(pageSize){
     if(pageSize == 'All'){
-      this.itemsOnPage = this.tempOrgUnuits.length;
+      this.itemsOnPage = this.tableRowData.length;
     }else{
       this.itemsOnPage = pageSize;
     }
@@ -367,7 +367,7 @@ export class AppComponent implements OnInit{
 
 
   getLAyOutChangedInitOrgUnit(newOrgUnit){
-    if(this.selectedData.length == 0 && this.selectedData.length == 0){
+    if(this.tableRowData.length == 0 && this.tableHeadData.length == 0){
       this.showTable = false;
       let tempOrg = [];
       // this.removeCheckBoxes();
@@ -376,7 +376,7 @@ export class AppComponent implements OnInit{
       if(newOrgUnit.children){
         newOrgUnit.children.forEach((childOrgUnit:any)=>{
           tempOrg.push(childOrgUnit);
-          this.selectedData = this.removeDuplicates(tempOrg,'id');
+          this.tableHeadData = this.removeDuplicates(tempOrg,'id');
         });
         if(newOrgUnit.level !== 1){
           this.selectedOrgUnitWithChildren.push(newOrgUnit);
@@ -384,17 +384,17 @@ export class AppComponent implements OnInit{
         }
 
         if(this.selectedOrgUnitWithChildren.length >1){
-          this.selectedData = this.selectedOrgUnitWithChildren;
+          this.tableHeadData = this.selectedOrgUnitWithChildren;
         }
 
       }else {
         tempOrg = [];
-        this.selectedOrgUnitWithChildren = this.selectedData;
-        this.selectedData.push(newOrgUnit);
-        this.selectedData = this.removeDuplicates(this.selectedData,'id');
+        this.selectedOrgUnitWithChildren = this.tableHeadData;
+        this.tableHeadData.push(newOrgUnit);
+        this.tableHeadData = this.removeDuplicates(this.tableHeadData,'id');
       }
 
-      console.log("Listening to from Live-App: "+JSON.stringify(this.selectedData));
+      console.log("Listening to from Live-App: "+JSON.stringify(this.tableHeadData));
 
       // this.receiveData(this.backUpDataList);
       this.receiveLayoutChangesOnData(this.backUpDataList);
@@ -413,7 +413,7 @@ export class AppComponent implements OnInit{
       if(newOrgUnit.children){
         newOrgUnit.children.forEach((childOrgUnit:any)=>{
           tempOrg.push(childOrgUnit);
-          this.selectedData = this.removeDuplicates(tempOrg,'id');
+          this.tableHeadData = this.removeDuplicates(tempOrg,'id');
 
 
           this.temporarlyChecking.push(childOrgUnit);
@@ -425,13 +425,13 @@ export class AppComponent implements OnInit{
           this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
         }
         if(this.selectedOrgUnitWithChildren.length >1){
-          this.selectedData = this.selectedOrgUnitWithChildren;
+          this.tableHeadData = this.selectedOrgUnitWithChildren;
         }
       }else {
         tempOrg = [];
-        this.selectedOrgUnitWithChildren = this.selectedData;
-        this.selectedData.push(newOrgUnit);
-        this.selectedData = this.removeDuplicates(this.selectedData,'id');
+        this.selectedOrgUnitWithChildren = this.tableHeadData;
+        this.tableHeadData.push(newOrgUnit);
+        this.tableHeadData = this.removeDuplicates(this.tableHeadData,'id');
       }
     });
     this.receiveLayoutChangesOnData(this.backUpDataList);
@@ -443,57 +443,49 @@ export class AppComponent implements OnInit{
   receiveLayoutChangesOnData(dataList){
     this.backUpDataList = dataList;
     this.selectedFilter = '';
-    //this.removeCheckBoxes();
-    this.tempOrgUnuits = [];
+    this.removeCheckBoxes();
+    this.tableRowData = [];
+    this.tableRowData = this.removeDuplicates(dataList, 'id');
 
+    this.tableHeadData.forEach((tempDataSet:any)=>{
 
-
-
-
-    dataList.forEach((dataSet)=>{
+    this.tableRowData.forEach((dataSet)=>{
       let dataSetOrgUnit = [];
-      this.tempOrgUnuits.push(dataSet);
-      this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits, 'id');
+      // this.tableRowData.push(dataSet);
       // make complex functions
       dataSetOrgUnit = dataSet.organisationUnits;
 
-      this.selectedData.forEach((tempOrg:any)=>{
+        if (dataSetOrgUnit.filter(e => e.id === tempDataSet.id).length > 0) {
+          dataSet.checked = true;
 
-        if (dataSetOrgUnit.filter(e => e.id === tempOrg.id).length > 0) {
-          tempOrg.checked = true;
-
-          if(!tempOrg.assigned){
-            tempOrg.assigned = [{id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: true}]
+          if(!dataSet.assigned){
+            dataSet.assigned = [{id:tempDataSet.id, displayName:tempDataSet.name, formType:dataSet.formType, assigned: true}]
           }else {
-            tempOrg.assigned.push({id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: true});
-            tempOrg.assigned = this.removeDuplicates(tempOrg.assigned,'id');
+            dataSet.assigned.push({id:tempDataSet.id, displayName:tempDataSet.name, formType:dataSet.formType, assigned: true});
+            dataSet.assigned = this.removeDuplicates(dataSet.assigned,'id');
           }
 
         }else {
-          tempOrg.checked = false;
-          if(!tempOrg.assigned){
-            tempOrg.assigned = [{id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: false}]
+          dataSet.checked = false;
+          if(!dataSet.assigned){
+            dataSet.assigned = [{id:tempDataSet.id, displayName:tempDataSet.name, formType:dataSet.formType, assigned: false}]
           }else {
-            tempOrg.assigned.push({id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: false});
-            tempOrg.assigned = this.removeDuplicates(tempOrg.assigned,'id');
+            dataSet.assigned.push({id:tempDataSet.id, displayName:tempDataSet.name, formType:dataSet.formType, assigned: false});
+            dataSet.assigned = this.removeDuplicates(dataSet.assigned,'id');
           }
         }
       });
 
     });
 
-    this.dataSetHolder.forEach((dataSet)=>{
-      this.tempOrgUnuits.push(dataSet);
-      this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits, 'id');
-    });
+    // this.dataSetHolder.forEach((dataSet)=>{
+    //   this.tableRowData.push(dataSet);
+    //   this.tableRowData = this.removeDuplicates(this.tableRowData, 'id');
+    // });
 
 
-
-
-
-
-    this.temp.push(this.selectedData);
-    this.totalRec = this.selectedData.length;
+    this.temp.push(this.tableRowData);
+    this.totalRec = this.tableRowData.length;
     this.pulseEffect = '';
     this.showTable = true;
   }
@@ -513,10 +505,10 @@ export class AppComponent implements OnInit{
   }
 
   removeCheckBoxes(){
-    this.tempOrgUnuits.forEach((tempOrg:any)=>{
-      if(tempOrg.assigned) {
-        tempOrg.assigned.forEach((dataSet: any) => {
-          let td_id = tempOrg.id + '-' + dataSet.id;
+    this.tableRowData.forEach((row:any)=>{
+      if(row.assigned) {
+        row.assigned.forEach((head: any) => {
+          let td_id = row.id + '-' + head.id;
 
           try{
             document.getElementById(td_id).hidden = true;
@@ -525,7 +517,38 @@ export class AppComponent implements OnInit{
           }
         });
       }
-      });
+    });
+
+    // this.tableRowData.forEach((tempOrg:any)=>{
+    //   if(tempOrg.assigned) {
+    //     tempOrg.assigned.forEach((dataSet: any) => {
+    //       let td_id = tempOrg.id + '-' + dataSet.id;
+    //
+    //       try{
+    //         document.getElementById(td_id).hidden = true;
+    //       } catch (e){
+    //         console.log('Error: '+e);
+    //       }
+    //     });
+    //   }
+    //   });
+  }
+
+
+  removeCheckBoxesLayOutChanged(){
+    this.tableRowData.forEach((row:any)=>{
+      if(row.assigned) {
+        row.assigned.forEach((head: any) => {
+          let td_id = row.id + '-' + head.id;
+
+          try{
+            document.getElementById(td_id).hidden = true;
+          } catch (e){
+            console.log('Error: '+e);
+          }
+        });
+      }
+    });
   }
 
 }

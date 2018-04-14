@@ -41,7 +41,7 @@
         <!--<app-data-filter *ngIf="selectedFilter === 'DATA'"-->
                          <!--(updatedListToTable)="receiveData($event)"-->
                          <!--(onDataFilterClose)="closeSelection($event)"-->
-                         <!--[selectedItems]="selectedData"-->
+                         <!--[selectedItetableHeadDatadData"-->
         <!--&gt;</app-data-filter>-->
 
 
@@ -58,7 +58,7 @@
         <app-data-filter *ngIf="selectedFilter === 'DATA'"
                          (updatedListToTable)="receiveLayoutChangesOnData($event)"
                          (onDataFilterClose)="closeSelection($event)"
-                         [selectedItems]="selectedData"
+                         [selectedItems]="tableHeadData"
         ></app-data-filter>
 
 
@@ -112,14 +112,14 @@
         <!--<thead class="">-->
         <!--<tr *ngIf="showTable">-->
           <!--<th width="100px"  >OrgUnit / DataSets</th>-->
-          <!--<th *ngFor="let data of selectedData" width="100px"  >{{data.displayName}}</th>-->
+          <!--<th *ngFor="let datatableHeadDataData" width="100px"  >{{data.displayName}}</th>-->
         <!--</tr>-->
         <!--<tr *ngIf="!showTable">-->
           <!--<th width="100px"  >OrgUnit / DataSets</th>-->
         <!--</tr>-->
         <!--</thead>-->
         <!--<tbody *ngIf="showTable">-->
-        <!--<tr  *ngFor="let orgUnit of tempOrgUnuits | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{orgUnit.id}}" >-->
+        <!--<tr  *ngFor="let orgUnittableRowDatauits | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{orgUnit.id}}" >-->
 
           <!--<td>{{orgUnit.name}}</td>-->
           <!--<td *ngFor="let dataOrgUnit of orgUnit.assigned" id="{{orgUnit.id+'-'+dataOrgUnit.id}}" >-->
@@ -138,27 +138,27 @@
         <thead class="">
         <tr *ngIf="showTable">
           <th width="100px"  >OrgUnit / DataSets</th>
-          <th *ngFor="let data of selectedData" width="100px"  >{{data.name}}</th>
+          <th *ngFor="let head of tableHeadData" width="100px"  >{{head.name}}</th>
         </tr>
         <tr *ngIf="!showTable">
           <th width="100px"  >OrgUnit / DataSets</th>
         </tr>
         </thead>
         <tbody *ngIf="showTable">
-        <!--<tr  *ngFor="let orgUnit of selectedData | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{orgUnit.id}}" >-->
+        <tr  *ngFor="let row of tableRowData | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{row.id}}" >
 
-          <!--<td>{{orgUnit.displayName}}</td>-->
-          <!--<td *ngFor="let dataOrgUnit of orgUnit.assigned" id="{{orgUnit.id+'-'+dataOrgUnit.id}}" >-->
-            <!--<div style="height: 29px;">-->
-              <!--<img *ngIf="dataOrgUnit.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >-->
-              <!--<img *ngIf="!dataOrgUnit.assigned" class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >-->
-            <!--</div>-->
-          <!--</td>-->
-        <!--</tr>-->
-
-        <tr  *ngFor="let orgUnit of tempOrgUnuits" >{{orgUnit.displayName}}
-
+          <td>{{row.displayName}}</td>
+          <td *ngFor="let rowDataOnHead of row.assigned" id="{{row.id+'-'+rowDataOnHead.id}}" >
+            <div style="height: 29px;">
+              <img *ngIf="rowDataOnHead.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChanged(orgUnit,rowDataOnHead,rowDataOnHead.assigned,$event)" title="{{row.displayName+','+rowDataOnHead.displayName}}" >
+              <img *ngIf="!rowDataOnHead.assigned" class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChanged(orgUnit,rowDataOnHead,rowDataOnHead.assigned,$event)" title="{{row.displayName+','+rowDataOnHead.displayName}}" >
+            </div>
+          </td>
         </tr>
+
+        <!--<tr  *ngFor="let orgUnit of tableRowData" >{{orgUnit.displayName}}-->
+
+        <!--</tr>-->
 
 
         </tbody>
