@@ -388,9 +388,10 @@ export class AppComponent implements OnInit{
     this.dataAssign.dataSet = dataOrgUnit.displayName;
     this.dataAssign.orgUnits.organisationUnits = orgUnitChanges;
     console.log("orgUnuitChanges to dataSet: "+JSON.stringify(orgUnitChanges));
-    console.log("dataSet: "+JSON.stringify(dataSet));
+    // console.log("dataSet: "+JSON.stringify(dataSet.formType));
 
-    if(dataSet.formType == 'dataSet'){
+    if(dataSet.formType === 'dataSet'){
+      console.log("dataSet: "+JSON.stringify(dataSet.formType));
       let dataSets = [];
       this.dataSetToUpdate = {dataSets:[]};
       dataSets = this.httpProvider.dataSetsFromServer;
