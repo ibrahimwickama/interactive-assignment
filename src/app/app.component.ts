@@ -348,12 +348,12 @@ export class AppComponent implements OnInit{
 
   }
 
-  checkBoxChangedOnLayOutChanged(dataSet,dataOrgUnit,assignedState,event){
+  checkBoxChangedOnLayOutChanged(selectedDataSet,dataOrgUnit,assignedState,event){
     let eventt = event.target.checked;
     let orgUnitChanges = [];
     let orgUnitChangesFalse = [];
     this.tableRowData.forEach((rowDataSet:any)=>{
-      if(rowDataSet.id == dataSet.id){
+      if(rowDataSet.id == selectedDataSet.id){
         rowDataSet.assigned.forEach((orgUnitAssigned:any)=>{
           if(orgUnitAssigned.id == dataOrgUnit.id ){
             if(orgUnitAssigned.assigned){
@@ -369,7 +369,7 @@ export class AppComponent implements OnInit{
     // this.
 
     this.tableRowData.forEach((tableRow:any)=>{
-      if(tableRow.id == dataSet.id){
+      if(tableRow.id == selectedDataSet.id){
         tableRow.assigned.forEach((orgUnitAssigned:any)=>{
           if(orgUnitAssigned.id === dataOrgUnit.id){
             if(orgUnitAssigned.assigned){
@@ -390,16 +390,17 @@ export class AppComponent implements OnInit{
     console.log("orgUnuitChanges to dataSet: "+JSON.stringify(orgUnitChanges));
     // console.log("dataSet: "+JSON.stringify(dataSet.formType));
 
-    if(dataSet.formType === 'dataSet'){
-      console.log("dataSet: "+JSON.stringify(dataSet.formType));
+    if(selectedDataSet.formType === 'dataSet'){
+      console.log("dataSet: "+JSON.stringify(selectedDataSet.formType));
       let dataSets = [];
       this.dataSetToUpdate = {dataSets:[]};
       dataSets = this.httpProvider.dataSetsFromServer;
 
       dataSets.forEach((dataSet:any)=>{
-        if(dataSet.id == this.dataAssign.id){
+        if(dataSet.id == selectedDataSet.id){
           orgUnitChanges.forEach((addNewOrgUnit)=>{
             dataSet.organisationUnits.push(addNewOrgUnit)
+            console.log("did it add: ");
           });
           orgUnitChangesFalse.forEach((removeorgUnit)=>{
             dataSet.organisationUnits.forEach((orgUnit,index)=>{
@@ -421,7 +422,7 @@ export class AppComponent implements OnInit{
           // })
         }
       });
-    }else if(dataSet.formType == 'program'){
+    }else if(selectedDataSet.formType == 'program'){
       let programs = [];
       this.programToUpdate = {programs:[]};
       programs = this.httpProvider.programsFromServer;
