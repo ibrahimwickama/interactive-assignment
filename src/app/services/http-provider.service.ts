@@ -63,8 +63,13 @@ export class HttpProviderService {
     ).catch(this.handleError);
   }
 
-  initialImport(payload){
+  addFacilityToForm(payload){
     let url='../../../api/metadata';
+    delete payload.lastUpdated;
+    delete payload.created;
+    delete payload.href;
+    delete payload.formType;
+    delete payload.assigned;
     return this.http.post(url,payload)
       .map((response:Response)=> response.json()
       ).catch(this.handleError);

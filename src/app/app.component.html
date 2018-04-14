@@ -119,7 +119,7 @@
         <!--</tr>-->
         <!--</thead>-->
         <!--<tbody *ngIf="showTable">-->
-        <!--<tr  *ngFor="let orgUnittableRowDatauits | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{orgUnit.id}}" >-->
+        <!--<tr  *ngFor="let orgUnittableRowDatauits | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{orgUnit.id}}" class="table-row" >-->
 
           <!--<td>{{orgUnit.name}}</td>-->
           <!--<td *ngFor="let dataOrgUnit of orgUnit.assigned" id="{{orgUnit.id+'-'+dataOrgUnit.id}}" >-->
@@ -129,6 +129,7 @@
             <!--</div>-->
             <!--</td>-->
           <!--</tr>-->
+
 
         <!--</tbody>-->
       <!--</table>-->
@@ -145,10 +146,10 @@
         </tr>
         </thead>
         <tbody *ngIf="showTable">
-        <tr  *ngFor="let row of tableRowData | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{row.id}}" >
+        <tr  *ngFor="let row of tableRowData | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{row.id}}" class="table-row" >
 
           <td>{{row.displayName}}</td>
-          <td *ngFor="let rowDataOnHead of row.assigned" id="{{row.id+'-'+rowDataOnHead.id}}" >
+          <td *ngFor="let rowDataOnHead of row.assigned" id="{{row.id+'-'+rowDataOnHead.id}}"  >
             <div style="height: 29px;">
               <img *ngIf="rowDataOnHead.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChangedOnLayOutChanged(row,rowDataOnHead,rowDataOnHead.assigned,$event)" title="{{row.displayName+','+rowDataOnHead.displayName}}" >
               <img *ngIf="!rowDataOnHead.assigned" class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChangedOnLayOutChanged(row,rowDataOnHead,rowDataOnHead.assigned,$event)" title="{{row.displayName+','+rowDataOnHead.displayName}}" >

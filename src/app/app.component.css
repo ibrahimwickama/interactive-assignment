@@ -284,3 +284,7 @@ main:hover .bottom-section{
   margin-top: 9px;
 }
 
+.table-row:hover{
+  background-color: #e9ebee;
+}
+

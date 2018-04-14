@@ -290,9 +290,8 @@ export class AppComponent implements OnInit{
     if(dataOrgUnit.formType == 'dataSet'){
       let dataSets = [];
       this.dataSetToUpdate = {dataSets:[]};
-      dataSets = this.httpProvider.dataSetsFromServer;
-
-      dataSets.forEach((dataSet:any)=>{
+      // dataSets = this.httpProvider.dataSetsFromServer;
+      this.dataSetsFromServer.forEach((dataSet:any)=>{
         if(dataSet.id == this.dataAssign.id){
           orgUnitChanges.forEach((addNewOrgUnit)=>{
             dataSet.organisationUnits.push(addNewOrgUnit)
@@ -304,15 +303,10 @@ export class AppComponent implements OnInit{
               }
             })
           });
-
-          delete dataSet.lastUpdated;
-          delete dataSet.created;
-          delete dataSet.href;
-          delete dataSet.formType;
           this.dataSetToUpdate.dataSets.push(dataSet);
           //console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
 
-          // this.httpProvider.initialImport(this.dataSetToUpdate).subscribe(response=>{
+          // this.httpProvider.addFacilityToForm(this.dataSetToUpdate).subscribe(response=>{
           //   //console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
           // })
         }
@@ -320,9 +314,8 @@ export class AppComponent implements OnInit{
     }else if(dataOrgUnit.formType == 'program'){
       let programs = [];
       this.programToUpdate = {programs:[]};
-      programs = this.httpProvider.programsFromServer;
-
-      programs.forEach((program:any)=>{
+      // programs = this.httpProvider.programsFromServer;
+      this.programsFromServer.forEach((program:any)=>{
         if(program.id == this.dataAssign.id){
           orgUnitChanges.forEach((addNewOrgUnit)=>{
             program.organisationUnits.push(addNewOrgUnit)
@@ -334,12 +327,8 @@ export class AppComponent implements OnInit{
               }
             })
           });
-          delete program.lastUpdated;
-          delete program.created;
-          delete program.href;
-          delete program.formType;
           this.programToUpdate.programs.push(program);
-          this.httpProvider.initialImport(this.programToUpdate).subscribe(response=>{
+          this.httpProvider.addFacilityToForm(this.programToUpdate).subscribe(response=>{
             //console.log("did it work program: "+JSON.stringify(this.programToUpdate));
           })
         }
@@ -391,7 +380,7 @@ export class AppComponent implements OnInit{
      console.log("dataSet: "+JSON.stringify(selectedDataSet.formType));
 
     if(selectedDataSet.formType === 'dataSet'){
-      console.log("dataSet: "+JSON.stringify(selectedDataSet.formType));
+      // console.log("dataSet: "+JSON.stringify(selectedDataSet.formType));
       let dataSets = [];
       this.dataSetToUpdate = {dataSets:[]};
       // dataSets = this.httpProvider.dataSetsFromServer;
@@ -400,7 +389,7 @@ export class AppComponent implements OnInit{
         if(dataSet.id == selectedDataSet.id){
           orgUnitChanges.forEach((addNewOrgUnit)=>{
             dataSet.organisationUnits.push(addNewOrgUnit)
-            console.log("did it add: ");
+            // console.log("did it add: ");
           });
           orgUnitChangesFalse.forEach((removeorgUnit)=>{
             dataSet.organisationUnits.forEach((orgUnit,index)=>{
@@ -409,15 +398,9 @@ export class AppComponent implements OnInit{
               }
             })
           });
-
-          delete dataSet.lastUpdated;
-          delete dataSet.created;
-          delete dataSet.href;
-         // delete dataSet.formType;
           this.dataSetToUpdate.dataSets.push(dataSet);
           console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
-
-          // this.httpProvider.initialImport(this.dataSetToUpdate).subscribe(response=>{
+          // this.httpProvider.addFacilityToForm(this.dataSetToUpdate).subscribe(response=>{
           //  //console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
           // })
         }
@@ -425,9 +408,9 @@ export class AppComponent implements OnInit{
     }else if(selectedDataSet.formType == 'program'){
       let programs = [];
       this.programToUpdate = {programs:[]};
-      programs = this.httpProvider.programsFromServer;
+      // programs = this.httpProvider.programsFromServer;
 
-      programs.forEach((program:any)=>{
+      this.programsFromServer.forEach((program:any)=>{
         if(program.id == this.dataAssign.id){
           orgUnitChanges.forEach((addNewOrgUnit)=>{
             program.organisationUnits.push(addNewOrgUnit)
@@ -439,12 +422,8 @@ export class AppComponent implements OnInit{
               }
             })
           });
-          delete program.lastUpdated;
-          delete program.created;
-          delete program.href;
-          delete program.formType;
           this.programToUpdate.programs.push(program);
-          this.httpProvider.initialImport(this.programToUpdate).subscribe(response=>{
+          this.httpProvider.addFacilityToForm(this.programToUpdate).subscribe(response=>{
             //console.log("did it work program: "+JSON.stringify(this.programToUpdate));
           })
         }
