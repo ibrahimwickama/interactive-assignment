@@ -285,7 +285,7 @@ export class AppComponent implements OnInit{
     this.dataAssign.id = dataOrgUnit.id;
     this.dataAssign.dataSet = dataOrgUnit.displayName;
     this.dataAssign.orgUnits.organisationUnits = orgUnitChanges;
-    // console.log("orgUnuitChanges to dataSet: "+JSON.stringify(orgUnitChanges));
+     //console.log("orgUnuitChanges to dataSet: "+JSON.stringify(orgUnitChanges));
 
     if(dataOrgUnit.formType == 'dataSet'){
       let dataSets = [];
@@ -310,9 +310,11 @@ export class AppComponent implements OnInit{
           delete dataSet.href;
           delete dataSet.formType;
           this.dataSetToUpdate.dataSets.push(dataSet);
-          this.httpProvider.initialImport(this.dataSetToUpdate).subscribe(response=>{
-            //console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
-          })
+          //console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
+
+          // this.httpProvider.initialImport(this.dataSetToUpdate).subscribe(response=>{
+          //   //console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
+          // })
         }
       });
     }else if(dataOrgUnit.formType == 'program'){
@@ -344,8 +346,108 @@ export class AppComponent implements OnInit{
       });
     }
 
+  }
+
+  checkBoxChangedOnLayOutChanged(dataSet,dataOrgUnit,assignedState,event){
+    let eventt = event.target.checked;
+    let orgUnitChanges = [];
+    let orgUnitChangesFalse = [];
+    this.tableRowData.forEach((rowDataSet:any)=>{
+      if(rowDataSet.id == dataSet.id){
+        rowDataSet.assigned.forEach((orgUnitAssigned:any)=>{
+          if(orgUnitAssigned.id == dataOrgUnit.id ){
+            if(orgUnitAssigned.assigned){
+              orgUnitAssigned.assigned = false
+            }else{
+              orgUnitAssigned.assigned = true;
+            }
+          }
+        })
+      }
+    });
+
+    this.tableRowData.forEach((tableRow:any)=>{
+      tableRow.assigned.forEach((orgUnitAssigned:any)=>{
+        if(orgUnitAssigned.id === dataOrgUnit.id){
+          if(orgUnitAssigned.assigned){
+            orgUnitChanges.push({id: dataOrgUnit.displayName});
+            //orgUnitChanges = this.removeDuplicates(orgUnitChanges,'id');
+          }else{
+            orgUnitChangesFalse.push({id: dataOrgUnit.id, name: dataOrgUnit.displayName})
+          }
+        }
+      });
+    });
+
+    this.dataAssign.id = dataOrgUnit.id;
+    this.dataAssign.dataSet = dataOrgUnit.displayName;
+    this.dataAssign.orgUnits.organisationUnits = orgUnitChanges;
+    console.log("orgUnuitChanges to dataSet: "+JSON.stringify(orgUnitChanges));
+
+    if(dataSet.formType == 'dataSet'){
+      let dataSets = [];
+      this.dataSetToUpdate = {dataSets:[]};
+      dataSets = this.httpProvider.dataSetsFromServer;
+
+      dataSets.forEach((dataSet:any)=>{
+        if(dataSet.id == this.dataAssign.id){
+          orgUnitChanges.forEach((addNewOrgUnit)=>{
+            dataSet.organisationUnits.push(addNewOrgUnit)
+          });
+          orgUnitChangesFalse.forEach((removeorgUnit)=>{
+            dataSet.organisationUnits.forEach((orgUnit,index)=>{
+              if(removeorgUnit.id == orgUnit.id){
+                dataSet.organisationUnits.splice(index,1);
+              }
+            })
+          });
+
+          delete dataSet.lastUpdated;
+          delete dataSet.created;
+          delete dataSet.href;
+          delete dataSet.formType;
+          this.dataSetToUpdate.dataSets.push(dataSet);
+          console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
+
+          // this.httpProvider.initialImport(this.dataSetToUpdate).subscribe(response=>{
+          //   //console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
+          // })
+        }
+      });
+    }else if(dataSet.formType == 'program'){
+      let programs = [];
+      this.programToUpdate = {programs:[]};
+      programs = this.httpProvider.programsFromServer;
+
+      programs.forEach((program:any)=>{
+        if(program.id == this.dataAssign.id){
+          orgUnitChanges.forEach((addNewOrgUnit)=>{
+            program.organisationUnits.push(addNewOrgUnit)
+          });
+          orgUnitChangesFalse.forEach((removeorgUnit)=>{
+            program.organisationUnits.forEach((orgUnit,index)=>{
+              if(removeorgUnit.id == orgUnit.id){
+                program.organisationUnits.splice(index,1);
+              }
+            })
+          });
+          delete program.lastUpdated;
+          delete program.created;
+          delete program.href;
+          delete program.formType;
+          this.programToUpdate.programs.push(program);
+          this.httpProvider.initialImport(this.programToUpdate).subscribe(response=>{
+            //console.log("did it work program: "+JSON.stringify(this.programToUpdate));
+          })
+        }
+      });
+    }
+
 
   }
+
+
+
 
   pageSizeChange(pageSize){
     if(pageSize == 'All'){
@@ -394,7 +496,7 @@ export class AppComponent implements OnInit{
         this.tableHeadData = this.removeDuplicates(this.tableHeadData,'id');
       }
 
-      console.log("Listening to from Live-App: "+JSON.stringify(this.tableHeadData));
+      //console.log("Listening to from Live-App: "+JSON.stringify(this.tableHeadData));
 
       // this.receiveData(this.backUpDataList);
       this.receiveLayoutChangesOnData(this.backUpDataList);
@@ -414,11 +516,6 @@ export class AppComponent implements OnInit{
         newOrgUnit.children.forEach((childOrgUnit:any)=>{
           tempOrg.push(childOrgUnit);
           this.tableHeadData = this.removeDuplicates(tempOrg,'id');
-
-
-          this.temporarlyChecking.push(childOrgUnit);
-
-
         });
         if(newOrgUnit.level !== 1){
           this.selectedOrgUnitWithChildren.push(newOrgUnit);
@@ -451,8 +548,6 @@ export class AppComponent implements OnInit{
 
     this.tableRowData.forEach((dataSet)=>{
       let dataSetOrgUnit = [];
-      // this.tableRowData.push(dataSet);
-      // make complex functions
       dataSetOrgUnit = dataSet.organisationUnits;
 
         if (dataSetOrgUnit.filter(e => e.id === tempDataSet.id).length > 0) {
@@ -464,7 +559,6 @@ export class AppComponent implements OnInit{
             dataSet.assigned.push({id:tempDataSet.id, displayName:tempDataSet.name, formType:dataSet.formType, assigned: true});
             dataSet.assigned = this.removeDuplicates(dataSet.assigned,'id');
           }
-
         }else {
           dataSet.checked = false;
           if(!dataSet.assigned){
@@ -477,16 +571,8 @@ export class AppComponent implements OnInit{
       });
 
     });
-
-    // this.dataSetHolder.forEach((dataSet)=>{
-    //   this.tableRowData.push(dataSet);
-    //   this.tableRowData = this.removeDuplicates(this.tableRowData, 'id');
-    // });
-
-
     this.temp.push(this.tableRowData);
     this.totalRec = this.tableRowData.length;
-    this.pulseEffect = '';
     this.showTable = true;
   }
 
@@ -509,7 +595,6 @@ export class AppComponent implements OnInit{
       if(row.assigned) {
         row.assigned.forEach((head: any) => {
           let td_id = row.id + '-' + head.id;
-
           try{
             document.getElementById(td_id).hidden = true;
           } catch (e){
@@ -534,21 +619,5 @@ export class AppComponent implements OnInit{
     //   });
   }
 
-
-  removeCheckBoxesLayOutChanged(){
-    this.tableRowData.forEach((row:any)=>{
-      if(row.assigned) {
-        row.assigned.forEach((head: any) => {
-          let td_id = row.id + '-' + head.id;
-
-          try{
-            document.getElementById(td_id).hidden = true;
-          } catch (e){
-            console.log('Error: '+e);
-          }
-        });
-      }
-    });
-  }
 
 }

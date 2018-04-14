@@ -150,8 +150,8 @@
           <td>{{row.displayName}}</td>
           <td *ngFor="let rowDataOnHead of row.assigned" id="{{row.id+'-'+rowDataOnHead.id}}" >
             <div style="height: 29px;">
-              <img *ngIf="rowDataOnHead.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChanged(orgUnit,rowDataOnHead,rowDataOnHead.assigned,$event)" title="{{row.displayName+','+rowDataOnHead.displayName}}" >
-              <img *ngIf="!rowDataOnHead.assigned" class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChanged(orgUnit,rowDataOnHead,rowDataOnHead.assigned,$event)" title="{{row.displayName+','+rowDataOnHead.displayName}}" >
+              <img *ngIf="rowDataOnHead.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChangedOnLayOutChanged(row,rowDataOnHead,rowDataOnHead.assigned,$event)" title="{{row.displayName+','+rowDataOnHead.displayName}}" >
+              <img *ngIf="!rowDataOnHead.assigned" class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChangedOnLayOutChanged(row,rowDataOnHead,rowDataOnHead.assigned,$event)" title="{{row.displayName+','+rowDataOnHead.displayName}}" >
             </div>
           </td>
         </tr>
