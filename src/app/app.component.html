@@ -14,37 +14,57 @@
               title="Filter by data" (click)="toggleCurrentFilter($event, 'DATA')" >
         <img src="./assets/icons/data.png" alt="">&nbsp;Data
       </button>
-      <button class="dashboard-btn layout-filter-btn "
-              title="Change layout" (click)="toggleCurrentFilter($event, 'LAYOUT')" >
-        <img src="./assets/icons/layout.png" alt="">&nbsp;Layout
-      </button>
+      <!--<button class="dashboard-btn layout-filter-btn "-->
+              <!--title="Change layout" (click)="toggleCurrentFilter($event, 'LAYOUT')" >-->
+        <!--<img src="./assets/icons/layout.png" alt="">&nbsp;Layout-->
+      <!--</button>-->
     </div>
   </div>
-    <div style="margin-left:30%; margin-top: 3px; font-weight: bold; font-size: larger" >Organisation Unit Assignment Table</div>
+    <div style="margin-left:30%; margin-top: 3px; font-size: larger" >Organisation Unit Assignment Table</div>
   </div>
 
         <!--table section begins-->
   <div class="card mb-5 table-section">
     <div class="card-header" style="display: inline-flex; background-color: white; padding: 2px">
       <div class="visualization-filter-body dashboard-border" appClickOutside  *ngIf="selectedFilter">
+        <!--<app-org-unit-filter *ngIf="selectedFilter === 'ORG_UNIT'"-->
+                             <!--[orgunit_model] = "orgUnit.data.orgunit_settings"-->
+                             <!--[showUpdate]="true"-->
+                             <!--(onOrgUnitModelUpdate) = "updateOrgUnitModel($event)"-->
+                             <!--(selectedOrgUnit)="getNewOrgUnit($event)"-->
+                             <!--(wasFirstEmitted)="initOrgUnits($event)"-->
+                             <!--(deSelectedOrgUnit)="removeDeselectedOrgUnit($event)"-->
+                             <!--(hideOrgUnitSelection)="closeSelection($event)"-->
+        <!--&gt;</app-org-unit-filter>-->
+
+
+        <!--<app-data-filter *ngIf="selectedFilter === 'DATA'"-->
+                         <!--(updatedListToTable)="receiveData($event)"-->
+                         <!--(onDataFilterClose)="closeSelection($event)"-->
+                         <!--[selectedItems]="selectedData"-->
+        <!--&gt;</app-data-filter>-->
+
+
         <app-org-unit-filter *ngIf="selectedFilter === 'ORG_UNIT'"
                              [orgunit_model] = "orgUnit.data.orgunit_settings"
                              [showUpdate]="true"
                              (onOrgUnitModelUpdate) = "updateOrgUnitModel($event)"
-                             (selectedOrgUnit)="getNewOrgUnit($event)"
-                             (wasFirstEmitted)="initOrgUnits($event)"
+                             (selectedOrgUnit)="getLayoutChangesOnOrgUnit($event)"
+                             (wasFirstEmitted)="getLAyOutChangedInitOrgUnit($event)"
                              (deSelectedOrgUnit)="removeDeselectedOrgUnit($event)"
-                             (hideOrgUnitSelection)="shutdownOrgUnitSelection($event)"
+                             (hideOrgUnitSelection)="closeSelection($event)"
         ></app-org-unit-filter>
 
         <app-data-filter *ngIf="selectedFilter === 'DATA'"
-                         (updatedListToTable)="receiveData($event)"
-                         (onDataFilterClose)="shutdownOrgUnitSelection($event)"
+                         (updatedListToTable)="receiveLayoutChangesOnData($event)"
+                         (onDataFilterClose)="closeSelection($event)"
                          [selectedItems]="selectedData"
         ></app-data-filter>
 
 
-        <app-layout *ngIf="selectedFilter === 'LAYOUT'" ></app-layout>
+        <!--<app-layout *ngIf="selectedFilter === 'LAYOUT'"-->
+                      <!--(onLayoutUpdate)="layoutChanges($event)"-->
+                       <!--(onLayoutClose)="closeSelection($event)" ></app-layout>-->
       </div>
 
       <!--LOADER ANIMATIONS-->
@@ -88,30 +108,63 @@
 
     <div class="card-block p-0">
 
+      <!--<table class="table table-bordered table-sm m-0" id="assignment-table">-->
+        <!--<thead class="">-->
+        <!--<tr *ngIf="showTable">-->
+          <!--<th width="100px"  >OrgUnit / DataSets</th>-->
+          <!--<th *ngFor="let data of selectedData" width="100px"  >{{data.displayName}}</th>-->
+        <!--</tr>-->
+        <!--<tr *ngIf="!showTable">-->
+          <!--<th width="100px"  >OrgUnit / DataSets</th>-->
+        <!--</tr>-->
+        <!--</thead>-->
+        <!--<tbody *ngIf="showTable">-->
+        <!--<tr  *ngFor="let orgUnit of tempOrgUnuits | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{orgUnit.id}}" >-->
+
+          <!--<td>{{orgUnit.name}}</td>-->
+          <!--<td *ngFor="let dataOrgUnit of orgUnit.assigned" id="{{orgUnit.id+'-'+dataOrgUnit.id}}" >-->
+            <!--<div style="height: 29px;">-->
+            <!--<img *ngIf="dataOrgUnit.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >-->
+            <!--<img *ngIf="!dataOrgUnit.assigned" class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >-->
+            <!--</div>-->
+            <!--</td>-->
+          <!--</tr>-->
+
+        <!--</tbody>-->
+      <!--</table>-->
+
+
       <table class="table table-bordered table-sm m-0" id="assignment-table">
         <thead class="">
         <tr *ngIf="showTable">
           <th width="100px"  >OrgUnit / DataSets</th>
-          <th *ngFor="let data of selectedData" width="100px"  >{{data.displayName}}</th>
+          <th *ngFor="let data of selectedData" width="100px"  >{{data.name}}</th>
         </tr>
         <tr *ngIf="!showTable">
           <th width="100px"  >OrgUnit / DataSets</th>
         </tr>
         </thead>
         <tbody *ngIf="showTable">
-        <tr  *ngFor="let orgUnit of tempOrgUnuits | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{orgUnit.id}}" >
+        <!--<tr  *ngFor="let orgUnit of selectedData | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{orgUnit.id}}" >-->
 
-          <td>{{orgUnit.name}}</td>
-          <td *ngFor="let dataOrgUnit of orgUnit.assigned" id="{{orgUnit.id+'-'+dataOrgUnit.id}}" >
-            <div style="height: 29px;">
-            <img *ngIf="dataOrgUnit.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >
-            <img *ngIf="!dataOrgUnit.assigned" class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >
-            </div>
-            </td>
-          </tr>
+          <!--<td>{{orgUnit.displayName}}</td>-->
+          <!--<td *ngFor="let dataOrgUnit of orgUnit.assigned" id="{{orgUnit.id+'-'+dataOrgUnit.id}}" >-->
+            <!--<div style="height: 29px;">-->
+              <!--<img *ngIf="dataOrgUnit.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >-->
+              <!--<img *ngIf="!dataOrgUnit.assigned" class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >-->
+            <!--</div>-->
+          <!--</td>-->
+        <!--</tr>-->
+
+        <tr  *ngFor="let orgUnit of tempOrgUnuits" >{{orgUnit.displayName}}
+
+        </tr>
+
 
         </tbody>
       </table>
+
+
     </div>
 
     <!--card-footer p-0-->

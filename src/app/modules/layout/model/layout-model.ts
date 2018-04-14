@@ -19,16 +19,16 @@ export interface LayoutModel {
 
 export const INITIAL_LAYOUT_MODEL: LayoutModel = {
   rows: [{
-      name: 'Period',
-      value: 'pe'
-    }],
+    name: 'OrgUnits',
+    value: 'ou'
+  }],
   columns: [{
     name: 'Data',
     value: 'dx'
   }],
   filters: [{
-    name: 'Filter',
-    value: 'ou'
+  name: 'Period',
+    value: 'pe'
   }],
   excluded: [{
     name: 'Excluded Dimension',
@@ -36,3 +36,11 @@ export const INITIAL_LAYOUT_MODEL: LayoutModel = {
   }]
 };
 
+// {
+//   name: 'Filter',
+//     value: 'ou'
+// }
+// {
+//   name: 'Period',
+//     value: 'pe'
+// }

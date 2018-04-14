@@ -35,11 +35,13 @@ export class AppComponent implements OnInit{
   selectedFilter:string;
   dataSetsFromServer:any = [];
   programsFromServer:any = [];
+  dataSetHolder:any = [];
   pulseEffect:string = 'pulse';
   showTable:boolean = true;
   backUpDataList:any = [];
   loaderMessage:string = 'Loading';
   showLoader:boolean = true;
+  temporarlyChecking:any = [];
 
   // @Input() orgUnitcomp: OrgUnitFilterComponent;
 
@@ -69,7 +71,7 @@ export class AppComponent implements OnInit{
     this.showFilters = true;
      this.selectedFilter = 'ORG_UNIT';
     this.loaderMessage = 'Fetching data for assignment...';
-    Observable.interval(20000).take(1).subscribe(() => {
+    Observable.interval(30000).take(1).subscribe(() => {
     let initialDataHolder = [];
     this.dataSetsFromServer.forEach((datasets)=>{
       // dataSets sample dataSets from hispTz,Moh --- zeEp4Xu2GOm(ANC), v6wdME3ouXu(OPD), QntdhuQfgvT(DTC), qpcwPcj8D6u(IPD), GzvLb3XVZbR(L&D)
@@ -82,12 +84,13 @@ export class AppComponent implements OnInit{
       }
     });
       this.loaderMessage = 'Finalizing...';
-      this.receiveData(initialDataHolder);
+      // this.receiveData(initialDataHolder);
+      this.dataSetHolder = initialDataHolder
+      this.receiveLayoutChangesOnData(initialDataHolder);
     this.showLoader = false;
     });
 
   }
-
 
 
 
@@ -99,58 +102,13 @@ export class AppComponent implements OnInit{
     // console.log("Listening to: "+JSON.stringify(ouModel))
   }
 
-  shutdownOrgUnitSelection(event){
+  closeSelection(event){
     this.selectedFilter = '';
   }
 
-  // orgUnit issues
-
-  showOrgunit(){
-
-    if(this.orgUintActive == 'active'){
-      this.sheetHeight = '0px';
-      this.sheetWidth = '400px';
-      this.orgUintActive = '';
-    }else {
-    this.sheetHeight = '0px';
-    // delays aa function for a period of timee
-    Observable.interval(500).take(4).subscribe(() => {
-    this.showOrgUnits = true;
-    this.orgUintActive = 'active';
-    this.showDataSets = false;
-    this.showPrograms = false;
-    this.sheetHeight = '400px';
-    this.sheetWidth = '500px';
-    //this.tempOrgUnuits = this.httpProvider.organisationUnits;
-  });
-
-    }
-  }
-
-  showDataSet(){
-    if(this.dataSetActive == 'active'){
-      this.sheetHeight = '0px';
-      this.sheetWidth = '400px';
-      this.dataSetActive = '';
-    }else{
-      //this.tempOrgUnuits = null;
-      //this.tempOrgUnuits = this.httpProvider.organisationUnits;
-      //this.selectedData = [];
-      //this.temp = [];
-      this.sheetHeight = '0px';
-      // delays a function for a period of time
-      Observable.interval(500).take(4).subscribe(() => {
-        this.showDataSets = true;
-        this.dataSetActive = 'active';
-        this.orgUintActive = '';
-        this.programActive = '';
-        this.showOrgUnits = false;
-        this.showPrograms = false;
-        this.sheetHeight = '400px';
-        this.sheetWidth = '100%';
-      });
-    }
-
+  layoutChanges(changes){
+    this.selectedFilter = '';
+    console.log("changes on table are : "+JSON.stringify(changes))
   }
 
  initOrgUnits(newOrgUnit){
@@ -248,8 +206,6 @@ export class AppComponent implements OnInit{
     }else{
       this.selectedFilter = '';
     }
-
-
   }
 
   receiveData(dataList){
@@ -407,6 +363,139 @@ export class AppComponent implements OnInit{
     }else{
       this.showFilters = true;
     }
+  }
+
+
+  getLAyOutChangedInitOrgUnit(newOrgUnit){
+    if(this.selectedData.length == 0 && this.selectedData.length == 0){
+      this.showTable = false;
+      let tempOrg = [];
+      // this.removeCheckBoxes();
+      // console.log("Listening to from Live-App: "+JSON.stringify(newOrgUnit));
+
+      if(newOrgUnit.children){
+        newOrgUnit.children.forEach((childOrgUnit:any)=>{
+          tempOrg.push(childOrgUnit);
+          this.selectedData = this.removeDuplicates(tempOrg,'id');
+        });
+        if(newOrgUnit.level !== 1){
+          this.selectedOrgUnitWithChildren.push(newOrgUnit);
+          this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
+        }
+
+        if(this.selectedOrgUnitWithChildren.length >1){
+          this.selectedData = this.selectedOrgUnitWithChildren;
+        }
+
+      }else {
+        tempOrg = [];
+        this.selectedOrgUnitWithChildren = this.selectedData;
+        this.selectedData.push(newOrgUnit);
+        this.selectedData = this.removeDuplicates(this.selectedData,'id');
+      }
+
+      console.log("Listening to from Live-App: "+JSON.stringify(this.selectedData));
+
+      // this.receiveData(this.backUpDataList);
+      this.receiveLayoutChangesOnData(this.backUpDataList);
+      this.selectedFilter == 'ORG_UNIT';
+      // console.log("initOrgUnits was fired");
+
+    }
+
+  }
+
+
+  getLayoutChangesOnOrgUnit(receivedOrgUnits){
+    this.showTable = false;
+    let tempOrg = [];
+    receivedOrgUnits.forEach((newOrgUnit:any)=>{
+      if(newOrgUnit.children){
+        newOrgUnit.children.forEach((childOrgUnit:any)=>{
+          tempOrg.push(childOrgUnit);
+          this.selectedData = this.removeDuplicates(tempOrg,'id');
+
+
+          this.temporarlyChecking.push(childOrgUnit);
+
+
+        });
+        if(newOrgUnit.level !== 1){
+          this.selectedOrgUnitWithChildren.push(newOrgUnit);
+          this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
+        }
+        if(this.selectedOrgUnitWithChildren.length >1){
+          this.selectedData = this.selectedOrgUnitWithChildren;
+        }
+      }else {
+        tempOrg = [];
+        this.selectedOrgUnitWithChildren = this.selectedData;
+        this.selectedData.push(newOrgUnit);
+        this.selectedData = this.removeDuplicates(this.selectedData,'id');
+      }
+    });
+    this.receiveLayoutChangesOnData(this.backUpDataList);
+    this.selectedFilter == 'ORG_UNIT';
+    // console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(newOrgUnit));
+  }
+
+
+  receiveLayoutChangesOnData(dataList){
+    this.backUpDataList = dataList;
+    this.selectedFilter = '';
+    //this.removeCheckBoxes();
+    this.tempOrgUnuits = [];
+
+
+
+
+
+    dataList.forEach((dataSet)=>{
+      let dataSetOrgUnit = [];
+      this.tempOrgUnuits.push(dataSet);
+      this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits, 'id');
+      // make complex functions
+      dataSetOrgUnit = dataSet.organisationUnits;
+
+      this.selectedData.forEach((tempOrg:any)=>{
+
+        if (dataSetOrgUnit.filter(e => e.id === tempOrg.id).length > 0) {
+          tempOrg.checked = true;
+
+          if(!tempOrg.assigned){
+            tempOrg.assigned = [{id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: true}]
+          }else {
+            tempOrg.assigned.push({id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: true});
+            tempOrg.assigned = this.removeDuplicates(tempOrg.assigned,'id');
+          }
+
+        }else {
+          tempOrg.checked = false;
+          if(!tempOrg.assigned){
+            tempOrg.assigned = [{id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: false}]
+          }else {
+            tempOrg.assigned.push({id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: false});
+            tempOrg.assigned = this.removeDuplicates(tempOrg.assigned,'id');
+          }
+        }
+      });
+
+    });
+
+    this.dataSetHolder.forEach((dataSet)=>{
+      this.tempOrgUnuits.push(dataSet);
+      this.tempOrgUnuits = this.removeDuplicates(this.tempOrgUnuits, 'id');
+    });
+
+
+
+
+
+
+    this.temp.push(this.selectedData);
+    this.totalRec = this.selectedData.length;
+    this.pulseEffect = '';
+    this.showTable = true;
   }
 
 
