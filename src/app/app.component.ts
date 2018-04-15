@@ -39,6 +39,7 @@ export class AppComponent implements OnInit{
   pulseEffect:string = 'pulse';
   showTable:boolean = true;
   backUpDataList:any = [];
+  backUpOrgUnits:any = [];
   loaderMessage:string = 'Loading';
   showLoader:boolean = true;
   tableMode:string = 'default';
@@ -119,6 +120,21 @@ export class AppComponent implements OnInit{
   layoutChanges(changes){
     this.selectedFilter = '';
     console.log("changes on table are : "+JSON.stringify(changes))
+    if(changes.columns[0].name == 'OrgUnits'){
+      console.log("make OrgUnits to Top")
+      this.tableDefault = false;
+      this.tableRowData = []
+      this.tableHeadData = []
+      this.receiveLayoutChangesOnData(this.backUpDataList)
+      this.getLayoutChangesOnOrgUnit(this.backUpOrgUnits);
+    }else if(changes.columns[0].name == 'Data'){
+      console.log("make Data to Top")
+      this.tableDefault = true;
+      this.tableRowData = []
+      this.tableHeadData = []
+      this.getNewOrgUnit(this.backUpOrgUnits);
+      this.receiveData(this.backUpDataList)
+    }
   }
 
  initOrgUnits(newOrgUnit){
@@ -158,6 +174,7 @@ export class AppComponent implements OnInit{
  }
 
   getNewOrgUnit(receivedOrgUnits){
+   this.backUpOrgUnits = receivedOrgUnits;
     this.showTable = false;
     let tempOrg = [];
     receivedOrgUnits.forEach((newOrgUnit:any)=>{
@@ -507,6 +524,7 @@ export class AppComponent implements OnInit{
 
   getLayoutChangesOnOrgUnit(receivedOrgUnits){
     this.showTable = false;
+    this.backUpOrgUnits = receivedOrgUnits;
     let tempOrg = [];
     receivedOrgUnits.forEach((newOrgUnit:any)=>{
       if(newOrgUnit.children){

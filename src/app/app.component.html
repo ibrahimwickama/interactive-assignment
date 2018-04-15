@@ -14,10 +14,10 @@
               title="Filter by data" (click)="toggleCurrentFilter($event, 'DATA')" >
         <img src="./assets/icons/data.png" alt="">&nbsp;Data
       </button>
-      <!--<button class="dashboard-btn layout-filter-btn "-->
-              <!--title="Change layout" (click)="toggleCurrentFilter($event, 'LAYOUT')" >-->
-        <!--<img src="./assets/icons/layout.png" alt="">&nbsp;Layout-->
-      <!--</button>-->
+      <button class="dashboard-btn layout-filter-btn "
+              title="Change layout" (click)="toggleCurrentFilter($event, 'LAYOUT')" >
+        <img src="./assets/icons/layout.png" alt="">&nbsp;Layout
+      </button>
     </div>
   </div>
     <div style="margin-left:30%; margin-top: 3px; font-size: larger" >Organisation Unit Assignment Table</div>
@@ -62,9 +62,9 @@
         ></app-data-filter>
 
 
-        <!--<app-layout *ngIf="selectedFilter === 'LAYOUT'"-->
-                      <!--(onLayoutUpdate)="layoutChanges($event)"-->
-                       <!--(onLayoutClose)="closeSelection($event)" ></app-layout>-->
+        <app-layout *ngIf="selectedFilter === 'LAYOUT'"
+                      (onLayoutUpdate)="layoutChanges($event)"
+                       (onLayoutClose)="closeSelection($event)" ></app-layout>
       </div>
 
       <!--LOADER ANIMATIONS-->
