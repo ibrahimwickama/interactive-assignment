@@ -42,7 +42,7 @@
         <app-data-filter *ngIf="selectedFilter === 'DATA' && tableDefault"
                          (updatedListToTable)="receiveData($event)"
                          (onDataFilterClose)="closeSelection($event)"
-                         [selectedItems]="tableRowData"></app-data-filter>
+                         [selectedItems]="tableHeadData"></app-data-filter>
 
 
         <app-org-unit-filter *ngIf="selectedFilter === 'ORG_UNIT' && !tableDefault"
@@ -112,6 +112,8 @@
         <thead class="">
         <tr *ngIf="showTable">
           <th width="100px"  >OrgUnit / DataSets</th>
+          <th width="100px"  >DataSets</th>
+          <th width="100px"  >Programs</th>
           <th *ngFor="let data of tableHeadData" width="100px"  >{{data.displayName}}</th>
         </tr>
         <tr *ngIf="!showTable">
@@ -122,6 +124,8 @@
         <tr  *ngFor="let orgUnit of tableRowData | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{orgUnit.id}}" class="table-row" >
 
           <td>{{orgUnit.name}}</td>
+          <td>{{getDataSetToOrgUnitCount(orgUnit.id)}}</td>
+          <td>{{getProgramsToOrgUnitCount(orgUnit.id)}}</td>
           <td *ngFor="let dataOrgUnit of orgUnit.assigned" id="{{orgUnit.id+'-'+dataOrgUnit.id}}" >
             <div style="height: 29px;">
             <img *ngIf="dataOrgUnit.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >

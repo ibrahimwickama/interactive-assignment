@@ -119,16 +119,16 @@ export class AppComponent implements OnInit{
 
   layoutChanges(changes){
     this.selectedFilter = '';
-    console.log("changes on table are : "+JSON.stringify(changes))
+    //console.log("changes on table are : "+JSON.stringify(changes))
     if(changes.columns[0].name == 'OrgUnits'){
-      console.log("make OrgUnits to Top")
+      //console.log("make OrgUnits to Top")
       this.tableDefault = false;
       this.tableRowData = []
       this.tableHeadData = []
       this.receiveLayoutChangesOnData(this.backUpDataList)
       this.getLayoutChangesOnOrgUnit(this.backUpOrgUnits);
     }else if(changes.columns[0].name == 'Data'){
-      console.log("make Data to Top")
+     // console.log("make Data to Top")
       this.tableDefault = true;
       this.tableRowData = []
       this.tableHeadData = []
@@ -138,6 +138,7 @@ export class AppComponent implements OnInit{
   }
 
  initOrgUnits(newOrgUnit){
+    //this.backUpOrgUnits = newOrgUnit;
     if(this.tableRowData.length == 0 && this.tableHeadData.length == 0){
       this.showTable = false;
       let tempOrg = [];
@@ -146,6 +147,9 @@ export class AppComponent implements OnInit{
 
       if(newOrgUnit.children){
         newOrgUnit.children.forEach((childOrgUnit:any)=>{
+          // childOrgUnit.dataSetCount = childOrgUnit.dataSets.length;
+          // childOrgUnit.programsCount = childOrgUnit.programs.length;
+          // console.log("dataSets assigned are : "+JSON.stringify(childOrgUnit))
           tempOrg.push(childOrgUnit);
           this.tableRowData = this.removeDuplicates(tempOrg,'id');
         });
@@ -180,6 +184,9 @@ export class AppComponent implements OnInit{
     receivedOrgUnits.forEach((newOrgUnit:any)=>{
     if(newOrgUnit.children){
       newOrgUnit.children.forEach((childOrgUnit:any)=>{
+        // childOrgUnit.dataSetCount = childOrgUnit.dataSets.length;
+        // childOrgUnit.programsCount = childOrgUnit.programs.length;
+        // console.log("dataSets assigned are : "+JSON.stringify(childOrgUnit.dataSets))
         tempOrg.push(childOrgUnit);
         this.tableRowData = this.removeDuplicates(tempOrg,'id');
       });
@@ -589,6 +596,31 @@ export class AppComponent implements OnInit{
     this.temp.push(this.tableRowData);
     this.totalRec = this.tableRowData.length;
     this.showTable = true;
+  }
+
+  getDataSetToOrgUnitCount(orgUnitId){
+    let dataSetCount = 0;
+    this.dataSetsFromServer.forEach((dataSet:any)=>{
+      dataSet.organisationUnits.forEach((orgUnitInDataSet:any)=>{
+        if(orgUnitInDataSet.id == orgUnitId){
+          dataSetCount +=1;
+        }
+      })
+    });
+    return dataSetCount;
+
+  }
+
+  getProgramsToOrgUnitCount(orgUnitId){
+    let programCount = 0;
+    this.programsFromServer.forEach((program:any)=>{
+      program.organisationUnits.forEach((orgUnitInDataSet:any)=>{
+        if(orgUnitInDataSet.id == orgUnitId){
+          programCount +=1;
+        }
+      })
+    });
+    return programCount;
   }
 
 

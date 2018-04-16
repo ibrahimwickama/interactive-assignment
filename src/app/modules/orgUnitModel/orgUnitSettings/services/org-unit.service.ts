@@ -17,8 +17,8 @@ export class OrgUnitService {
   // Get current user information
   getUserInformation (priority = null) {
     const url = (priority === false) ?
-      'me.json?fields=dataViewOrganisationUnits[id,name,level],organisationUnits[id,name,level]' :
-      'me.json?fields=organisationUnits[id,name,level]';
+      'me.json?fields=dataViewOrganisationUnits[id,name,level,dataSets,programs],organisationUnits[id,name,level,dataSets,programs]' :
+      'me.json?fields=organisationUnits[id,name,level,dataSets,programs]';
     return Observable.create(observer => {
       if (this.user_information !== null) {
         observer.next(this.user_information);
