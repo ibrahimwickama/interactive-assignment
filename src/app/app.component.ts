@@ -18,6 +18,7 @@ export class AppComponent implements OnInit{
   tourSection1:any;
   tourSection2:any;
   tourSection3:any;
+  tourSection4:any;
   tableDefault:boolean = true;
   tableHeadData = [];
   temp = [];
@@ -718,13 +719,16 @@ export class AppComponent implements OnInit{
     // let section = sectioned.target.value;
     if(section == 1){
       this.tourSection1 = 3;
-      this.tourSection2 = this.tourSection3 = 1;
+      this.tourSection2 = this.tourSection3 = this.tourSection4 = 1;
     }else if(section == 2){
       this.tourSection2 = 3;
-      this.tourSection1 = this.tourSection3 = 1;
+      this.tourSection1 = this.tourSection3 = this.tourSection4 = 1;
     }else if(section == 3){
       this.tourSection3 = 3;
-      this.tourSection1 = this.tourSection2 = 1;
+      this.tourSection1 = this.tourSection2 = this.tourSection4 = 1;
+    }else if(section == 4){
+      this.tourSection4 = 3;
+      this.tourSection1 = this.tourSection2 = this.tourSection3 = 1;
     }
   }
 

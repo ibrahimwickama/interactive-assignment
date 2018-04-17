@@ -12,20 +12,20 @@
 
   <!--<div class="text">Overlay Text</div>-->
 
-  <div class="card tour-holder">
+  <div class="card tour-holder" [ngStyle]="{top: lowerDown, left:lowerLeft}">
     <div class="tour-header">
-      First Section<a class="close" (click)="closePopOver()" >&times;</a>
+      Section {{sectionState}} <a class="close" (click)="closePopOver()" >&times;</a>
     </div>
     <div class="tour-section">
-      Welcome to Interactive Assignments
+      {{loadInfo}}
     </div>
     <div class="tour-footer">
       <div class="btn-group" style="margin-left: 5px" >
-        <a id="prev" class="btn btn-default btn-sm tourbtn" (click)="prevClick()" >
+        <button id="prev" class="btn btn-default btn-sm tourbtn" (click)="prevClick()" [disabled]="sectionState<=0">
           <<
-          &nbsp;&nbsp;Prev</a>
-        <a id="next" class="btn btn-default btn-sm tourbtn" (click)="nextClick()">
-          Next&nbsp;&nbsp; >></a>
+          &nbsp;&nbsp;Prev</button>
+        <button id="next" class="btn btn-default btn-sm tourbtn" (click)="nextClick()" [disabled]="sectionState>=4">
+          Next&nbsp;&nbsp; >></button>
       </div>
 
       <div></div>

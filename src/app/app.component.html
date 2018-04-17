@@ -5,16 +5,16 @@
   <div class="visualization-filter-section" >
   <div class="visualization-filter-buttons">
     <div  class="visualization-filter-list"  >
-      <button class="dashboard-btn org-unit-filter-btn "  title="Filter by organisation unit"
+      <button class="dashboard-btn org-unit-filter-btn "  title="Filter by organisation unit" [ngStyle]="{zIndex: tourSection1}"
               (click)="toggleCurrentFilter($event, 'ORG_UNIT')" >
         <img src="./assets/icons/tree.png" alt="">&nbsp;Org-Unit
       </button>
 
-      <button class="dashboard-btn data-filter-btn "
+      <button class="dashboard-btn data-filter-btn " [ngStyle]="{zIndex: tourSection2}"
               title="Filter by data" (click)="toggleCurrentFilter($event, 'DATA')" >
         <img src="./assets/icons/data.png" alt="">&nbsp;Data
       </button>
-      <button class="dashboard-btn layout-filter-btn "
+      <button class="dashboard-btn layout-filter-btn " [ngStyle]="{zIndex: tourSection3}"
               title="Change layout" (click)="toggleCurrentFilter($event, 'LAYOUT')" >
         <img src="./assets/icons/layout.png" alt="">&nbsp;Layout
       </button>
@@ -29,7 +29,7 @@
   </div>
 
         <!--table section begins-->
-  <div class="card mb-5 table-section">
+  <div class="card mb-5 table-section" [ngStyle]="{zIndex: tourSection4}">
     <div class="card-header" style="display: inline-flex; background-color: white; padding: 2px">
       <div class="visualization-filter-body dashboard-border" appClickOutside  *ngIf="selectedFilter">
 
@@ -115,7 +115,7 @@
 
     <div class="card-block p-0" *ngIf="tableDefault">
 
-      <table class="table table-bordered table-sm m-0" id="assignment-table1"  >
+      <table class="table table-bordered table-sm m-0" id="assignment-table1" >
         <thead class="">
         <tr *ngIf="showTable">
           <th width="100px"  >OrgUnit / DataSets</th>
