@@ -40,6 +40,8 @@ export class AppComponent implements OnInit{
   showTable:boolean = true;
   backUpDataList:any = [];
   backUpOrgUnits:any = [];
+  backedUpOrgUnits:any = [];
+  backedUpDataList:any = [];
   loaderMessage:string = 'Loading';
   showLoader:boolean = true;
   tableMode:string = 'default';
@@ -94,6 +96,7 @@ export class AppComponent implements OnInit{
       }
     });
       this.loaderMessage = 'Finalizing...';
+      this.backedUpDataList = initialDataHolder;
       if(this.tableDefault){
         this.receiveData(initialDataHolder);
       }else{
@@ -103,10 +106,6 @@ export class AppComponent implements OnInit{
     });
 
   }
-
-
-
-
 
        // orgUnit issues
   updateOrgUnitModel(ouModel) {
@@ -120,33 +119,36 @@ export class AppComponent implements OnInit{
 
   layoutChanges(changes){
     this.selectedFilter = '';
-    //console.log("changes on table are : "+JSON.stringify(changes))
     if(changes.columns[0].name == 'OrgUnits'){
-      //console.log("make OrgUnits to Top")
       this.tableDefault = false;
-      this.receiveLayoutChangesOnData(this.tableHeadData)
-      this.getLayoutChangesOnOrgUnit(this.tableRowData);
-      // this.tableRowData = []
-      // this.tableHeadData = []
-      this.tellOrgUnitFilter.emit(true);
-
     }else if(changes.columns[0].name == 'Data'){
      // console.log("make Data to Top")
       this.tableDefault = true;
-      this.getNewOrgUnit(this.tableHeadData);
-      this.receiveData(this.tableRowData)
-      // this.tableRowData = []
-      // this.tableHeadData = []
-
     }
+    if(this.tableDefault){
+      this.removeHeadings();
+      this.tableRowData = []
+      this.tableHeadData = []
+      this.getNewOrgUnit(this.backedUpOrgUnits);
+      this.receiveData(this.tableHeadData)
+    }else{
+      //console.log("BackUp OrgUnits "+JSON.stringify(this.backedUpOrgUnits))
+      this.tableRowData = []
+      this.tableHeadData = []
+      this.receiveLayoutChangesOnData(this.backedUpDataList);
+      this.getLayoutChangesOnOrgUnit(this.backedUpOrgUnits);
+    }
+
+
   }
 
   orgUnitBackUp(orgUnits){
-    this.backUpOrgUnits = orgUnits;
+    // let holder =
+    this.backedUpOrgUnits = [orgUnits];
   }
 
  initOrgUnits(newOrgUnit){
-    // this.backUpOrgUnits = newOrgUnit;
+     this.backUpOrgUnits = newOrgUnit;
     if(this.tableRowData.length == 0 && this.tableHeadData.length == 0){
       this.showTable = false;
       let tempOrg = [];
@@ -539,38 +541,40 @@ export class AppComponent implements OnInit{
 
 
   getLayoutChangesOnOrgUnit(receivedOrgUnits){
-    this.showTable = false;
-    this.backUpOrgUnits = receivedOrgUnits;
-    let tempOrg = [];
-    receivedOrgUnits.forEach((newOrgUnit:any)=>{
-      if(newOrgUnit.children){
-        newOrgUnit.children.forEach((childOrgUnit:any)=>{
-          tempOrg.push(childOrgUnit);
-          this.tableHeadData = this.removeDuplicates(tempOrg,'id');
-        });
-        if(newOrgUnit.level !== 1){
-          this.selectedOrgUnitWithChildren.push(newOrgUnit);
-          this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
+      this.showTable = false;
+      this.backUpOrgUnits = receivedOrgUnits;
+      let tempOrg = [];
+      receivedOrgUnits.forEach((newOrgUnit:any)=>{
+        if(newOrgUnit.children){
+          newOrgUnit.children.forEach((childOrgUnit:any)=>{
+            tempOrg.push(childOrgUnit);
+            this.tableHeadData = this.removeDuplicates(tempOrg,'id');
+          });
+          if(newOrgUnit.level !== 1){
+            this.selectedOrgUnitWithChildren.push(newOrgUnit);
+            this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
+          }
+          if(this.selectedOrgUnitWithChildren.length >1){
+            this.tableHeadData = this.selectedOrgUnitWithChildren;
+          }
+        }else {
+          tempOrg = [];
+          this.selectedOrgUnitWithChildren = this.tableHeadData;
+          this.tableHeadData.push(newOrgUnit);
+          this.tableHeadData = this.removeDuplicates(this.tableHeadData,'id');
         }
-        if(this.selectedOrgUnitWithChildren.length >1){
-          this.tableHeadData = this.selectedOrgUnitWithChildren;
-        }
-      }else {
-        tempOrg = [];
-        this.selectedOrgUnitWithChildren = this.tableHeadData;
-        this.tableHeadData.push(newOrgUnit);
-        this.tableHeadData = this.removeDuplicates(this.tableHeadData,'id');
-      }
-    });
-    this.receiveLayoutChangesOnData(this.backUpDataList);
-    this.selectedFilter == 'ORG_UNIT';
-    // console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(newOrgUnit));
+      });
+      this.receiveLayoutChangesOnData(this.backUpDataList);
+      this.selectedFilter == 'ORG_UNIT';
+      // console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(newOrgUnit));
+
   }
 
 
   receiveLayoutChangesOnData(dataList){
     this.backUpDataList = dataList;
     this.selectedFilter = '';
+    // this.removeHeadings();
     this.removeCheckBoxes();
     this.tableRowData = [];
     this.tableRowData = this.removeDuplicates(dataList, 'id');
@@ -667,8 +671,9 @@ export class AppComponent implements OnInit{
             document.getElementById("programs").hidden = true;
             document.getElementById(td_dst).hidden = true;
             document.getElementById(td_prg).hidden = true;
+            document.getElementById(head.id).hidden = true;
           } catch (e){
-            console.log('Error: '+e);
+            //console.log('Error: '+e);
           }
         });
       }
@@ -687,6 +692,17 @@ export class AppComponent implements OnInit{
     //     });
     //   }
     //   });
+  }
+
+  removeHeadings(){
+    this.tableHeadData.forEach((head:any)=>{
+        let th = head.id;
+        try{
+          document.getElementById(th).hidden = true;
+        } catch (e){
+          //console.log('Error: '+e);
+        }
+      })
   }
 
 

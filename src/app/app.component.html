@@ -65,7 +65,7 @@
         <app-data-filter *ngIf="selectedFilter === 'DATA' && !tableDefault"
                          (updatedListToTable)="receiveLayoutChangesOnData($event)"
                          (onDataFilterClose)="closeSelection($event)"
-                         [selectedItems]="tableHeadData"
+                         [selectedItems]="tableRowData"
         ></app-data-filter>
 
 
@@ -153,7 +153,7 @@
         <th width="100px"  >OrgUnit / DataSets</th>
         <th width="100px"  id="orgUnits">OrgUnits</th>
         <!--<th width="100px"  id="programs">Programs</th>-->
-        <th *ngFor="let head of tableHeadData" width="100px" style="background-color: white" >{{head.name}}</th>
+        <th *ngFor="let head of tableHeadData" width="100px" style="background-color: white" id="{{head.id}}">{{head.name}}</th>
       </tr>
       <tr *ngIf="!showTable">
         <th width="100px"  >OrgUnit / DataSets</th>
