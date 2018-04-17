@@ -31,7 +31,7 @@
         <!--table section begins-->
   <div class="card mb-5 table-section" [ngStyle]="{zIndex: tourSection4}">
     <div class="card-header" style="display: inline-flex; background-color: white; padding: 2px">
-      <div class="visualization-filter-body dashboard-border" appClickOutside  *ngIf="selectedFilter">
+      <div class="visualization-filter-body dashboard-border" appClickOutside (clickOutside)="selectedFilter = ''"  *ngIf="selectedFilter">
 
         <app-org-unit-filter *ngIf="selectedFilter === 'ORG_UNIT' && tableDefault"
                              [orgunit_model] = "orgUnit.data.orgunit_settings"

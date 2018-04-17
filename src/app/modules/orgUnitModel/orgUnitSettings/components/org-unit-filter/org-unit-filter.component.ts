@@ -91,6 +91,7 @@ export class OrgUnitFilterComponent implements OnInit {
     }
   }
   ngOnInit() {
+    this.displayOrgTree();
     if (this.orgunit_tree_config.multiple) {
       if (this.orgunit_tree_config.multiple_key === 'none') {
         const actionMapping: IActionMapping = {
@@ -280,6 +281,7 @@ export class OrgUnitFilterComponent implements OnInit {
 
   // a method to activate the model
   deActivateNode(nodeId: any, nodes, event) {
+    console.log("deactivated : "+JSON.stringify(event))
     setTimeout(() => {
       const node = nodes.treeModel.getNodeById(nodeId);
       if (node) {

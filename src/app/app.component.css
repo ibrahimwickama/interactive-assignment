@@ -253,11 +253,11 @@ tbody tr td:nth-child(3){
 .visualization-filter-body {
   background-color: rgba(255, 255, 255, 0.95);
   position: absolute;
-  padding: 5px;
+  padding: 0px;
   top: 40px;
-  width: 430px;
+  width: 420px;
   height: 350px;
-  z-index: 1200;
+  z-index: 1;
 }
 
 .active-filter {

@@ -18,6 +18,7 @@ export class MultiselectComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    // this.hideOptions = false;
     if (this.starting_items.length !== 0) {
       if (this.selected_items.length === 0) {
         this.selected_items = this.starting_items;
