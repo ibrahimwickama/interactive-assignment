@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {HttpProviderService} from "./services/http-provider.service";
 import {Observable} from "rxjs/Observable";
 import {OrgUnitService} from "./modules/orgUnitModel/orgUnitSettings/services/org-unit.service";
@@ -14,10 +14,10 @@ export class AppComponent implements OnInit{
   sheetHeight:any;
   sheetWidth:any;
   orgUintActive:string;
-  dataSetActive:string;
-  programActive:string;
-  showOrgUnits:boolean = false;
-  showDataSets:boolean = false;
+  showTour:boolean = false;
+  tourSection1:any;
+  tourSection2:any;
+  tourSection3:any;
   tableDefault:boolean = true;
   tableHeadData = [];
   temp = [];
@@ -45,6 +45,7 @@ export class AppComponent implements OnInit{
   tableMode:string = 'default';
 
   // @Input() orgUnitcomp: OrgUnitFilterComponent;
+  @Output() tellOrgUnitFilter = new EventEmitter();
 
   constructor(private httpProvider: HttpProviderService, private orgUnitService: OrgUnitService){
     this.orgUnit = this.orgUnitService.getAallOrgUnitStructure();
@@ -123,22 +124,29 @@ export class AppComponent implements OnInit{
     if(changes.columns[0].name == 'OrgUnits'){
       //console.log("make OrgUnits to Top")
       this.tableDefault = false;
-      this.tableRowData = []
-      this.tableHeadData = []
-      this.receiveLayoutChangesOnData(this.backUpDataList)
-      this.getLayoutChangesOnOrgUnit(this.backUpOrgUnits);
+      this.receiveLayoutChangesOnData(this.tableHeadData)
+      this.getLayoutChangesOnOrgUnit(this.tableRowData);
+      // this.tableRowData = []
+      // this.tableHeadData = []
+      this.tellOrgUnitFilter.emit(true);
+
     }else if(changes.columns[0].name == 'Data'){
      // console.log("make Data to Top")
       this.tableDefault = true;
-      this.tableRowData = []
-      this.tableHeadData = []
-      this.getNewOrgUnit(this.backUpOrgUnits);
-      this.receiveData(this.backUpDataList)
+      this.getNewOrgUnit(this.tableHeadData);
+      this.receiveData(this.tableRowData)
+      // this.tableRowData = []
+      // this.tableHeadData = []
+
     }
   }
 
+  orgUnitBackUp(orgUnits){
+    this.backUpOrgUnits = orgUnits;
+  }
+
  initOrgUnits(newOrgUnit){
-    //this.backUpOrgUnits = newOrgUnit;
+    // this.backUpOrgUnits = newOrgUnit;
     if(this.tableRowData.length == 0 && this.tableHeadData.length == 0){
       this.showTable = false;
       let tempOrg = [];
@@ -160,6 +168,7 @@ export class AppComponent implements OnInit{
 
         if(this.selectedOrgUnitWithChildren.length >1){
           this.tableRowData = this.selectedOrgUnitWithChildren;
+
         }
 
       }else {
@@ -178,7 +187,7 @@ export class AppComponent implements OnInit{
  }
 
   getNewOrgUnit(receivedOrgUnits){
-   this.backUpOrgUnits = receivedOrgUnits;
+   //this.backUpOrgUnits = receivedOrgUnits;
     this.showTable = false;
     let tempOrg = [];
     receivedOrgUnits.forEach((newOrgUnit:any)=>{
@@ -623,6 +632,14 @@ export class AppComponent implements OnInit{
     return programCount;
   }
 
+  getOrgUnitCount(data){
+    let orgUnitCount = 0;
+    data.organisationUnits.forEach((orgUnit)=>{
+      orgUnitCount +=1
+    })
+    return orgUnitCount;
+  }
+
 
   removeDuplicates(originalArray, key) {
     let newArray = [];
@@ -642,8 +659,14 @@ export class AppComponent implements OnInit{
       if(row.assigned) {
         row.assigned.forEach((head: any) => {
           let td_id = row.id + '-' + head.id;
+          let td_dst = row.id + '--';
+          let td_prg = row.id + '-';
           try{
             document.getElementById(td_id).hidden = true;
+            document.getElementById("dataSets").hidden = true;
+            document.getElementById("programs").hidden = true;
+            document.getElementById(td_dst).hidden = true;
+            document.getElementById(td_prg).hidden = true;
           } catch (e){
             console.log('Error: '+e);
           }
@@ -664,6 +687,33 @@ export class AppComponent implements OnInit{
     //     });
     //   }
     //   });
+  }
+
+
+
+
+  startTour() {
+    // this.hintService.initialize();
+    this.showTour = true;
+  }
+
+  highLightDiv(section){
+    // console.log("sectioned "+sectioned);
+    // let section = sectioned.target.value;
+    if(section == 1){
+      this.tourSection1 = 3;
+      this.tourSection2 = this.tourSection3 = 1;
+    }else if(section == 2){
+      this.tourSection2 = 3;
+      this.tourSection1 = this.tourSection3 = 1;
+    }else if(section == 3){
+      this.tourSection3 = 3;
+      this.tourSection1 = this.tourSection2 = 1;
+    }
+  }
+
+  endTour(event){
+    this.showTour = false;
   }
 
 

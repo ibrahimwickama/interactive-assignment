@@ -11,12 +11,13 @@ import {NgxPaginationModule} from "ngx-pagination";
 import {OrgUnitModule} from "./modules/orgUnitModel/orgUnitSettings/orgUnit.module";
 import {DataFilterModule} from "./modules/data-filter/data-filter.module";
 import {LayoutModule} from "./modules/layout/layout.module";
+import {TourCompComponent} from "./components/tour-comp/tour-comp.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     DataSetsComponent,
-    ProgramsComponent
+    ProgramsComponent,TourCompComponent
   ],
   imports: [
     BrowserModule,MenuModule,FormsModule,NgxPaginationModule,OrgUnitModule,DataFilterModule,LayoutModule

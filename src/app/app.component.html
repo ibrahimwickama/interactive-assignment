@@ -18,6 +18,11 @@
               title="Change layout" (click)="toggleCurrentFilter($event, 'LAYOUT')" >
         <img src="./assets/icons/layout.png" alt="">&nbsp;Layout
       </button>
+
+      <button class="dashboard-btn layout-filter-btn "
+              title="Change layout" (click)="startTour()" >
+        <img src="./assets/icons/tour.png" alt="">&nbsp;Take a Tour
+      </button>
     </div>
   </div>
     <div style="margin-left:30%; margin-top: 3px; font-size: larger" >Organisation Unit Assignment Table</div>
@@ -36,6 +41,7 @@
                              (wasFirstEmitted)="initOrgUnits($event)"
                              (deSelectedOrgUnit)="removeDeselectedOrgUnit($event)"
                              (hideOrgUnitSelection)="closeSelection($event)"
+                             (restoreOrgUnits)="orgUnitBackUp($event)"
         ></app-org-unit-filter>
 
 
@@ -53,6 +59,7 @@
                              (wasFirstEmitted)="getLAyOutChangedInitOrgUnit($event)"
                              (deSelectedOrgUnit)="removeDeselectedOrgUnit($event)"
                              (hideOrgUnitSelection)="closeSelection($event)"
+                             (restoreOrgUnits)="orgUnitBackUp($event)"
         ></app-org-unit-filter>
 
         <app-data-filter *ngIf="selectedFilter === 'DATA' && !tableDefault"
@@ -106,14 +113,14 @@
       </div>
       </div>
 
-    <div class="card-block p-0">
+    <div class="card-block p-0" *ngIf="tableDefault">
 
-      <table class="table table-bordered table-sm m-0" id="assignment-table1" *ngIf="tableDefault" >
+      <table class="table table-bordered table-sm m-0" id="assignment-table1"  >
         <thead class="">
         <tr *ngIf="showTable">
           <th width="100px"  >OrgUnit / DataSets</th>
-          <th width="100px"  >DataSets</th>
-          <th width="100px"  >Programs</th>
+          <th width="100px"  id="dataSets">DataSets</th>
+          <th width="100px"  id="programs">Programs</th>
           <th *ngFor="let data of tableHeadData" width="100px"  >{{data.displayName}}</th>
         </tr>
         <tr *ngIf="!showTable">
@@ -124,8 +131,8 @@
         <tr  *ngFor="let orgUnit of tableRowData | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{orgUnit.id}}" class="table-row" >
 
           <td>{{orgUnit.name}}</td>
-          <td>{{getDataSetToOrgUnitCount(orgUnit.id)}}</td>
-          <td>{{getProgramsToOrgUnitCount(orgUnit.id)}}</td>
+          <td title="{{orgUnit.name}} is assigned to {{getDataSetToOrgUnitCount(orgUnit.id)}} DataSets" id="{{orgUnit.id+'--'}}">{{getDataSetToOrgUnitCount(orgUnit.id)}}</td>
+          <td title="{{orgUnit.name}} is assigned to {{getProgramsToOrgUnitCount(orgUnit.id)}} Programs" id="{{orgUnit.id+'-'}}" >{{getProgramsToOrgUnitCount(orgUnit.id)}}</td>
           <td *ngFor="let dataOrgUnit of orgUnit.assigned" id="{{orgUnit.id+'-'+dataOrgUnit.id}}" >
             <div style="height: 29px;">
             <img *ngIf="dataOrgUnit.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >
@@ -136,39 +143,47 @@
         </tbody>
       </table>
 
-
-      <table class="table table-bordered table-sm m-0" id="assignment-table2" *ngIf="!tableDefault" >
-        <thead class="">
-        <tr *ngIf="showTable">
-          <th width="100px"  >OrgUnit / DataSets</th>
-          <th *ngFor="let head of tableHeadData" width="100px"  >{{head.name}}</th>
-        </tr>
-        <tr *ngIf="!showTable">
-          <th width="100px"  >OrgUnit / DataSets</th>
-        </tr>
-        </thead>
-        <tbody *ngIf="showTable">
-        <tr  *ngFor="let row of tableRowData | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{row.id}}" class="table-row" >
-
-          <td>{{row.displayName}}</td>
-          <td *ngFor="let rowDataOnHead of row.assigned" id="{{row.id+'-'+rowDataOnHead.id}}"  >
-            <div style="height: 29px;">
-              <img *ngIf="rowDataOnHead.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChangedOnLayOutChanged(row,rowDataOnHead,rowDataOnHead.assigned,$event)" title="{{row.displayName+','+rowDataOnHead.displayName}}" >
-              <img *ngIf="!rowDataOnHead.assigned" class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChangedOnLayOutChanged(row,rowDataOnHead,rowDataOnHead.assigned,$event)" title="{{row.displayName+','+rowDataOnHead.displayName}}" >
-            </div>
-          </td>
-        </tr>
-
-        <!--<tr  *ngFor="let orgUnit of tableRowData" >{{orgUnit.displayName}}-->
-
-        <!--</tr>-->
-
-
-        </tbody>
-      </table>
-
-
     </div>
+
+
+    <div class="card-block p-0" *ngIf="!tableDefault">
+    <table class="table table-bordered table-sm m-0" id="assignment-table2"  >
+      <thead class="">
+      <tr *ngIf="showTable">
+        <th width="100px"  >OrgUnit / DataSets</th>
+        <th width="100px"  id="orgUnits">OrgUnits</th>
+        <!--<th width="100px"  id="programs">Programs</th>-->
+        <th *ngFor="let head of tableHeadData" width="100px" style="background-color: white" >{{head.name}}</th>
+      </tr>
+      <tr *ngIf="!showTable">
+        <th width="100px"  >OrgUnit / DataSets</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="showTable">
+      <tr  *ngFor="let row of tableRowData | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{row.id}}" class="table-row" >
+
+        <td>{{row.displayName}}</td>
+        <td title="{{row.displayName}} is assigned to {{getOrgUnitCount(row)}} DataSets" id="{{row.id+'--'}}">{{getOrgUnitCount(row)}}</td>
+        <!--<td title="{{row.displayName}} is assigned to {{getProgramsToOrgUnitCount(row)}} Programs" id="{{row.id+'-'}}" >{{getProgramsToOrgUnitCount(row)}}</td>-->
+        <td *ngFor="let rowDataOnHead of row.assigned" id="{{row.id+'-'+rowDataOnHead.id}}" style="background-color: white" >
+          <div style="height: 29px;">
+            <img *ngIf="rowDataOnHead.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChangedOnLayOutChanged(row,rowDataOnHead,rowDataOnHead.assigned,$event)" title="{{row.displayName+','+rowDataOnHead.displayName}}" >
+            <img *ngIf="!rowDataOnHead.assigned" class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChangedOnLayOutChanged(row,rowDataOnHead,rowDataOnHead.assigned,$event)" title="{{row.displayName+','+rowDataOnHead.displayName}}" >
+          </div>
+        </td>
+      </tr>
+
+      <!--<tr  *ngFor="let orgUnit of tableRowData" >{{orgUnit.displayName}}-->
+
+      <!--</tr>-->
+
+
+      </tbody>
+    </table>
+    </div>
+
+
+
 
     <!--card-footer p-0-->
     <div class="  below-section"  style=" background-color: white">
@@ -187,6 +202,11 @@
 
   </div>
 </main>
+
+
+<app-tour-comp *ngIf="showTour"
+               (closePop)="endTour($event)"
+               (changeSection)="highLightDiv($event)"></app-tour-comp>
 
 
 
