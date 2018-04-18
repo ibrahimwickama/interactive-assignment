@@ -7,11 +7,11 @@
         <span *ngIf="orgunit_model.selected_orgunits.length > 3 && orgunit_model.selected_user_orgunit.length == 0">
                 <span class="selected-item">
                   {{ orgunit_model.selected_orgunits[0].name }}
-                  <a (click)="deActivateNode(orgunit_model.selected_orgunits[0].id,orgtree,$event)" class="removeorgunit" >x</a>
+                  <a (click)="deActivateNode(orgunit_model.selected_orgunits[0].id,orgtree,$event,orgunit_model.selected_orgunits[0])" class="removeorgunit" >x</a>
                 </span>
                 <span class="selected-item">
                   {{ orgunit_model.selected_orgunits[1].name }}
-                  <a (click)="deActivateNode(orgunit_model.selected_orgunits[1].id,orgtree,$event)" class="removeorgunit">x</a>
+                  <a (click)="deActivateNode(orgunit_model.selected_orgunits[1].id,orgtree,$event,orgunit_model.selected_orgunits[1])" class="removeorgunit">x</a>
                 </span>
                 <span class="selected-item">
                   &nbsp; and {{ orgunit_model.selected_orgunits.length - 2 }} more
@@ -20,7 +20,7 @@
         <span *ngIf="orgunit_model.selected_orgunits.length <= 3 && orgunit_model.selected_user_orgunit.length == 0">
                  <span *ngFor="let item of orgunit_model.selected_orgunits" class="selected-item ng-binding ng-scope">
                   {{ item.name }}
-                   <a (click)="deActivateNode(item.id,orgtree,$event)" class="removeorgunit">x</a>
+                   <a (click)="deActivateNode(item.id,orgtree,$event,item)" class="removeorgunit">x</a>
                 </span>
               </span>
         <span class="no-selection"*ngIf="orgunit_model.selected_orgunits.length == 0 && !orgunit_tree_config.loading && orgunit_model.selection_mode != 'Usr_orgUnit'">{{ orgunit_tree_config.placeholder }}</span>

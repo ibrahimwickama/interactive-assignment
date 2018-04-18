@@ -237,7 +237,7 @@ export class OrgUnitFilterComponent implements OnInit {
 
   clearAll() {
     for (const active_orgunit of this.orgunit_model.selected_orgunits) {
-      this.deActivateNode(active_orgunit.id, this.orgtree, null);
+      this.deActivateNode(active_orgunit.id, this.orgtree, null,active_orgunit);
     }
   }
 
@@ -280,8 +280,9 @@ export class OrgUnitFilterComponent implements OnInit {
   }
 
   // a method to activate the model
-  deActivateNode(nodeId: any, nodes, event) {
-    console.log("deactivated : "+JSON.stringify(event))
+  deActivateNode(nodeId: any, nodes, event,orgUnit) {
+    // console.log("deactivated : "+JSON.stringify(orgUnit));
+    this.deSelectedOrgUnit.emit(orgUnit);
     setTimeout(() => {
       const node = nodes.treeModel.getNodeById(nodeId);
       if (node) {

@@ -22,6 +22,9 @@ export class TourCompComponent implements OnInit {
   }
 
   closePopOver(){
+    this.sectionState = 0;
+    this.lowerDown = '';
+    this.lowerLeft = '';
     this.closePop.emit(true);
   }
 

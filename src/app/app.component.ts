@@ -223,6 +223,7 @@ export class AppComponent implements OnInit{
 
 
   removeDeselectedOrgUnit(orgUnitDeselected){
+    // this.removeCheckBoxes()
     if(orgUnitDeselected.children){
       orgUnitDeselected.children.forEach((childOrgUnit:any)=>{
         this.tableRowData.forEach((tempOrg, index)=>{
@@ -240,6 +241,29 @@ export class AppComponent implements OnInit{
       this.tableRowData.forEach((tempOrg, index)=>{
         if(tempOrg.id == orgUnitDeselected.id){
           this.tableRowData.splice(index,1);
+        }
+      });
+    }
+  }
+
+  removeDeselectedOrgUnitOnLayOutchange(orgUnitDeselected){
+    if(orgUnitDeselected.children){
+      orgUnitDeselected.children.forEach((childOrgUnit:any)=>{
+        this.tableHeadData.forEach((tempOrg, index)=>{
+          if(tempOrg.id == childOrgUnit.id){
+            this.tableRowData.splice(index,1);
+          }
+        });
+      });
+      this.selectedOrgUnitWithChildren.forEach((orgUnit,index)=>{
+        if(orgUnit.id == orgUnitDeselected.id){
+          this.selectedOrgUnitWithChildren.splice(index,1);
+        }
+      });
+    }else {
+      this.tableHeadData.forEach((tempOrg, index)=>{
+        if(tempOrg.id == orgUnitDeselected.id){
+          this.tableHeadData.splice(index,1);
         }
       });
     }
@@ -733,6 +757,7 @@ export class AppComponent implements OnInit{
   }
 
   endTour(event){
+    this.tourSection1 = this.tourSection2 = this.tourSection3 = this.tourSection4 = 1;
     this.showTour = false;
   }
 

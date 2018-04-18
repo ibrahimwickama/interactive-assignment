@@ -7,7 +7,7 @@
     <div  class="visualization-filter-list"  >
       <button class="dashboard-btn org-unit-filter-btn "  title="Filter by organisation unit" [ngStyle]="{zIndex: tourSection1}"
               (click)="toggleCurrentFilter($event, 'ORG_UNIT')" >
-        <img src="./assets/icons/tree.png" alt="">&nbsp;Org-Unit
+        <img src="./assets/icons/tree.png" alt="">&nbsp;Org-unit
       </button>
 
       <button class="dashboard-btn data-filter-btn " [ngStyle]="{zIndex: tourSection2}"
@@ -21,11 +21,11 @@
 
       <button class="dashboard-btn layout-filter-btn "
               title="Change layout" (click)="startTour()" >
-        <img src="./assets/icons/tour.png" alt="">&nbsp;Take a Tour
+        <img src="./assets/icons/tour.png" alt="">&nbsp;Take a tour
       </button>
     </div>
   </div>
-    <div style="margin-left:30%; margin-top: 3px; font-size: larger" >Organisation Unit Assignment Table</div>
+    <div style="margin-left:30%; margin-top: 3px; font-size: larger" >Assignment Table</div>
   </div>
 
         <!--table section begins-->
@@ -57,7 +57,7 @@
                              (onOrgUnitModelUpdate) = "updateOrgUnitModel($event)"
                              (selectedOrgUnit)="getLayoutChangesOnOrgUnit($event)"
                              (wasFirstEmitted)="getLAyOutChangedInitOrgUnit($event)"
-                             (deSelectedOrgUnit)="removeDeselectedOrgUnit($event)"
+                             (deSelectedOrgUnit)="removeDeselectedOrgUnitOnLayOutchange($event)"
                              (hideOrgUnitSelection)="closeSelection($event)"
                              (restoreOrgUnits)="orgUnitBackUp($event)"
         ></app-org-unit-filter>
@@ -121,7 +121,7 @@
           <th width="100px"  >OrgUnit / DataSets</th>
           <th width="100px"  id="dataSets">DataSets</th>
           <th width="100px"  id="programs">Programs</th>
-          <th *ngFor="let data of tableHeadData" width="100px"  >{{data.displayName}}</th>
+          <th *ngFor="let data of tableHeadData" width="100px" id="{{data.id}}" >{{data.displayName}}</th>
         </tr>
         <tr *ngIf="!showTable">
           <th width="100px"  >OrgUnit / DataSets</th>
@@ -151,12 +151,12 @@
       <thead class="">
       <tr *ngIf="showTable">
         <th width="100px"  >OrgUnit / DataSets</th>
-        <th width="100px"  id="orgUnits">OrgUnits</th>
+        <th width="100px"  id="orgUnits">Org-units</th>
         <!--<th width="100px"  id="programs">Programs</th>-->
         <th *ngFor="let head of tableHeadData" width="100px" style="background-color: white" id="{{head.id}}">{{head.name}}</th>
       </tr>
       <tr *ngIf="!showTable">
-        <th width="100px"  >OrgUnit / DataSets</th>
+        <th width="100px"  >Org-unit / DataSets</th>
       </tr>
       </thead>
       <tbody *ngIf="showTable">
