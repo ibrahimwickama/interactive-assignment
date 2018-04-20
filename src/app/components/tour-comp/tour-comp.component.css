@@ -14,13 +14,15 @@
 
 .tour-holder{
   position: inherit;
-  top: 500px;
-  left: 50%;
+  top: 400px;
+  left: 11%;
   width: 300px;
   /*height: 150px;*/
   font-size: 20px;
   color: black;
   background-color: white;
+  z-index: 99;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
   transform: translate(-50%,-50%);
   -ms-transform: translate(-50%,-50%);
 }

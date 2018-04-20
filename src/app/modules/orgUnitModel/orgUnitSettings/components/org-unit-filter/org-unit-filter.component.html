@@ -107,10 +107,16 @@
             </ng-template>
           </tree-root>
         </div>
+        <!--col-auto   col-sm-12-->
         <div class="col-sm-12" style="padding:0px;margin-top: 5px;border-top:1px solid rgba(0,0,0,0.3)" *ngIf="showUpdate">
+          <div style="margin-left: 67%">
+          <button class="btn btn-outline-secondary btn-sm pull-right cursor" style="margin-top: 5px" (click)="closeOrgunits()">
+            <i class="fa fa-refresh"></i> Close
+          </button>
           <button class="btn btn-outline-secondary btn-sm pull-right cursor" style="margin-top: 5px" (click)="updateOrgunits()">
             <i class="fa fa-refresh"></i> Update
           </button>
+          </div>
         </div>
       </div>
 

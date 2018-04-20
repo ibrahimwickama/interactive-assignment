@@ -14,13 +14,13 @@
 
   <div class="card tour-holder" [ngStyle]="{top: lowerDown, left:lowerLeft}">
     <div class="tour-header">
-      Section {{sectionState}} <a class="close" (click)="closePopOver()" >&times;</a>
+      {{header}} <a class="close" (click)="closePopOver()" >&times;</a>
     </div>
     <div class="tour-section">
       {{loadInfo}}
     </div>
     <div class="tour-footer">
-      <div class="btn-group" style="margin-left: 5px" >
+      <div class="btn-group" style="margin-left: 50%" >
         <button id="prev" class="btn btn-default btn-sm tourbtn" (click)="prevClick()" [disabled]="sectionState<=0">
           <<
           &nbsp;&nbsp;Prev</button>

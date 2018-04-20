@@ -3,7 +3,6 @@ import {HttpProviderService} from "./services/http-provider.service";
 import {Observable} from "rxjs/Observable";
 import {OrgUnitService} from "./modules/orgUnitModel/orgUnitSettings/services/org-unit.service";
 import {OrgUnitData} from "./modules/orgUnitModel/orgUnitSettings/models/orgUnits";
-import {OrgUnitFilterComponent} from "./modules/orgUnitModel/orgUnitSettings/components/org-unit-filter/org-unit-filter.component";
 
 @Component({
   selector: 'app-root',
@@ -13,7 +12,7 @@ import {OrgUnitFilterComponent} from "./modules/orgUnitModel/orgUnitSettings/com
 export class AppComponent implements OnInit{
   sheetHeight:any;
   sheetWidth:any;
-  orgUintActive:string;
+  currentOrgUnit:any = 'Org-unit';
   showTour:boolean = false;
   tourSection1:any;
   tourSection2:any;
@@ -46,6 +45,7 @@ export class AppComponent implements OnInit{
   loaderMessage:string = 'Loading';
   showLoader:boolean = true;
   tableMode:string = 'default';
+  detailCount:any = {data1:'',data2:''};
 
   // @Input() orgUnitcomp: OrgUnitFilterComponent;
   @Output() tellOrgUnitFilter = new EventEmitter();
@@ -144,11 +144,11 @@ export class AppComponent implements OnInit{
   }
 
   orgUnitBackUp(orgUnits){
-    // let holder =
     this.backedUpOrgUnits = [orgUnits];
   }
 
  initOrgUnits(newOrgUnit){
+    this.currentOrgUnit = this.orgUnit.data.orgunit_settings.selected_orgunits[0].name;
      this.backUpOrgUnits = newOrgUnit;
     if(this.tableRowData.length == 0 && this.tableHeadData.length == 0){
       this.showTable = false;
@@ -189,37 +189,175 @@ export class AppComponent implements OnInit{
 
  }
 
+
   getNewOrgUnit(receivedOrgUnits){
-   //this.backUpOrgUnits = receivedOrgUnits;
-    this.showTable = false;
-    let tempOrg = [];
-    receivedOrgUnits.forEach((newOrgUnit:any)=>{
-    if(newOrgUnit.children){
-      newOrgUnit.children.forEach((childOrgUnit:any)=>{
-        // childOrgUnit.dataSetCount = childOrgUnit.dataSets.length;
-        // childOrgUnit.programsCount = childOrgUnit.programs.length;
-        // console.log("dataSets assigned are : "+JSON.stringify(childOrgUnit.dataSets))
-        tempOrg.push(childOrgUnit);
-        this.tableRowData = this.removeDuplicates(tempOrg,'id');
+    //this.backUpOrgUnits = receivedOrgUnits;
+    //console.log("dataSets assigned are : "+JSON.stringify(receivedOrgUnits))
+    // orgunit_model.selected_orgunits[0].name
+    this.currentOrgUnit = this.orgUnit.data.orgunit_settings.selected_orgunits[0].name;
+    if(this.orgUnit.data.orgunit_settings.selected_levels[0]){
+      this.showTable = false;
+      let tempOrg = [];
+        // assume level 1
+      receivedOrgUnits.forEach((newOrgUnit:any)=>{
+
+          // carries level 2
+        if(newOrgUnit.children){
+
+          if(newOrgUnit.level == this.orgUnit.data.orgunit_settings.selected_levels[0].level){
+            tempOrg.push(newOrgUnit);
+            this.tableRowData = this.removeDuplicates(tempOrg,'id');
+          }else{
+            // goes to level 3
+            newOrgUnit.children.forEach((childOrgUnit:any)=>{
+              // checks level 3 if has level 4
+              if(childOrgUnit.children){
+                if(childOrgUnit.level == this.orgUnit.data.orgunit_settings.selected_levels[0].level){
+                  tempOrg.push(childOrgUnit);
+                  this.tableRowData = this.removeDuplicates(tempOrg,'id');
+                }else{
+                  childOrgUnit.children.forEach((subChildOrgnit:any)=>{
+                    if(subChildOrgnit.level == this.orgUnit.data.orgunit_settings.selected_levels[0].level ){
+                      tempOrg.push(subChildOrgnit);
+                      this.tableRowData = this.removeDuplicates(tempOrg,'id');
+                    }
+                  });
+                }
+              }else if(childOrgUnit.level == this.orgUnit.data.orgunit_settings.selected_levels[0].level ){
+                  tempOrg.push(childOrgUnit);
+                  this.tableRowData = this.removeDuplicates(tempOrg,'id');
+                }
+
+              if(childOrgUnit.level == this.orgUnit.data.orgunit_settings.selected_levels[0].level ){
+
+              }
+              // childOrgUnit.dataSetCount = childOrgUnit.dataSets.length;
+              // childOrgUnit.programsCount = childOrgUnit.programs.length;
+              // console.log("dataSets assigned are : "+JSON.stringify(childOrgUnit.dataSets))
+              tempOrg.push(childOrgUnit);
+              this.tableRowData = this.removeDuplicates(tempOrg,'id');
+            });
+          }
+
+          if(newOrgUnit.level !== 1){
+            this.selectedOrgUnitWithChildren.push(newOrgUnit);
+            this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
+          }
+          if(this.selectedOrgUnitWithChildren.length >1){
+            this.tableRowData = this.selectedOrgUnitWithChildren;
+          }
+        }else if(newOrgUnit.level == this.orgUnit.data.orgunit_settings.selected_levels[0].level){
+          tempOrg = [];
+          this.selectedOrgUnitWithChildren = this.tableRowData;
+          this.tableRowData.push(newOrgUnit);
+          this.tableRowData = this.removeDuplicates(this.tableRowData,'id');
+        }
       });
-      if(newOrgUnit.level !== 1){
-        this.selectedOrgUnitWithChildren.push(newOrgUnit);
-        this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
+      this.receiveData(this.backUpDataList);
+      this.selectedFilter == 'ORG_UNIT';
+      //console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(this.orgUnit.data.orgunit_settings.selected_levels[0].level));
+    }else{
+      this.showTable = false;
+      let tempOrg = [];
+      receivedOrgUnits.forEach((newOrgUnit:any)=>{
+      if(newOrgUnit.children){
+        newOrgUnit.children.forEach((childOrgUnit:any)=>{
+          // childOrgUnit.dataSetCount = childOrgUnit.dataSets.length;
+          // childOrgUnit.programsCount = childOrgUnit.programs.length;
+          // console.log("dataSets assigned are : "+JSON.stringify(childOrgUnit.dataSets))
+          tempOrg.push(childOrgUnit);
+          this.tableRowData = this.removeDuplicates(tempOrg,'id');
+        });
+        if(newOrgUnit.level !== 1){
+          this.selectedOrgUnitWithChildren.push(newOrgUnit);
+          this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
+        }
+        if(this.selectedOrgUnitWithChildren.length >1){
+          this.tableRowData = this.selectedOrgUnitWithChildren;
+        }
+      }else {
+        tempOrg = [];
+        this.selectedOrgUnitWithChildren = this.tableRowData;
+        this.tableRowData.push(newOrgUnit);
+        this.tableRowData = this.removeDuplicates(this.tableRowData,'id');
       }
-      if(this.selectedOrgUnitWithChildren.length >1){
-        this.tableRowData = this.selectedOrgUnitWithChildren;
-      }
-    }else {
-      tempOrg = [];
-      this.selectedOrgUnitWithChildren = this.tableRowData;
-      this.tableRowData.push(newOrgUnit);
-      this.tableRowData = this.removeDuplicates(this.tableRowData,'id');
+      });
+      this.receiveData(this.backUpDataList);
+      this.selectedFilter == 'ORG_UNIT';
+       //console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(this.orgUnit.data.orgunit_settings.selected_levels[0]));
     }
-    });
-    this.receiveData(this.backUpDataList);
-    this.selectedFilter == 'ORG_UNIT';
-    // console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(newOrgUnit));
+
   }
+
+
+
+  // getNewOrgUnit(receivedOrgUnits){
+  //  //this.backUpOrgUnits = receivedOrgUnits;
+  //   console.log("dataSets assigned are : "+JSON.stringify(receivedOrgUnits))
+  //   if(this.orgUnit.data.orgunit_settings.selected_levels[0]){
+  //     this.showTable = false;
+  //     let tempOrg = [];
+  //     receivedOrgUnits.forEach((newOrgUnit:any)=>{
+  //       if(newOrgUnit.children){
+  //
+  //         newOrgUnit.children.forEach((childOrgUnit:any)=>{
+  //
+  //           if(childOrgUnit.level == this.orgUnit.data.orgunit_settings.selected_levels[0].level ){
+  //
+  //           }
+  //           // childOrgUnit.dataSetCount = childOrgUnit.dataSets.length;
+  //           // childOrgUnit.programsCount = childOrgUnit.programs.length;
+  //           // console.log("dataSets assigned are : "+JSON.stringify(childOrgUnit.dataSets))
+  //           tempOrg.push(childOrgUnit);
+  //           this.tableRowData = this.removeDuplicates(tempOrg,'id');
+  //         });
+  //         if(newOrgUnit.level !== 1){
+  //           this.selectedOrgUnitWithChildren.push(newOrgUnit);
+  //           this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
+  //         }
+  //         if(this.selectedOrgUnitWithChildren.length >1){
+  //           this.tableRowData = this.selectedOrgUnitWithChildren;
+  //         }
+  //       }else {
+  //         tempOrg = [];
+  //         this.selectedOrgUnitWithChildren = this.tableRowData;
+  //         this.tableRowData.push(newOrgUnit);
+  //         this.tableRowData = this.removeDuplicates(this.tableRowData,'id');
+  //       }
+  //     });
+  //     this.receiveData(this.backUpDataList);
+  //     this.selectedFilter == 'ORG_UNIT';
+  //     console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(this.orgUnit.data.orgunit_settings.selected_levels[0].level));
+  //   }
+  //   // this.showTable = false;
+  //   // let tempOrg = [];
+  //   // receivedOrgUnits.forEach((newOrgUnit:any)=>{
+  //   // if(newOrgUnit.children){
+  //   //   newOrgUnit.children.forEach((childOrgUnit:any)=>{
+  //   //     // childOrgUnit.dataSetCount = childOrgUnit.dataSets.length;
+  //   //     // childOrgUnit.programsCount = childOrgUnit.programs.length;
+  //   //     // console.log("dataSets assigned are : "+JSON.stringify(childOrgUnit.dataSets))
+  //   //     tempOrg.push(childOrgUnit);
+  //   //     this.tableRowData = this.removeDuplicates(tempOrg,'id');
+  //   //   });
+  //   //   if(newOrgUnit.level !== 1){
+  //   //     this.selectedOrgUnitWithChildren.push(newOrgUnit);
+  //   //     this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
+  //   //   }
+  //   //   if(this.selectedOrgUnitWithChildren.length >1){
+  //   //     this.tableRowData = this.selectedOrgUnitWithChildren;
+  //   //   }
+  //   // }else {
+  //   //   tempOrg = [];
+  //   //   this.selectedOrgUnitWithChildren = this.tableRowData;
+  //   //   this.tableRowData.push(newOrgUnit);
+  //   //   this.tableRowData = this.removeDuplicates(this.tableRowData,'id');
+  //   // }
+  //   // });
+  //   // this.receiveData(this.backUpDataList);
+  //   // this.selectedFilter == 'ORG_UNIT';
+  //   //  console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(this.orgUnit.data.orgunit_settings.selected_levels[0]));
+  // }
 
 
   removeDeselectedOrgUnit(orgUnitDeselected){
@@ -285,6 +423,15 @@ export class AppComponent implements OnInit{
     this.tableHeadData = [];
     dataList.forEach((dataSet)=>{
     let dataSetOrgUnit = [];
+
+    if(dataSet.formType == 'dataSet'){
+      this.detailCount.data1 = 'dataSet';
+      // this.detailCount.data2 = '';
+    }else if(dataSet.formType == 'dataSet'){
+      this.detailCount.data2 = 'program';
+      // this.detailCount.data1 = '';
+    }
+
     this.tableHeadData.push(dataSet);
     this.tableHeadData = this.removeDuplicates(this.tableHeadData, 'id');
     // make complex functions
@@ -692,8 +839,12 @@ export class AppComponent implements OnInit{
           let td_prg = row.id + '-';
           try{
             document.getElementById(td_id).hidden = true;
-            document.getElementById("dataSets").hidden = true;
-            document.getElementById("programs").hidden = true;
+
+            if(this.detailCount.data1 == 'dataSet'){
+              document.getElementById("dataSets").hidden = true;
+            }else if(this.detailCount.data2 = 'program'){
+              document.getElementById("programs").hidden = true;
+            }
             document.getElementById(td_dst).hidden = true;
             document.getElementById(td_prg).hidden = true;
             document.getElementById(head.id).hidden = true;
@@ -760,6 +911,7 @@ export class AppComponent implements OnInit{
     this.tourSection1 = this.tourSection2 = this.tourSection3 = this.tourSection4 = 1;
     this.showTour = false;
   }
+
 
 
 }

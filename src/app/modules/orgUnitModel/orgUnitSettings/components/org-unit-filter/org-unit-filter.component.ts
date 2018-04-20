@@ -148,7 +148,10 @@ export class OrgUnitFilterComponent implements OnInit {
         .subscribe(
           (data: any) => {
             // assign urgunit levels and groups to variables
+            //console.log("Org unit level: "+JSON.stringify(data.organisationUnitLevels));
+            // console.log("Org unit level: "+JSON.stringify(this.orgunit_model.user_orgunits));
             this.orgunit_model.orgunit_levels = data.organisationUnitLevels;
+
             // setting organisation groups
             this.orgunitService.getOrgunitGroups().subscribe( groups => {//noinspection TypeScriptUnresolvedVariable
               this.orgunit_model.orgunit_groups = groups;
@@ -211,10 +214,7 @@ export class OrgUnitFilterComponent implements OnInit {
   }
 
 
-  //
-  // listenerToTableChange(){
-  //   this.restoreOrgUnits.emit(this.selected_orgunits[0])
-  // }
+
 
 
   updateOrgunits() {
@@ -226,6 +226,12 @@ export class OrgUnitFilterComponent implements OnInit {
     // console.log("From update clicked: "+JSON.stringify(this.multiOrgUnits));
     this.multiOrgUnits = [];
   }
+
+  closeOrgunits(){
+    this.emit(true);
+    this.hideOrgUnitSelection.emit(true);
+  }
+
 
   showOrgUnitTypesList(){
     if(this.showOrgUnitTypes){
@@ -420,12 +426,13 @@ export class OrgUnitFilterComponent implements OnInit {
     this.orgunit_model.selected_user_orgunit = selected_user_orgunit;
     this.emit(false);
     //this.selectedOrgUnit.emit(this.selected_orgunits[0]);
-    // console.log("Listening to: "+JSON.stringify(selected_user_orgunit));
+
 
   }
 
   // set selected groups
   setSelectedLevels( selected_levels ) {
+    console.log("Listening to: "+JSON.stringify(selected_levels));
     this.orgunit_model.selected_levels = selected_levels;
     this.emit(false);
   }

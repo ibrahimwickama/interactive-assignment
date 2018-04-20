@@ -252,6 +252,7 @@ export class OrgUnitService {
         this.http.get('organisationUnits.json?fields=id,name,level,children[id,name]&filter=id:in:[' + orgunits.join(',') + ']&paging=false')
           .subscribe((nodes: any) => {
             this.initial_orgunits = nodes.organisationUnits;
+            console.log("initial OrgUits: "+JSON.stringify(this.initial_orgunits));
             observer.next(this.initial_orgunits);
             observer.complete();
           }, error => {

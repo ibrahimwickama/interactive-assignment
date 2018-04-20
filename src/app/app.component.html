@@ -2,12 +2,25 @@
 
 
 <main class="container pt-5" style="margin-top: 15px;max-width: 1840px;">
+  <div class="page-top-Header">
+    <div class="logo-holder">
+      <img src="./assets/logo.png" alt="" style="width: 120px">
+    </div>
+    <div style="width: 100%">
+  <div class="top-head">Interactive Assignments</div>
+    <div class="header-description">A quick DHIS 2 tool for data Assignment this includes organization units,
+      datasets, programs, indicators, data elements. Easy to navigate and instantly saves changes.
+    </div>
+    </div>
+  </div>
+
+
   <div class="visualization-filter-section" >
   <div class="visualization-filter-buttons">
     <div  class="visualization-filter-list"  >
       <button class="dashboard-btn org-unit-filter-btn "  title="Filter by organisation unit" [ngStyle]="{zIndex: tourSection1}"
               (click)="toggleCurrentFilter($event, 'ORG_UNIT')" >
-        <img src="./assets/icons/tree.png" alt="">&nbsp;Org-unit
+        <img src="./assets/icons/tree.png" alt="">&nbsp;{{ currentOrgUnit}}
       </button>
 
       <button class="dashboard-btn data-filter-btn " [ngStyle]="{zIndex: tourSection2}"
@@ -18,15 +31,17 @@
               title="Change layout" (click)="toggleCurrentFilter($event, 'LAYOUT')" >
         <img src="./assets/icons/layout.png" alt="">&nbsp;Layout
       </button>
-
+    </div>
+  </div>
+    <div style="margin-left:16%; margin-top: 3px; font-size: larger" >Assignment Table</div>
+    <div style="margin-left: 35%">
       <button class="dashboard-btn layout-filter-btn "
               title="Change layout" (click)="startTour()" >
         <img src="./assets/icons/tour.png" alt="">&nbsp;Take a tour
       </button>
     </div>
-  </div>
-    <div style="margin-left:30%; margin-top: 3px; font-size: larger" >Assignment Table</div>
-  </div>
+
+    </div>
 
         <!--table section begins-->
   <div class="card mb-5 table-section" [ngStyle]="{zIndex: tourSection4}">
@@ -118,9 +133,9 @@
       <table class="table table-bordered table-sm m-0" id="assignment-table1" >
         <thead class="">
         <tr *ngIf="showTable">
-          <th width="100px"  >OrgUnit / DataSets</th>
-          <th width="100px"  id="dataSets">DataSets</th>
-          <th width="100px"  id="programs">Programs</th>
+          <th style="width:100px">OrgUnit / DataSets</th>
+          <th width="100px"  id="dataSets" *ngIf="detailCount.data1 == 'dataSet'">DataSets</th>
+          <th width="100px"  id="programs" *ngIf="detailCount.data2 == 'program'">Programs</th>
           <th *ngFor="let data of tableHeadData" width="100px" id="{{data.id}}" >{{data.displayName}}</th>
         </tr>
         <tr *ngIf="!showTable">
@@ -131,8 +146,8 @@
         <tr  *ngFor="let orgUnit of tableRowData | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{orgUnit.id}}" class="table-row" >
 
           <td>{{orgUnit.name}}</td>
-          <td title="{{orgUnit.name}} is assigned to {{getDataSetToOrgUnitCount(orgUnit.id)}} DataSets" id="{{orgUnit.id+'--'}}">{{getDataSetToOrgUnitCount(orgUnit.id)}}</td>
-          <td title="{{orgUnit.name}} is assigned to {{getProgramsToOrgUnitCount(orgUnit.id)}} Programs" id="{{orgUnit.id+'-'}}" >{{getProgramsToOrgUnitCount(orgUnit.id)}}</td>
+          <td title="{{orgUnit.name}} is assigned to {{getDataSetToOrgUnitCount(orgUnit.id)}} DataSets" id="{{orgUnit.id+'--'}}" *ngIf="detailCount.data1 == 'dataSet'">{{getDataSetToOrgUnitCount(orgUnit.id)}}</td>
+          <td title="{{orgUnit.name}} is assigned to {{getProgramsToOrgUnitCount(orgUnit.id)}} Programs" id="{{orgUnit.id+'-'}}" *ngIf="detailCount.data2 == 'program'">{{getProgramsToOrgUnitCount(orgUnit.id)}}</td>
           <td *ngFor="let dataOrgUnit of orgUnit.assigned" id="{{orgUnit.id+'-'+dataOrgUnit.id}}" >
             <div style="height: 29px;">
             <img *ngIf="dataOrgUnit.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >
@@ -150,13 +165,13 @@
     <table class="table table-bordered table-sm m-0" id="assignment-table2"  >
       <thead class="">
       <tr *ngIf="showTable">
-        <th width="100px"  >OrgUnit / DataSets</th>
+        <th width="100px"  >Org-unit / Datasets</th>
         <th width="100px"  id="orgUnits">Org-units</th>
         <!--<th width="100px"  id="programs">Programs</th>-->
         <th *ngFor="let head of tableHeadData" width="100px" style="background-color: white" id="{{head.id}}">{{head.name}}</th>
       </tr>
       <tr *ngIf="!showTable">
-        <th width="100px"  >Org-unit / DataSets</th>
+        <th width="100px"  >Org-unit / Datasets</th>
       </tr>
       </thead>
       <tbody *ngIf="showTable">
@@ -207,6 +222,8 @@
 <app-tour-comp *ngIf="showTour"
                (closePop)="endTour($event)"
                (changeSection)="highLightDiv($event)"></app-tour-comp>
+
+
 
 
 

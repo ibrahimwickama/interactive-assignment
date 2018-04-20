@@ -51,6 +51,7 @@ export class MultiselectComponent implements OnInit {
   }
 
   selectItem(item) {
+
     if (this.checkItemAvailabilty(item, this.selected_items )) {
       this.selected_items.splice(this.selected_items.indexOf(item), 1);
     }else {
