@@ -14,14 +14,16 @@ export class AppComponent implements OnInit{
   sheetWidth:any;
   currentOrgUnit:any = 'Org-unit';
   showTour:boolean = false;
-  tourSection1:any;
+  tourSection1:any = 3;
   tourSection2:any;
   tourSection3:any;
   tourSection4:any;
   tableDefault:boolean = true;
   tableHeadData = [];
-  temp = [];
+  tableHeadDataBackUp = [];
   tableRowData = [];
+  tableRowDataBackUp = [];
+  temp = [];
   totalRec:any;
   page: number = 1;
   itemsOnPage: number = 20;
@@ -88,11 +90,11 @@ export class AppComponent implements OnInit{
     let initialDataHolder = [];
     this.dataSetsFromServer.forEach((datasets)=>{
       // dataSets sample dataSets from hispTz,Moh --- zeEp4Xu2GOm(ANC), v6wdME3ouXu(OPD), QntdhuQfgvT(DTC), qpcwPcj8D6u(IPD), GzvLb3XVZbR(L&D)
+      // dataSets sample dataSets from hispTz,Moh --- nqKkegk1y8U(BRN Disp), RixTh0Xs0A7(BRN Hc), fiDtcNUzKI6(BRN Hsp)
       // if(datasets.id == 'zeEp4Xu2GOm' || datasets.id == 'v6wdME3ouXu' || datasets.id == 'QntdhuQfgvT' || datasets.id == 'qpcwPcj8D6u' || datasets.id ==  'GzvLb3XVZbR'){
       if(datasets.id == 'lyLU2wR22tC' || datasets.id == 'BfMAe6Itzgt' || datasets.id == 'TuL8IOPzpHh' ||
         datasets.id == 'vc6nF5yZsPR' || datasets.id ==  'Nyh6laLdBEJ'
-        || datasets.id == 'zeEp4Xu2GOm' || datasets.id == 'v6wdME3ouXu' || datasets.id == 'QntdhuQfgvT' ||
-        datasets.id == 'qpcwPcj8D6u' || datasets.id ==  'GzvLb3XVZbR'){
+        || datasets.id == 'nqKkegk1y8U' || datasets.id == 'RixTh0Xs0A7' || datasets.id == 'fiDtcNUzKI6'){
         initialDataHolder.push(datasets);
       }
     });
@@ -163,6 +165,7 @@ export class AppComponent implements OnInit{
           // console.log("dataSets assigned are : "+JSON.stringify(childOrgUnit))
           tempOrg.push(childOrgUnit);
           this.tableRowData = this.removeDuplicates(tempOrg,'id');
+          this.tableRowDataBackUp = this.tableRowData
         });
         if(newOrgUnit.level !== 1){
           this.selectedOrgUnitWithChildren.push(newOrgUnit);
@@ -171,6 +174,7 @@ export class AppComponent implements OnInit{
 
         if(this.selectedOrgUnitWithChildren.length >1){
           this.tableRowData = this.selectedOrgUnitWithChildren;
+          this.tableRowDataBackUp = this.tableRowData
 
         }
 
@@ -179,6 +183,7 @@ export class AppComponent implements OnInit{
         this.selectedOrgUnitWithChildren = this.tableRowData;
         this.tableRowData.push(newOrgUnit);
         this.tableRowData = this.removeDuplicates(this.tableRowData,'id');
+        this.tableRowDataBackUp = this.tableRowData
       }
 
       this.receiveData(this.backUpDataList);
@@ -425,16 +430,15 @@ export class AppComponent implements OnInit{
     let dataSetOrgUnit = [];
 
     if(dataSet.formType == 'dataSet'){
-      this.detailCount.data1 = 'dataSet';
-      // this.detailCount.data2 = '';
-    }else if(dataSet.formType == 'dataSet'){
-      this.detailCount.data2 = 'program';
-      // this.detailCount.data1 = '';
+      this.detailCount.data1 = 'dataSets';
+    }else if(dataSet.formType == 'program'){
+      this.detailCount.data1 = 'programs';
     }
 
     this.tableHeadData.push(dataSet);
     this.tableHeadData = this.removeDuplicates(this.tableHeadData, 'id');
-    // make complex functions
+   this.tableHeadDataBackUp =  this.tableHeadData;
+     // make complex functions
     dataSetOrgUnit = dataSet.organisationUnits;
 
       this.tableRowData.forEach((tempOrg:any)=>{
@@ -461,7 +465,6 @@ export class AppComponent implements OnInit{
     });
 
     });
-
     this.temp.push(this.tableRowData);
     this.totalRec = this.tableRowData.length;
     this.pulseEffect = '';
@@ -839,6 +842,7 @@ export class AppComponent implements OnInit{
           let td_prg = row.id + '-';
           try{
             document.getElementById(td_id).hidden = true;
+            // document.getElementById(td_id).remove()
 
             if(this.detailCount.data1 == 'dataSet'){
               document.getElementById("dataSets").hidden = true;
@@ -846,8 +850,11 @@ export class AppComponent implements OnInit{
               document.getElementById("programs").hidden = true;
             }
             document.getElementById(td_dst).hidden = true;
+            // document.getElementById(td_dst).remove()
             document.getElementById(td_prg).hidden = true;
+            // document.getElementById(td_prg).remove()
             document.getElementById(head.id).hidden = true;
+            // document.getElementById(head.id).remove()
           } catch (e){
             //console.log('Error: '+e);
           }
@@ -911,6 +918,69 @@ export class AppComponent implements OnInit{
     this.tourSection1 = this.tourSection2 = this.tourSection3 = this.tourSection4 = 1;
     this.showTour = false;
   }
+
+
+
+  getFilteredList(ev) {
+    let val = ev.target.value;
+      // filter first headers
+    if(this.tableDefault){
+    this.tableRowData = this.tableRowDataBackUp;
+    this.tableHeadData = this.tableHeadDataBackUp;
+    if(val && val.trim() != ''){
+      this.tableRowData = this.tableRowData.filter((data:any) => {
+        return (data.name.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      })
+    }else {
+      this.tableRowData = []
+      this.tableHeadData = []
+      this.removeCheckBoxes();
+      this.tableRowData = this.tableRowDataBackUp;
+      this.tableHeadData = this.tableHeadDataBackUp;
+      // this.receiveData(this.backUpDataList);
+      // this.receiveData(this.backUpDataList);
+    }
+
+        // this.removeHeadings();
+        // this.tableRowData = []
+        // // this.tableHeadData = []
+        // this.getNewOrgUnit(this.backedUpOrgUnits);
+        // this.receiveData(this.tableHeadData)
+      }else{
+        //console.log("BackUp OrgUnits "+JSON.stringify(this.backedUpOrgUnits))
+        // this.tableRowData = []
+        // // this.tableHeadData = []
+        // this.receiveLayoutChangesOnData(this.backedUpDataList);
+        // this.getLayoutChangesOnOrgUnit(this.backedUpOrgUnits);
+
+      this.tableHeadData = this.tableHeadDataBackUp;
+      if(val && val.trim() != ''){
+        this.tableHeadData = this.tableHeadData.filter((data:any) => {
+          return (data.name.toLowerCase().indexOf(val.toLowerCase()) > -1);
+        })
+      }else {
+        this.tableRowData = []
+        this.tableHeadData = []
+        this.removeCheckBoxes();
+        this.tableRowData = this.tableRowDataBackUp;
+        this.tableHeadData = this.tableHeadDataBackUp;
+        // this.receiveData(this.backUpDataList);
+        // this.receiveData(this.backUpDataList);
+      }
+
+      }
+
+    }
+
+    // if(val && val.trim() != ''){
+    //   this.tableHeadData = this.tableHeadData.filter((data:any) => {
+    //     return (data.displayName.toLowerCase().indexOf(val.toLowerCase()) > -1);
+    //   })
+    // }else{
+    //   this.tableHeadData = this.tableHeadData;
+    // }
+
+
 
 
 

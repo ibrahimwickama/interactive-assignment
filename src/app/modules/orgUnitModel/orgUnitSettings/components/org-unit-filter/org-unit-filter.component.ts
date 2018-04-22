@@ -10,7 +10,7 @@ import { OrgUnitService } from '../../services/org-unit.service';
 })
 export class OrgUnitFilterComponent implements OnInit {
   // thisrow:boolean = false;
-  showOrgUnitTypes:boolean = false;
+  showOrgUnitTypes:string = 'none';
 
   // the object that will carry the output value you can send one from outside to config start values
   @Input() orgunit_model: any =  {
@@ -234,10 +234,10 @@ export class OrgUnitFilterComponent implements OnInit {
 
 
   showOrgUnitTypesList(){
-    if(this.showOrgUnitTypes){
-      this.showOrgUnitTypes = false;
-    }else if(!this.showOrgUnitTypes){
-      this.showOrgUnitTypes = true;
+    if(this.showOrgUnitTypes == 'block'){
+      this.showOrgUnitTypes = 'none';
+    }else if(this.showOrgUnitTypes == 'none'){
+      this.showOrgUnitTypes = 'block';
     }
   }
 
@@ -248,8 +248,10 @@ export class OrgUnitFilterComponent implements OnInit {
   }
 
   setType(type: string) {
-    this.orgunit_model.selection_mode = type;
+
     // this.showOrgUnitTypes = false;
+    this.orgunit_model.selection_mode = type;
+
     if ( type !== 'orgUnit' ) {
       this.orgunit_model.selected_user_orgunit = [];
     }
@@ -259,6 +261,7 @@ export class OrgUnitFilterComponent implements OnInit {
     if ( type !== 'Group' ) {
       this.orgunit_model.selected_groups = [];
     }
+     this.showOrgUnitTypesList();
 
   }
   // display Orgunit Tree

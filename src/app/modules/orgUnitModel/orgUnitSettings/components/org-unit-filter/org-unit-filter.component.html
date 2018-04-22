@@ -32,7 +32,7 @@
       <span *ngIf="orgunit_tree_config.loading">{{ orgunit_tree_config.loading_message }}</span>
     </div>
     <div class="tree-view" [ngClass]="{'hiddenTree':showOrgTree}" id="tree_view">
-      <div class="container-fluid">
+      <div class="container-fluid" style="padding-right: 0px;overflow-x: hidden;">
         <div class="row">
           <div class="col-sm-3" style="padding-left: 0px; margin-bottom: 5px">
             <!--<div class="dropdown">-->
@@ -45,7 +45,7 @@
                 <img *ngIf="orgunit_model.selection_mode == 'Group'" src="assets/img/icons8-Group.png" class="group-image">
               </button>
 
-              <div class="dropdown-content" style="font-size: 12px" *ngIf="showOrgUnitTypes" >
+              <div class="dropdown-content" style="font-size: 12px" [ngStyle]="{display: showOrgUnitTypes}">
                   <a (click)="setType('orgUnit')" >
                     <!--<span *ngIf="orgunit_model.selection_mode == 'orgUnit'" class="glyphicon glyphicon-ok"></span>-->
                     <img src="assets/img/icons8-Tree.png" class="group-image">
@@ -72,16 +72,16 @@
 
 
           <!--org_unit_groups-->
-          <div class="col-sm-9" style="padding-right: 0px; margin-bottom: 5px" *ngIf="orgunit_model.selection_mode == 'Group'">
+          <div class="col-sm-8 show_itemss" style="padding-right: 0px; margin-bottom: 5px" *ngIf="orgunit_model.selection_mode == 'Group'">
             <app-multiselect [placeholder]="'Select Organisation units group'" [selected_items]="orgunit_model.selected_groups" [items]="orgunit_model.orgunit_groups" (onSelected)="setSelectedGroups($event)"></app-multiselect>
           </div>
           <!--user_org_unit-->
-          <div class="col-sm-9" style="padding-right: 0px; margin-bottom: 5px" [ngClass]="{'hiddenTree': orgunit_model.selection_mode != 'orgUnit'}">
+          <div class="col-sm-8 show_itemss" style="padding-right: 0px; margin-bottom: 5px" [ngClass]="{'hiddenTree': orgunit_model.selection_mode != 'orgUnit'}">
             <app-multiselect #period_selector [placeholder]="'Select Organisation Unit'" [items]="user_orgunits_types" (onSelected)="setSelectedUserOrg($event)"></app-multiselect>
 
           </div>
           <!--org_unit_levels-->
-          <div class="col-sm-9" style="padding-right: 0px; margin-bottom: 5px" *ngIf="orgunit_model.selection_mode == 'Level'">
+          <div class="col-sm-8 show_itemss" style="padding-right: 0px; margin-bottom: 5px" *ngIf="orgunit_model.selection_mode == 'Level'">
             <app-multiselect [prefix]="'Level: '" [prefix_multiple]="'Levels: '" [placeholder]="'Select Organisation units levels'" [selected_items]="orgunit_model.selected_levels" [items]="orgunit_model.orgunit_levels | filterLevel:organisationunits[0]:orgunit_model.selected_orgunits" (onSelected)="setSelectedLevels($event)"></app-multiselect>
 
           </div>
@@ -113,7 +113,10 @@
           <button class="btn btn-outline-secondary btn-sm pull-right cursor" style="margin-top: 5px" (click)="closeOrgunits()">
             <i class="fa fa-refresh"></i> Close
           </button>
-          <button class="btn btn-outline-secondary btn-sm pull-right cursor" style="margin-top: 5px" (click)="updateOrgunits()">
+          <button class="btn btn-outline-secondary btn-sm pull-right cursor"
+                  style="margin-top: 5px"
+                  [disabled]="orgunit_model.selected_orgunits.length == 0"
+                  (click)="updateOrgunits()">
             <i class="fa fa-refresh"></i> Update
           </button>
           </div>

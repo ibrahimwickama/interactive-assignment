@@ -2,17 +2,17 @@
 
 
 <main class="container pt-5" style="margin-top: 15px;max-width: 1840px;">
-  <div class="page-top-Header">
-    <div class="logo-holder">
-      <img src="./assets/logo.png" alt="" style="width: 120px">
-    </div>
-    <div style="width: 100%">
-  <div class="top-head">Interactive Assignments</div>
-    <div class="header-description">A quick DHIS 2 tool for data Assignment this includes organization units,
-      datasets, programs, indicators, data elements. Easy to navigate and instantly saves changes.
-    </div>
-    </div>
-  </div>
+  <!--<div class="page-top-Header">-->
+    <!--<div class="logo-holder">-->
+      <!--<img src="./assets/logo.png" alt="" style="width: 120px">-->
+    <!--</div>-->
+    <!--<div style="width: 100%">-->
+  <!--<div class="top-head">Interactive Assignments</div>-->
+    <!--<div class="header-description">A quick DHIS 2 tool for data Assignment this includes organization units,-->
+      <!--datasets, programs, indicators, data elements. Easy to navigate and instantly saves changes.-->
+    <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
 
 
   <div class="visualization-filter-section" >
@@ -20,7 +20,7 @@
     <div  class="visualization-filter-list"  >
       <button class="dashboard-btn org-unit-filter-btn "  title="Filter by organisation unit" [ngStyle]="{zIndex: tourSection1}"
               (click)="toggleCurrentFilter($event, 'ORG_UNIT')" >
-        <img src="./assets/icons/tree.png" alt="">&nbsp;{{ currentOrgUnit}}
+        <img src="./assets/icons/tree.png" alt="">&nbsp; Org-unit
       </button>
 
       <button class="dashboard-btn data-filter-btn " [ngStyle]="{zIndex: tourSection2}"
@@ -34,12 +34,16 @@
     </div>
   </div>
     <div style="margin-left:16%; margin-top: 3px; font-size: larger" >Assignment Table</div>
-    <div style="margin-left: 35%">
-      <button class="dashboard-btn layout-filter-btn "
-              title="Change layout" (click)="startTour()" >
-        <img src="./assets/icons/tour.png" alt="">&nbsp;Take a tour
-      </button>
+    <div style="margin-left: 25%; margin-top: -3px">
+      <input type="text" placeholder="Search..." class="form-control" style="width: 320px" (input)="getFilteredList($event)">
     </div>
+    <!--<div style="margin-left: 35%">-->
+      <!--<input type="text" placeholder="Search..." class="form-control">-->
+      <!--&lt;!&ndash;<button class="dashboard-btn layout-filter-btn "&ndash;&gt;-->
+      <!--&lt;!&ndash;title="Change layout" (click)="startTour()" >&ndash;&gt;-->
+      <!--&lt;!&ndash;<img src="./assets/icons/tour.png" alt="">&nbsp;Take a tour&ndash;&gt;-->
+      <!--&lt;!&ndash;</button>&ndash;&gt;-->
+    <!--</div>-->
 
     </div>
 
@@ -134,8 +138,7 @@
         <thead class="">
         <tr *ngIf="showTable">
           <th style="width:100px">OrgUnit / DataSets</th>
-          <th width="100px"  id="dataSets" *ngIf="detailCount.data1 == 'dataSet'">DataSets</th>
-          <th width="100px"  id="programs" *ngIf="detailCount.data2 == 'program'">Programs</th>
+          <th width="100px"  id="data">{{detailCount.data1}}</th>
           <th *ngFor="let data of tableHeadData" width="100px" id="{{data.id}}" >{{data.displayName}}</th>
         </tr>
         <tr *ngIf="!showTable">
@@ -146,8 +149,7 @@
         <tr  *ngFor="let orgUnit of tableRowData | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{orgUnit.id}}" class="table-row" >
 
           <td>{{orgUnit.name}}</td>
-          <td title="{{orgUnit.name}} is assigned to {{getDataSetToOrgUnitCount(orgUnit.id)}} DataSets" id="{{orgUnit.id+'--'}}" *ngIf="detailCount.data1 == 'dataSet'">{{getDataSetToOrgUnitCount(orgUnit.id)}}</td>
-          <td title="{{orgUnit.name}} is assigned to {{getProgramsToOrgUnitCount(orgUnit.id)}} Programs" id="{{orgUnit.id+'-'}}" *ngIf="detailCount.data2 == 'program'">{{getProgramsToOrgUnitCount(orgUnit.id)}}</td>
+          <td title="{{orgUnit.name}} is assigned to {{(detailCount.data1 == 'dataSets')?getDataSetToOrgUnitCount(orgUnit.id):getProgramsToOrgUnitCount(orgUnit.id)}} {{detailCount.data1}}" id="{{orgUnit.id+'--'}}">{{(detailCount.data1 == 'dataSets')?getDataSetToOrgUnitCount(orgUnit.id):getProgramsToOrgUnitCount(orgUnit.id)}}</td>
           <td *ngFor="let dataOrgUnit of orgUnit.assigned" id="{{orgUnit.id+'-'+dataOrgUnit.id}}" >
             <div style="height: 29px;">
             <img *ngIf="dataOrgUnit.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >
