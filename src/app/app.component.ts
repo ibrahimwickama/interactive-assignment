@@ -11,7 +11,7 @@ import {OrgUnitData} from "./modules/orgUnitModel/orgUnitSettings/models/orgUnit
 })
 export class AppComponent implements OnInit{
   sheetHeight:any;
-  sheetWidth:any;
+  showChangesApplied:string = '';
   currentOrgUnit:any = 'Org-unit';
   showTour:boolean = false;
   tourSection1:any = 3;
@@ -47,9 +47,8 @@ export class AppComponent implements OnInit{
   loaderMessage:string = 'Loading';
   showLoader:boolean = true;
   tableMode:string = 'default';
-  detailCount:any = {data1:'',data2:''};
+  detailCount:any = {data1:'dataSets',data2:''};
 
-  // @Input() orgUnitcomp: OrgUnitFilterComponent;
   @Output() tellOrgUnitFilter = new EventEmitter();
 
   constructor(private httpProvider: HttpProviderService, private orgUnitService: OrgUnitService){
@@ -110,6 +109,13 @@ export class AppComponent implements OnInit{
 
   }
 
+  showChangesSaved(){
+    this.showChangesApplied = 'show';
+    Observable.interval(2000).take(1).subscribe(() => {
+      this.showChangesApplied = '';
+    });
+  }
+
        // orgUnit issues
   updateOrgUnitModel(ouModel) {
     this.orgUnit.data.orgunit_settings = ouModel;
@@ -121,26 +127,27 @@ export class AppComponent implements OnInit{
   }
 
   layoutChanges(changes){
-    this.selectedFilter = '';
-    if(changes.columns[0].name == 'OrgUnits'){
-      this.tableDefault = false;
-    }else if(changes.columns[0].name == 'Data'){
-     // console.log("make Data to Top")
-      this.tableDefault = true;
-    }
-    if(this.tableDefault){
-      this.removeHeadings();
-      this.tableRowData = []
-      this.tableHeadData = []
-      this.getNewOrgUnit(this.backedUpOrgUnits);
-      this.receiveData(this.tableHeadData)
-    }else{
-      //console.log("BackUp OrgUnits "+JSON.stringify(this.backedUpOrgUnits))
-      this.tableRowData = []
-      this.tableHeadData = []
-      this.receiveLayoutChangesOnData(this.backedUpDataList);
-      this.getLayoutChangesOnOrgUnit(this.backedUpOrgUnits);
-    }
+
+    // this.selectedFilter = '';
+    // if(changes.columns[0].name == 'OrgUnits'){
+    //   this.tableDefault = false;
+    // }else if(changes.columns[0].name == 'Data'){
+    //  // console.log("make Data to Top")
+    //   this.tableDefault = true;
+    // }
+    // if(this.tableDefault){
+    //   this.removeHeadings();
+    //   this.tableRowData = []
+    //   this.tableHeadData = []
+    //   this.getNewOrgUnit(this.backedUpOrgUnits);
+    //   this.receiveData(this.tableHeadData)
+    // }else{
+    //   //console.log("BackUp OrgUnits "+JSON.stringify(this.backedUpOrgUnits))
+    //   this.tableRowData = []
+    //   this.tableHeadData = []
+    //   this.receiveLayoutChangesOnData(this.backedUpDataList);
+    //   this.getLayoutChangesOnOrgUnit(this.backedUpOrgUnits);
+    // }
 
 
   }
@@ -526,9 +533,10 @@ export class AppComponent implements OnInit{
           this.dataSetToUpdate.dataSets.push(dataSet);
           //console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
 
-          // this.httpProvider.addFacilityToForm(this.dataSetToUpdate).subscribe(response=>{
-          //   //console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
-          // })
+          this.httpProvider.addFacilityToForm(this.dataSetToUpdate).subscribe(response=>{
+            this.showChangesSaved();
+            //console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
+          })
         }
       });
     }else if(dataOrgUnit.formType == 'program'){
@@ -549,6 +557,7 @@ export class AppComponent implements OnInit{
           });
           this.programToUpdate.programs.push(program);
           this.httpProvider.addFacilityToForm(this.programToUpdate).subscribe(response=>{
+            this.showChangesSaved();
             //console.log("did it work program: "+JSON.stringify(this.programToUpdate));
           })
         }

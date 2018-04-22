@@ -1,7 +1,7 @@
 {
-    "version": "1.0.0",
-    "name": "Organisation Unit Assignment",
-    "description": "Organisation Unit Assignment",
+    "version": "0.0.0",
+    "name": "Interactive Assignments",
+    "description": "Interactive Assignments",
     "launch_path": "index.html",
     "icons": {
         "16": "favicon.ico",

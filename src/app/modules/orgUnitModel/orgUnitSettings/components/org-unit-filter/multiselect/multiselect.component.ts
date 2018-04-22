@@ -58,6 +58,7 @@ export class MultiselectComponent implements OnInit {
       this.selected_items.push(item);
     }
     this.onSelected.emit(this.selected_items);
+    // this.hideOptions = false;
   }
 
   deActivateNode(item, event) {

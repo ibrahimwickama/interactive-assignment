@@ -11,6 +11,7 @@ import { OrgUnitService } from '../../services/org-unit.service';
 export class OrgUnitFilterComponent implements OnInit {
   // thisrow:boolean = false;
   showOrgUnitTypes:string = 'none';
+  yesWasFirstEmitted:boolean = false;
 
   // the object that will carry the output value you can send one from outside to config start values
   @Input() orgunit_model: any =  {
@@ -214,9 +215,6 @@ export class OrgUnitFilterComponent implements OnInit {
   }
 
 
-
-
-
   updateOrgunits() {
     this.displayOrgTree();
     this.emit(true);
@@ -354,7 +352,11 @@ export class OrgUnitFilterComponent implements OnInit {
     // this.selected_orgunits.forEach((orgUnit:any)=>{
     this.multiOrgUnits.push(this.selected_orgunits[0]);
     // })
-       this.wasFirstEmitted.emit(this.selected_orgunits[0]);
+    if(!this.yesWasFirstEmitted){
+      this.wasFirstEmitted.emit(this.selected_orgunits[0]);
+      this.yesWasFirstEmitted = true;
+    }
+
     this.restoreOrgUnits.emit(this.selected_orgunits[0])
        // this.listenerToTableChange();
        // this.wasFirstEmitted = false;
@@ -435,7 +437,7 @@ export class OrgUnitFilterComponent implements OnInit {
 
   // set selected groups
   setSelectedLevels( selected_levels ) {
-    console.log("Listening to: "+JSON.stringify(selected_levels));
+    //console.log("Listening to: "+JSON.stringify(selected_levels));
     this.orgunit_model.selected_levels = selected_levels;
     this.emit(false);
   }
