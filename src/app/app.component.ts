@@ -20,9 +20,9 @@ export class AppComponent implements OnInit{
   tourSection4:any;
   tableDefault:boolean = true;
   tableHeadData = [];
-  tableHeadDataBackUp = [];
+  dataOnTopBackUp = [];
   tableRowData = [];
-  tableRowDataBackUp = [];
+  orgUnitOnRowsBackUp = [];
   temp = [];
   totalRec:any;
   page: number = 1;
@@ -40,10 +40,13 @@ export class AppComponent implements OnInit{
   dataSetHolder:any = [];
   pulseEffect:string = 'pulse';
   showTable:boolean = true;
-  backUpDataList:any = [];
+  backUpDataListWhenWasTop:any = [];
+  backUpDataListWhenReserved:any;
   backUpOrgUnits:any = [];
   backedUpOrgUnits:any = [];
   backedUpDataList:any = [];
+  backedUpDataListReversed:any = [];
+  backedUpOrgUnitsReversed:any = [];
   loaderMessage:string = 'Loading';
   showLoader:boolean = true;
   tableMode:string = 'default';
@@ -128,26 +131,31 @@ export class AppComponent implements OnInit{
 
   layoutChanges(changes){
 
-    // this.selectedFilter = '';
-    // if(changes.columns[0].name == 'OrgUnits'){
-    //   this.tableDefault = false;
-    // }else if(changes.columns[0].name == 'Data'){
-    //  // console.log("make Data to Top")
-    //   this.tableDefault = true;
-    // }
-    // if(this.tableDefault){
-    //   this.removeHeadings();
-    //   this.tableRowData = []
-    //   this.tableHeadData = []
-    //   this.getNewOrgUnit(this.backedUpOrgUnits);
-    //   this.receiveData(this.tableHeadData)
-    // }else{
-    //   //console.log("BackUp OrgUnits "+JSON.stringify(this.backedUpOrgUnits))
-    //   this.tableRowData = []
-    //   this.tableHeadData = []
-    //   this.receiveLayoutChangesOnData(this.backedUpDataList);
-    //   this.getLayoutChangesOnOrgUnit(this.backedUpOrgUnits);
-    // }
+    this.selectedFilter = '';
+    if(changes.columns[0].name == 'OrgUnits'){
+      this.deleteCheckBoxes();
+      this.tableDefault = false;
+    }else if(changes.columns[0].name == 'Data'){
+      this.deleteCheckBoxes();
+     // console.log("make Data to Top")
+      this.tableDefault = true;
+    }
+    if(this.tableDefault){
+      this.removeHeadings();
+      this.removeCheckBoxes();
+      this.tableRowData = []
+      this.tableHeadData = []
+      this.getNewOrgUnit(this.backedUpOrgUnits);
+      // this.receiveData(this.backUpDataListWhenWasTop)
+    }else{
+      //console.log("BackUp OrgUnits  "+JSON.stringify(this.backedUpOrgUnits))
+      this.removeHeadings();
+      this.removeCheckBoxes();
+      this.tableRowData = []
+      this.tableHeadData = []
+      // this.receiveLayoutChangesOnData(this.backUpDataListWhenReserved);
+      this.getLayoutChangesOnOrgUnit(this.backedUpOrgUnits);
+    }
 
 
   }
@@ -172,7 +180,7 @@ export class AppComponent implements OnInit{
           // console.log("dataSets assigned are : "+JSON.stringify(childOrgUnit))
           tempOrg.push(childOrgUnit);
           this.tableRowData = this.removeDuplicates(tempOrg,'id');
-          this.tableRowDataBackUp = this.tableRowData
+          // this.orgUnitOnRowsBackUp = this.tableRowData
         });
         if(newOrgUnit.level !== 1){
           this.selectedOrgUnitWithChildren.push(newOrgUnit);
@@ -181,7 +189,7 @@ export class AppComponent implements OnInit{
 
         if(this.selectedOrgUnitWithChildren.length >1){
           this.tableRowData = this.selectedOrgUnitWithChildren;
-          this.tableRowDataBackUp = this.tableRowData
+
 
         }
 
@@ -190,19 +198,22 @@ export class AppComponent implements OnInit{
         this.selectedOrgUnitWithChildren = this.tableRowData;
         this.tableRowData.push(newOrgUnit);
         this.tableRowData = this.removeDuplicates(this.tableRowData,'id');
-        this.tableRowDataBackUp = this.tableRowData
+        // this.orgUnitOnRowsBackUp = this.tableRowData
       }
 
-      this.receiveData(this.backUpDataList);
+      this.receiveData(this.backUpDataListWhenWasTop);
       this.selectedFilter == 'ORG_UNIT';
       // console.log("initOrgUnits was fired");
 
     }
 
+   this.orgUnitOnRowsBackUp = this.tableRowData
+
  }
 
 
   getNewOrgUnit(receivedOrgUnits){
+    this.removeCheckBoxes();
     //this.backUpOrgUnits = receivedOrgUnits;
     //console.log("dataSets assigned are : "+JSON.stringify(receivedOrgUnits))
     // orgunit_model.selected_orgunits[0].name
@@ -257,15 +268,17 @@ export class AppComponent implements OnInit{
           }
           if(this.selectedOrgUnitWithChildren.length >1){
             this.tableRowData = this.selectedOrgUnitWithChildren;
+
           }
         }else if(newOrgUnit.level == this.orgUnit.data.orgunit_settings.selected_levels[0].level){
           tempOrg = [];
           this.selectedOrgUnitWithChildren = this.tableRowData;
           this.tableRowData.push(newOrgUnit);
           this.tableRowData = this.removeDuplicates(this.tableRowData,'id');
+
         }
       });
-      this.receiveData(this.backUpDataList);
+      this.receiveData(this.backUpDataListWhenWasTop);
       this.selectedFilter == 'ORG_UNIT';
       //console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(this.orgUnit.data.orgunit_settings.selected_levels[0].level));
     }else{
@@ -294,10 +307,12 @@ export class AppComponent implements OnInit{
         this.tableRowData = this.removeDuplicates(this.tableRowData,'id');
       }
       });
-      this.receiveData(this.backUpDataList);
+      this.receiveData(this.backUpDataListWhenWasTop);
       this.selectedFilter == 'ORG_UNIT';
        //console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(this.orgUnit.data.orgunit_settings.selected_levels[0]));
     }
+
+    this.orgUnitOnRowsBackUp = this.tableRowData
 
   }
 
@@ -337,7 +352,7 @@ export class AppComponent implements OnInit{
   //         this.tableRowData = this.removeDuplicates(this.tableRowData,'id');
   //       }
   //     });
-  //     this.receiveData(this.backUpDataList);
+  //     this.receiveData(this.backUpDataListWhenWasTop);
   //     this.selectedFilter == 'ORG_UNIT';
   //     console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(this.orgUnit.data.orgunit_settings.selected_levels[0].level));
   //   }
@@ -366,7 +381,7 @@ export class AppComponent implements OnInit{
   //   //   this.tableRowData = this.removeDuplicates(this.tableRowData,'id');
   //   // }
   //   // });
-  //   // this.receiveData(this.backUpDataList);
+  //   // this.receiveData(this.backUpDataListWhenWasTop);
   //   // this.selectedFilter == 'ORG_UNIT';
   //   //  console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(this.orgUnit.data.orgunit_settings.selected_levels[0]));
   // }
@@ -429,7 +444,7 @@ export class AppComponent implements OnInit{
   }
 
   receiveData(dataList){
-    this.backUpDataList = dataList;
+    this.backUpDataListWhenWasTop = dataList;
     this.selectedFilter = '';
     this.removeCheckBoxes();
     this.tableHeadData = [];
@@ -444,7 +459,7 @@ export class AppComponent implements OnInit{
 
     this.tableHeadData.push(dataSet);
     this.tableHeadData = this.removeDuplicates(this.tableHeadData, 'id');
-   this.tableHeadDataBackUp =  this.tableHeadData;
+   this.dataOnTopBackUp =  this.tableHeadData;
      // make complex functions
     dataSetOrgUnit = dataSet.organisationUnits;
 
@@ -513,6 +528,8 @@ export class AppComponent implements OnInit{
     this.dataAssign.dataSet = dataOrgUnit.displayName;
     this.dataAssign.orgUnits.organisationUnits = orgUnitChanges;
      //console.log("orgUnuitChanges to dataSet: "+JSON.stringify(orgUnitChanges));
+
+    this.orgUnitOnRowsBackUp = this.tableRowData
 
     if(dataOrgUnit.formType == 'dataSet'){
       let dataSets = [];
@@ -628,10 +645,11 @@ export class AppComponent implements OnInit{
             })
           });
           this.dataSetToUpdate.dataSets.push(dataSet);
-          console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
-          // this.httpProvider.addFacilityToForm(this.dataSetToUpdate).subscribe(response=>{
-          //  //console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
-          // })
+          // console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
+          this.httpProvider.addFacilityToForm(this.dataSetToUpdate).subscribe(response=>{
+            this.showChangesSaved();
+           //console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
+          })
         }
       });
     }else if(selectedDataSet.formType == 'program'){
@@ -653,6 +671,7 @@ export class AppComponent implements OnInit{
           });
           this.programToUpdate.programs.push(program);
           this.httpProvider.addFacilityToForm(this.programToUpdate).subscribe(response=>{
+            this.showChangesSaved();
             //console.log("did it work program: "+JSON.stringify(this.programToUpdate));
           })
         }
@@ -714,12 +733,14 @@ export class AppComponent implements OnInit{
 
       //console.log("Listening to from Live-App: "+JSON.stringify(this.tableHeadData));
 
-      // this.receiveData(this.backUpDataList);
-      this.receiveLayoutChangesOnData(this.backUpDataList);
+      // this.receiveData(this.backUpDataListWhenWasTop);
+      this.receiveLayoutChangesOnData(this.backUpDataListWhenWasTop);
       this.selectedFilter == 'ORG_UNIT';
       // console.log("initOrgUnits was fired");
 
     }
+
+    this.backedUpOrgUnitsReversed = this.tableHeadData
 
   }
 
@@ -748,20 +769,29 @@ export class AppComponent implements OnInit{
           this.tableHeadData = this.removeDuplicates(this.tableHeadData,'id');
         }
       });
-      this.receiveLayoutChangesOnData(this.backUpDataList);
+      if(this.backUpDataListWhenReserved){
+        this.receiveLayoutChangesOnData(this.backUpDataListWhenWasTop);
+      }else{
+        this.receiveLayoutChangesOnData(this.backUpDataListWhenWasTop);
+    }
+
       this.selectedFilter == 'ORG_UNIT';
       // console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(newOrgUnit));
+
+    this.backedUpOrgUnitsReversed = this.tableHeadData
 
   }
 
 
   receiveLayoutChangesOnData(dataList){
-    this.backUpDataList = dataList;
+    // this.backUpDataListWhenWasTop =  dataList;
+    this.backUpDataListWhenReserved = dataList;
     this.selectedFilter = '';
-    // this.removeHeadings();
+    this.removeHeadings();
     this.removeCheckBoxes();
     this.tableRowData = [];
     this.tableRowData = this.removeDuplicates(dataList, 'id');
+    this.backedUpDataListReversed =  this.tableRowData;
 
     this.tableHeadData.forEach((tempDataSet:any)=>{
 
@@ -864,6 +894,26 @@ export class AppComponent implements OnInit{
             // document.getElementById(td_prg).remove()
             document.getElementById(head.id).hidden = true;
             // document.getElementById(head.id).remove()
+
+            document.getElementById(td_prg+'lyLU2wR22tC').remove();
+            document.getElementById(td_prg+'vc6nF5yZsPR').remove();
+            document.getElementById(td_prg+'nqKkegk1y8U').remove();
+            document.getElementById(td_prg+'BfMAe6Itzgt').remove();
+            document.getElementById(td_prg+'Nyh6laLdBEJ').remove();
+            document.getElementById(td_prg+'RixTh0Xs0A7').remove();
+            document.getElementById(td_prg+'TuL8IOPzpHh').remove();
+            document.getElementById(td_prg+'fiDtcNUzKI6').remove();
+
+
+
+
+
+
+
+
+
+
+
           } catch (e){
             //console.log('Error: '+e);
           }
@@ -897,7 +947,50 @@ export class AppComponent implements OnInit{
       })
   }
 
+  deleteCheckBoxes(){
+    this.tableRowData.forEach((row:any)=>{
+      if(row.assigned) {
+        row.assigned.forEach((head: any) => {
+          let td_id = row.id + '-' + head.id;
+          let td_dst = row.id + '--';
+          let td_prg = row.id + '-';
+          try{
+            // document.getElementById(td_id).hidden = true;
+            document.getElementById(td_id).remove()
+            document.getElementById("assignment-table1").remove()
 
+            if(this.detailCount.data1 == 'dataSet'){
+              document.getElementById("dataSets").hidden = true;
+            }else if(this.detailCount.data2 = 'program'){
+              document.getElementById("programs").hidden = true;
+            }
+            // document.getElementById(td_dst).hidden = true;
+            document.getElementById(td_dst).remove()
+            // document.getElementById(td_prg).hidden = true;
+            document.getElementById(td_prg).remove()
+            // document.getElementById(head.id).hidden = true;
+            document.getElementById(head.id).remove()
+          } catch (e){
+            //console.log('Error: '+e);
+          }
+        });
+      }
+    });
+
+    // this.tableRowData.forEach((tempOrg:any)=>{
+    //   if(tempOrg.assigned) {
+    //     tempOrg.assigned.forEach((dataSet: any) => {
+    //       let td_id = tempOrg.id + '-' + dataSet.id;
+    //
+    //       try{
+    //         document.getElementById(td_id).hidden = true;
+    //       } catch (e){
+    //         console.log('Error: '+e);
+    //       }
+    //     });
+    //   }
+    //   });
+  }
 
 
   startTour() {
@@ -934,8 +1027,9 @@ export class AppComponent implements OnInit{
     let val = ev.target.value;
       // filter first headers
     if(this.tableDefault){
-    this.tableRowData = this.tableRowDataBackUp;
-    this.tableHeadData = this.tableHeadDataBackUp;
+
+    this.tableRowData = this.orgUnitOnRowsBackUp;
+    this.tableHeadData = this.dataOnTopBackUp;
     if(val && val.trim() != ''){
       this.tableRowData = this.tableRowData.filter((data:any) => {
         return (data.name.toLowerCase().indexOf(val.toLowerCase()) > -1);
@@ -944,12 +1038,11 @@ export class AppComponent implements OnInit{
       this.tableRowData = []
       this.tableHeadData = []
       this.removeCheckBoxes();
-      this.tableRowData = this.tableRowDataBackUp;
-      this.tableHeadData = this.tableHeadDataBackUp;
-      // this.receiveData(this.backUpDataList);
-      // this.receiveData(this.backUpDataList);
+      this.tableRowData = this.orgUnitOnRowsBackUp;
+      this.tableHeadData = this.dataOnTopBackUp;
+      // this.receiveData(this.backUpDataListWhenWasTop);
+      // this.receiveData(this.backUpDataListWhenWasTop);
     }
-
         // this.removeHeadings();
         // this.tableRowData = []
         // // this.tableHeadData = []
@@ -962,19 +1055,19 @@ export class AppComponent implements OnInit{
         // this.receiveLayoutChangesOnData(this.backedUpDataList);
         // this.getLayoutChangesOnOrgUnit(this.backedUpOrgUnits);
 
-      this.tableHeadData = this.tableHeadDataBackUp;
+      this.tableRowData = this.dataOnTopBackUp;
       if(val && val.trim() != ''){
-        this.tableHeadData = this.tableHeadData.filter((data:any) => {
+        this.tableRowData = this.tableRowData.filter((data:any) => {
           return (data.name.toLowerCase().indexOf(val.toLowerCase()) > -1);
         })
       }else {
         this.tableRowData = []
         this.tableHeadData = []
         this.removeCheckBoxes();
-        this.tableRowData = this.tableRowDataBackUp;
-        this.tableHeadData = this.tableHeadDataBackUp;
-        // this.receiveData(this.backUpDataList);
-        // this.receiveData(this.backUpDataList);
+        this.tableRowData = this.dataOnTopBackUp;
+        this.tableHeadData = this.backedUpOrgUnitsReversed;
+        // this.receiveData(this.backUpDataListWhenWasTop);
+        // this.receiveData(this.backUpDataListWhenWasTop);
       }
 
       }
