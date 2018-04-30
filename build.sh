@@ -15,3 +15,5 @@ curl -X POST -u admin:district -F file=@orgUnitAssignment.zip https://play.dhis2
 echo "Installing the app into DHIS Play on play.dhis2.org/29..."
 curl -X POST -u system:System123 -F file=@orgUnitAssignment.zip https://play.dhis2.org/2.29/api/apps
 echo "Successful installed the app"
+echo "Installing the app into DHIS Nutrition on dhis.hisptz.org/nutrition/..."
+curl -X POST -u admin:district -F file=@orgUnitAssignment.zip https://dhis.hisptz.org/nutrition/api/apps

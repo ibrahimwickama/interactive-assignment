@@ -352,10 +352,10 @@ export class OrgUnitFilterComponent implements OnInit {
     // this.selected_orgunits.forEach((orgUnit:any)=>{
     this.multiOrgUnits.push(this.selected_orgunits[0]);
     // })
-    if(!this.yesWasFirstEmitted){
-      this.wasFirstEmitted.emit(this.selected_orgunits[0]);
-      this.yesWasFirstEmitted = true;
-    }
+    // if(!this.yesWasFirstEmitted){
+    //   this.wasFirstEmitted.emit(this.selected_orgunits[0]);
+    //   this.yesWasFirstEmitted = true;
+    // }
 
     this.restoreOrgUnits.emit(this.selected_orgunits[0])
        // this.listenerToTableChange();

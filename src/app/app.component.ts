@@ -20,8 +20,10 @@ export class AppComponent implements OnInit{
   tourSection4:any;
   tableDefault:boolean = true;
   tableHeadData = [];
+  table2HeadData = [];
   dataOnTopBackUp = [];
   tableRowData = [];
+  table2RowData = [];
   orgUnitOnRowsBackUp = [];
   temp = [];
   totalRec:any;
@@ -51,8 +53,48 @@ export class AppComponent implements OnInit{
   showLoader:boolean = true;
   tableMode:string = 'default';
   detailCount:any = {data1:'dataSets',data2:''};
+  // orgUnit: any = {};
+  organisationunits: any[] = [];
+  selected_orgunits: any[] = [];
 
   @Output() tellOrgUnitFilter = new EventEmitter();
+
+
+  // the object that will carry the output value you can send one from outside to config start values
+   orgunit_model: any =  {
+    selection_mode: 'Usr_orgUnit',
+    selected_levels: [],
+    show_update_button: true,
+    selected_groups: [],
+    orgunit_levels: [],
+    orgunit_groups: [],
+    selected_orgunits: [],
+    user_orgunits: [],
+    type: 'report', // can be 'data_entry'
+    selected_user_orgunit: []
+  };
+
+  // // The organisation unit configuration object This will have to come from outside.
+  // @Input() orgunit_tree_config: any = {
+  //   show_search : true,
+  //   search_text : 'Search',
+  //   level: null,
+  //   loading: true,
+  //   loading_message: 'Loading Organisation units...',
+  //   multiple: true,
+  //   multiple_key: 'none', // can be control or shift
+  //   placeholder: 'Select Organisation Unit'
+  // };
+
+  user_orgunits_types: Array<any> = [
+    {id: 'USER_ORGUNIT', name: 'User Admin Unit', shown: true},
+    {id: 'USER_ORGUNIT_CHILDREN', name: 'User sub-units', shown: true},
+    {id: 'USER_ORGUNIT_GRANDCHILDREN', name: 'User sub-x2-units', shown: true}
+  ];
+
+
+
+
 
   constructor(private httpProvider: HttpProviderService, private orgUnitService: OrgUnitService){
     this.orgUnit = this.orgUnitService.getAallOrgUnitStructure();
@@ -86,7 +128,8 @@ export class AppComponent implements OnInit{
   // initial Loader for Data
   getInitialDataToDisplay(){
     this.showFilters = true;
-     this.selectedFilter = 'ORG_UNIT';
+     // this.selectedFilter = 'ORG_UNIT';
+    this.loadOrgUnits();
     this.loaderMessage = 'Fetching data for assignment...';
     Observable.interval(30000).take(1).subscribe(() => {
     let initialDataHolder = [];
@@ -94,11 +137,17 @@ export class AppComponent implements OnInit{
       // dataSets sample dataSets from hispTz,Moh --- zeEp4Xu2GOm(ANC), v6wdME3ouXu(OPD), QntdhuQfgvT(DTC), qpcwPcj8D6u(IPD), GzvLb3XVZbR(L&D)
       // dataSets sample dataSets from hispTz,Moh --- nqKkegk1y8U(BRN Disp), RixTh0Xs0A7(BRN Hc), fiDtcNUzKI6(BRN Hsp)
       // if(datasets.id == 'zeEp4Xu2GOm' || datasets.id == 'v6wdME3ouXu' || datasets.id == 'QntdhuQfgvT' || datasets.id == 'qpcwPcj8D6u' || datasets.id ==  'GzvLb3XVZbR'){
-      if(datasets.id == 'lyLU2wR22tC' || datasets.id == 'BfMAe6Itzgt' || datasets.id == 'TuL8IOPzpHh' ||
-        datasets.id == 'vc6nF5yZsPR' || datasets.id ==  'Nyh6laLdBEJ'
-        || datasets.id == 'nqKkegk1y8U' || datasets.id == 'RixTh0Xs0A7' || datasets.id == 'fiDtcNUzKI6'){
+      // if(datasets.id == 'lyLU2wR22tC' || datasets.id == 'BfMAe6Itzgt' || datasets.id == 'TuL8IOPzpHh' ||
+      //   datasets.id == 'vc6nF5yZsPR' || datasets.id ==  'Nyh6laLdBEJ'
+      //   || datasets.id == 'nqKkegk1y8U' || datasets.id == 'RixTh0Xs0A7' || datasets.id == 'fiDtcNUzKI6'){
+      //   initialDataHolder.push(datasets);
+      // }
+      //
+      if(initialDataHolder.length <= 6){
         initialDataHolder.push(datasets);
       }
+
+
     });
       this.loaderMessage = 'Finalizing...';
       this.backedUpDataList = initialDataHolder;
@@ -111,6 +160,70 @@ export class AppComponent implements OnInit{
     });
 
   }
+
+  loadOrgUnits(){
+    this.orgUnitService.getOrgunitLevelsInformation()
+      .subscribe(
+        (data: any) => {
+
+    // identify currently logged in usser
+    this.orgUnitService.getUserInformation(this.orgunit_model.type).subscribe(
+      userOrgunit => {
+        const level = this.orgUnitService.getUserHighestOrgUnitlevel( userOrgunit );
+        this.orgunit_model.user_orgunits = this.orgUnitService.getUserOrgUnits( userOrgunit );
+        this.orgUnitService.user_orgunits = this.orgUnitService.getUserOrgUnits( userOrgunit );
+        if (this.orgunit_model.selection_mode === 'Usr_orgUnit') {
+          this.orgunit_model.selected_orgunits = this.orgunit_model.user_orgunits;
+        }
+        const all_levels = data.pager.total;
+        const orgunits = this.orgUnitService.getuserOrganisationUnitsWithHighestlevel( level, userOrgunit );
+        const use_level = parseInt(all_levels) - (parseInt(level) - 1);
+        // load inital orgiunits to speed up loading speed
+        this.orgUnitService.getInitialOrgunitsForTree(orgunits).subscribe(
+          (initial_data) => {
+            this.organisationunits = initial_data;
+            // this.orgunit_tree_config.loading = false;
+            // a hack to make sure the user orgunit is not triggered on the first time
+            //this.initial_usr_orgunit = [{id: 'USER_ORGUNIT', name: 'User org unit'}];
+            // after done loading initial organisation units now load all organisation units
+            const fields = this.orgUnitService.generateUrlBasedOnLevels(use_level);
+            this.orgUnitService.getAllOrgunitsForTree1(fields, orgunits).subscribe(
+              items => {
+                // items[0].expanded = true;
+                this.organisationunits = items;
+
+                this.initOrgUnits(this.organisationunits[0]);
+                // console.log("checking initially :"+JSON.stringify(this.organisationunits))
+                // // activate organisation units
+                // for (const active_orgunit of this.orgunit_model.selected_orgunits) {
+                //   this.activateNode(active_orgunit.id, this.orgtree, true);
+                // }
+                // // backup to make sure that always there is default organisation unit
+                // if (this.orgunit_model.selected_orgunits.length === 0) {
+                //   for (const active_orgunit of this.orgunit_model.user_orgunits) {
+                //     this.activateNode(active_orgunit.id, this.orgtree, true);
+                //   }
+                // }
+                // this.prepareOrganisationUnitTree(this.organisationunits, 'parent');
+              },
+              error => {
+                console.log('something went wrong while fetching Organisation units');
+                // this.orgunit_tree_config.loading = false;
+              }
+            );
+          },
+          error => {
+            console.log('something went wrong while fetching Organisation units');
+            // this.orgunit_tree_config.loading = false;
+          }
+        );
+
+      }
+    );
+        })
+  }
+
+
 
   showChangesSaved(){
     this.showChangesApplied = 'show';
@@ -133,26 +246,26 @@ export class AppComponent implements OnInit{
 
     this.selectedFilter = '';
     if(changes.columns[0].name == 'OrgUnits'){
-      this.deleteCheckBoxes();
+      // this.deleteCheckBoxes();
       this.tableDefault = false;
     }else if(changes.columns[0].name == 'Data'){
-      this.deleteCheckBoxes();
+      // this.deleteCheckBoxes();
      // console.log("make Data to Top")
       this.tableDefault = true;
     }
     if(this.tableDefault){
-      this.removeHeadings();
-      this.removeCheckBoxes();
+      // this.removeHeadings();
+      // this.removeCheckBoxes();
       this.tableRowData = []
       this.tableHeadData = []
       this.getNewOrgUnit(this.backedUpOrgUnits);
       // this.receiveData(this.backUpDataListWhenWasTop)
     }else{
       //console.log("BackUp OrgUnits  "+JSON.stringify(this.backedUpOrgUnits))
-      this.removeHeadings();
-      this.removeCheckBoxes();
-      this.tableRowData = []
-      this.tableHeadData = []
+      // this.removeHeadings();
+      // this.removeCheckBoxes();
+      this.table2RowData = []
+      this.table2HeadData = []
       // this.receiveLayoutChangesOnData(this.backUpDataListWhenReserved);
       this.getLayoutChangesOnOrgUnit(this.backedUpOrgUnits);
     }
@@ -165,9 +278,9 @@ export class AppComponent implements OnInit{
   }
 
  initOrgUnits(newOrgUnit){
-    this.currentOrgUnit = this.orgUnit.data.orgunit_settings.selected_orgunits[0].name;
+    // this.currentOrgUnit = this.orgUnit.data.orgunit_settings.selected_orgunits[0].name;
      this.backUpOrgUnits = newOrgUnit;
-    if(this.tableRowData.length == 0 && this.tableHeadData.length == 0){
+    // if(this.tableRowData.length == 0 && this.tableHeadData.length == 0){
       this.showTable = false;
       let tempOrg = [];
       // this.removeCheckBoxes();
@@ -175,9 +288,10 @@ export class AppComponent implements OnInit{
 
       if(newOrgUnit.children){
         newOrgUnit.children.forEach((childOrgUnit:any)=>{
+
           // childOrgUnit.dataSetCount = childOrgUnit.dataSets.length;
           // childOrgUnit.programsCount = childOrgUnit.programs.length;
-          // console.log("dataSets assigned are : "+JSON.stringify(childOrgUnit))
+          //  console.log("dataSets assigned are : "+JSON.stringify(childOrgUnit))
           tempOrg.push(childOrgUnit);
           this.tableRowData = this.removeDuplicates(tempOrg,'id');
           // this.orgUnitOnRowsBackUp = this.tableRowData
@@ -205,7 +319,7 @@ export class AppComponent implements OnInit{
       this.selectedFilter == 'ORG_UNIT';
       // console.log("initOrgUnits was fired");
 
-    }
+    // }
 
    this.orgUnitOnRowsBackUp = this.tableRowData
 
@@ -704,7 +818,7 @@ export class AppComponent implements OnInit{
 
 
   getLAyOutChangedInitOrgUnit(newOrgUnit){
-    if(this.tableRowData.length == 0 && this.tableHeadData.length == 0){
+    if(this.table2RowData.length == 0 && this.table2HeadData.length == 0){
       this.showTable = false;
       let tempOrg = [];
       // this.removeCheckBoxes();
@@ -713,7 +827,7 @@ export class AppComponent implements OnInit{
       if(newOrgUnit.children){
         newOrgUnit.children.forEach((childOrgUnit:any)=>{
           tempOrg.push(childOrgUnit);
-          this.tableHeadData = this.removeDuplicates(tempOrg,'id');
+          this.table2HeadData = this.removeDuplicates(tempOrg,'id');
         });
         if(newOrgUnit.level !== 1){
           this.selectedOrgUnitWithChildren.push(newOrgUnit);
@@ -721,14 +835,14 @@ export class AppComponent implements OnInit{
         }
 
         if(this.selectedOrgUnitWithChildren.length >1){
-          this.tableHeadData = this.selectedOrgUnitWithChildren;
+          this.table2HeadData = this.selectedOrgUnitWithChildren;
         }
 
       }else {
         tempOrg = [];
-        this.selectedOrgUnitWithChildren = this.tableHeadData;
-        this.tableHeadData.push(newOrgUnit);
-        this.tableHeadData = this.removeDuplicates(this.tableHeadData,'id');
+        this.selectedOrgUnitWithChildren = this.table2HeadData;
+        this.table2HeadData.push(newOrgUnit);
+        this.table2HeadData = this.removeDuplicates(this.table2HeadData,'id');
       }
 
       //console.log("Listening to from Live-App: "+JSON.stringify(this.tableHeadData));
@@ -740,7 +854,7 @@ export class AppComponent implements OnInit{
 
     }
 
-    this.backedUpOrgUnitsReversed = this.tableHeadData
+    this.backedUpOrgUnitsReversed = this.table2HeadData
 
   }
 
@@ -753,20 +867,20 @@ export class AppComponent implements OnInit{
         if(newOrgUnit.children){
           newOrgUnit.children.forEach((childOrgUnit:any)=>{
             tempOrg.push(childOrgUnit);
-            this.tableHeadData = this.removeDuplicates(tempOrg,'id');
+            this.table2HeadData = this.removeDuplicates(tempOrg,'id');
           });
           if(newOrgUnit.level !== 1){
             this.selectedOrgUnitWithChildren.push(newOrgUnit);
             this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
           }
           if(this.selectedOrgUnitWithChildren.length >1){
-            this.tableHeadData = this.selectedOrgUnitWithChildren;
+            this.table2HeadData = this.selectedOrgUnitWithChildren;
           }
         }else {
           tempOrg = [];
           this.selectedOrgUnitWithChildren = this.tableHeadData;
-          this.tableHeadData.push(newOrgUnit);
-          this.tableHeadData = this.removeDuplicates(this.tableHeadData,'id');
+          this.table2HeadData.push(newOrgUnit);
+          this.table2HeadData = this.removeDuplicates(this.table2HeadData,'id');
         }
       });
       if(this.backUpDataListWhenReserved){
@@ -778,7 +892,7 @@ export class AppComponent implements OnInit{
       this.selectedFilter == 'ORG_UNIT';
       // console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(newOrgUnit));
 
-    this.backedUpOrgUnitsReversed = this.tableHeadData
+    this.backedUpOrgUnitsReversed = this.table2HeadData
 
   }
 
@@ -789,13 +903,13 @@ export class AppComponent implements OnInit{
     this.selectedFilter = '';
     this.removeHeadings();
     this.removeCheckBoxes();
-    this.tableRowData = [];
-    this.tableRowData = this.removeDuplicates(dataList, 'id');
-    this.backedUpDataListReversed =  this.tableRowData;
+    this.table2RowData = [];
+    this.table2RowData = this.removeDuplicates(dataList, 'id');
+    this.backedUpDataListReversed =  this.table2RowData;
 
-    this.tableHeadData.forEach((tempDataSet:any)=>{
+    this.table2HeadData.forEach((tempDataSet:any)=>{
 
-    this.tableRowData.forEach((dataSet)=>{
+    this.table2RowData.forEach((dataSet)=>{
       let dataSetOrgUnit = [];
       dataSetOrgUnit = dataSet.organisationUnits;
 
@@ -820,8 +934,8 @@ export class AppComponent implements OnInit{
       });
 
     });
-    this.temp.push(this.tableRowData);
-    this.totalRec = this.tableRowData.length;
+    this.temp.push(this.table2RowData);
+    this.totalRec = this.table2RowData.length;
     this.showTable = true;
   }
 
@@ -895,24 +1009,23 @@ export class AppComponent implements OnInit{
             document.getElementById(head.id).hidden = true;
             // document.getElementById(head.id).remove()
 
-            document.getElementById(td_prg+'lyLU2wR22tC').remove();
-            document.getElementById(td_prg+'vc6nF5yZsPR').remove();
-            document.getElementById(td_prg+'nqKkegk1y8U').remove();
-            document.getElementById(td_prg+'BfMAe6Itzgt').remove();
-            document.getElementById(td_prg+'Nyh6laLdBEJ').remove();
-            document.getElementById(td_prg+'RixTh0Xs0A7').remove();
-            document.getElementById(td_prg+'TuL8IOPzpHh').remove();
-            document.getElementById(td_prg+'fiDtcNUzKI6').remove();
+            // document.getElementById(td_prg+'lyLU2wR22tC').remove();
+            // document.getElementById(td_prg+'vc6nF5yZsPR').remove();
+            // document.getElementById(td_prg+'nqKkegk1y8U').remove();
+            // document.getElementById(td_prg+'BfMAe6Itzgt').remove();
+            // document.getElementById(td_prg+'Nyh6laLdBEJ').remove();
+            // document.getElementById(td_prg+'RixTh0Xs0A7').remove();
+            // document.getElementById(td_prg+'TuL8IOPzpHh').remove();
+            // document.getElementById(td_prg+'fiDtcNUzKI6').remove();
 
-
-
-
-
-
-
-
-
-
+            document.getElementById(td_prg+'lyLU2wR22tC').hidden = true;
+            document.getElementById(td_prg+'vc6nF5yZsPR').hidden = true;
+            document.getElementById(td_prg+'nqKkegk1y8U').hidden = true;
+            document.getElementById(td_prg+'BfMAe6Itzgt').hidden = true;
+            document.getElementById(td_prg+'Nyh6laLdBEJ').hidden = true;
+            document.getElementById(td_prg+'RixTh0Xs0A7').hidden = true;
+            document.getElementById(td_prg+'TuL8IOPzpHh').hidden = true;
+            document.getElementById(td_prg+'fiDtcNUzKI6').hidden = true;
 
           } catch (e){
             //console.log('Error: '+e);
@@ -1055,17 +1168,17 @@ export class AppComponent implements OnInit{
         // this.receiveLayoutChangesOnData(this.backedUpDataList);
         // this.getLayoutChangesOnOrgUnit(this.backedUpOrgUnits);
 
-      this.tableRowData = this.dataOnTopBackUp;
+      this.table2RowData = this.dataOnTopBackUp;
       if(val && val.trim() != ''){
-        this.tableRowData = this.tableRowData.filter((data:any) => {
+        this.table2RowData = this.table2RowData.filter((data:any) => {
           return (data.name.toLowerCase().indexOf(val.toLowerCase()) > -1);
         })
       }else {
-        this.tableRowData = []
-        this.tableHeadData = []
+        this.table2RowData = []
+        this.table2HeadData = []
         this.removeCheckBoxes();
-        this.tableRowData = this.dataOnTopBackUp;
-        this.tableHeadData = this.backedUpOrgUnitsReversed;
+        this.table2RowData = this.dataOnTopBackUp;
+        this.table2HeadData = this.backedUpOrgUnitsReversed;
         // this.receiveData(this.backUpDataListWhenWasTop);
         // this.receiveData(this.backUpDataListWhenWasTop);
       }

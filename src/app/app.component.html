@@ -84,12 +84,12 @@
         <app-data-filter *ngIf="selectedFilter === 'DATA' && !tableDefault"
                          (updatedListToTable)="receiveLayoutChangesOnData($event)"
                          (onDataFilterClose)="closeSelection($event)"
-                         [selectedItems]="tableRowData"
+                         [selectedItems]="table2RowData"
         ></app-data-filter>
 
 
         <app-layout *ngIf="selectedFilter === 'LAYOUT'"
-                      (onLayoutUpdate)="layoutChanges($event)"
+                      <!--(onLayoutUpdate)="layoutChanges($event)"-->
                        (onLayoutClose)="closeSelection($event)" ></app-layout>
       </div>
 
@@ -170,14 +170,14 @@
         <th width="100px"  >Org-unit / Datasets</th>
         <th width="100px"  id="orgUnits">Org-units</th>
         <!--<th width="100px"  id="programs">Programs</th>-->
-        <th *ngFor="let head of tableHeadData" width="100px" style="background-color: white" id="{{head.id}}">{{head.name}}</th>
+        <th *ngFor="let head of table2HeadData" width="100px" style="background-color: white" id="{{head.id}}">{{head.name}}</th>
       </tr>
       <tr *ngIf="!showTable">
         <th width="100px"  >Org-unit / Datasets</th>
       </tr>
       </thead>
       <tbody *ngIf="showTable">
-      <tr  *ngFor="let row of tableRowData | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{row.id}}" class="table-row" >
+      <tr  *ngFor="let row of table2RowData | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{row.id}}" class="table-row" >
 
         <td>{{row.displayName}}</td>
         <td title="{{row.displayName}} is assigned to {{getOrgUnitCount(row)}} DataSets" id="{{row.id+'--'}}">{{getOrgUnitCount(row)}}</td>
