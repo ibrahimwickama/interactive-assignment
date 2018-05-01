@@ -128,26 +128,14 @@ export class AppComponent implements OnInit{
   // initial Loader for Data
   getInitialDataToDisplay(){
     this.showFilters = true;
-     // this.selectedFilter = 'ORG_UNIT';
     this.loadOrgUnits();
     this.loaderMessage = 'Fetching data for assignment...';
-    Observable.interval(30000).take(1).subscribe(() => {
+    Observable.interval(10000).take(1).subscribe(() => {
     let initialDataHolder = [];
     this.dataSetsFromServer.forEach((datasets)=>{
-      // dataSets sample dataSets from hispTz,Moh --- zeEp4Xu2GOm(ANC), v6wdME3ouXu(OPD), QntdhuQfgvT(DTC), qpcwPcj8D6u(IPD), GzvLb3XVZbR(L&D)
-      // dataSets sample dataSets from hispTz,Moh --- nqKkegk1y8U(BRN Disp), RixTh0Xs0A7(BRN Hc), fiDtcNUzKI6(BRN Hsp)
-      // if(datasets.id == 'zeEp4Xu2GOm' || datasets.id == 'v6wdME3ouXu' || datasets.id == 'QntdhuQfgvT' || datasets.id == 'qpcwPcj8D6u' || datasets.id ==  'GzvLb3XVZbR'){
-      // if(datasets.id == 'lyLU2wR22tC' || datasets.id == 'BfMAe6Itzgt' || datasets.id == 'TuL8IOPzpHh' ||
-      //   datasets.id == 'vc6nF5yZsPR' || datasets.id ==  'Nyh6laLdBEJ'
-      //   || datasets.id == 'nqKkegk1y8U' || datasets.id == 'RixTh0Xs0A7' || datasets.id == 'fiDtcNUzKI6'){
-      //   initialDataHolder.push(datasets);
-      // }
-      //
       if(initialDataHolder.length <= 6){
         initialDataHolder.push(datasets);
       }
-
-
     });
       this.loaderMessage = 'Finalizing...';
       this.backedUpDataList = initialDataHolder;
