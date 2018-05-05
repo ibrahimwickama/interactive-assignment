@@ -20,7 +20,7 @@
     <div  class="visualization-filter-list"  >
       <button class="dashboard-btn org-unit-filter-btn "  title="Filter by organisation unit" [ngStyle]="{zIndex: tourSection1}"
               (click)="toggleCurrentFilter($event, 'ORG_UNIT')" >
-        <img src="./assets/icons/tree.png" alt="">&nbsp; Org-unit
+        <img src="./assets/icons/tree.png" alt="">&nbsp;Orgunit
       </button>
 
       <button class="dashboard-btn data-filter-btn " [ngStyle]="{zIndex: tourSection2}"
@@ -33,9 +33,12 @@
       </button>
     </div>
   </div>
-    <div style="margin-left:16%; margin-top: 3px; font-size: larger" >Assignment Table</div>
-    <div style="margin-left: 25%; margin-top: -3px">
-      <input type="text" placeholder="Search..." class="form-control" style="width: 320px" (input)="getFilteredList($event)">
+    <div class="assingment-table"  >Assignment Table</div>
+    <div class="search-holder">
+      <input type="text" placeholder="Search..."
+             class="form-control search-input"  id="search-input" (input)="getFilteredList($event)">
+             <!--(input)="getFilteredList($event)"-->
+
     </div>
     <!--<div style="margin-left: 35%">-->
       <!--<input type="text" placeholder="Search..." class="form-control">-->
@@ -89,7 +92,7 @@
 
 
         <app-layout *ngIf="selectedFilter === 'LAYOUT'"
-                      <!--(onLayoutUpdate)="layoutChanges($event)"-->
+                      (onLayoutUpdate)="layoutChanges($event)"
                        (onLayoutClose)="closeSelection($event)" ></app-layout>
       </div>
 
@@ -132,24 +135,41 @@
       </div>
       </div>
 
+    <!--<div *ngIf="!showLoader" >-->
+      <!--<app-table-display-->
+      <!--[table2HeadData]="table2HeadData.slice(0)"-->
+      <!--[table2RowData]="table2RowData.slice(0)"-->
+      <!--[tableDefault]="tableDefault"-->
+      <!--[tableHeadData]="tableHeadData.slice(0)"-->
+      <!--[tableRowData]="tableRowData.slice(0)"-->
+      <!--[showTable]="showTable"-->
+      <!--[dataSetsFromServer]="dataSetsFromServer"-->
+      <!--[programsFromServer]="programsFromServer"-->
+      <!--[detailCount]="detailCount"-->
+      <!--[doReloadTable]="doReloadTable"-->
+      <!--[backedUpOrgUnits]="backedUpOrgUnits"-->
+      <!--&gt;-->
+      <!--</app-table-display>-->
+    <!--</div>-->
+
     <div class="card-block p-0" *ngIf="tableDefault">
 
       <table class="table table-bordered table-sm m-0" id="assignment-table1" >
         <thead class="">
         <tr *ngIf="showTable">
-          <th style="width:100px">OrgUnit / DataSets</th>
+          <th style="width:100px">Orgunit / Datasets</th>
           <th width="100px"  id="data">{{detailCount.data1}}</th>
           <th *ngFor="let data of tableHeadData" width="100px" id="{{data.id}}" >{{data.displayName}}</th>
         </tr>
         <tr *ngIf="!showTable">
-          <th width="100px"  >OrgUnit / DataSets</th>
+          <th width="100px"  >Orgunit / Datasets</th>
         </tr>
         </thead>
         <tbody *ngIf="showTable">
         <tr  *ngFor="let orgUnit of tableRowData | paginate: { id: 'listing_pagination',itemsPerPage:itemsOnPage,currentPage: page,totalItems: totalRec }" id="{{orgUnit.id}}" class="table-row" >
 
           <td>{{orgUnit.name}}</td>
-          <td title="{{orgUnit.name}} is assigned to {{(detailCount.data1 == 'dataSets')?getDataSetToOrgUnitCount(orgUnit.id):getProgramsToOrgUnitCount(orgUnit.id)}} {{detailCount.data1}}" id="{{orgUnit.id+'--'}}">{{(detailCount.data1 == 'dataSets')?getDataSetToOrgUnitCount(orgUnit.id):getProgramsToOrgUnitCount(orgUnit.id)}}</td>
+          <td title="{{orgUnit.name}} is assigned to {{(detailCount.data1 == 'Datasets')?getDataSetToOrgUnitCount(orgUnit.id):getProgramsToOrgUnitCount(orgUnit.id)}} {{detailCount.data1}}" id="{{orgUnit.id+'--'}}">{{(detailCount.data1 == 'Datasets')?getDataSetToOrgUnitCount(orgUnit.id):getProgramsToOrgUnitCount(orgUnit.id)}}</td>
           <td *ngFor="let dataOrgUnit of orgUnit.assigned" id="{{orgUnit.id+'-'+dataOrgUnit.id}}" >
             <div style="height: 29px;">
             <img *ngIf="dataOrgUnit.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >
@@ -167,7 +187,7 @@
     <table class="table table-bordered table-sm m-0" id="assignment-table2"  >
       <thead class="">
       <tr *ngIf="showTable">
-        <th width="100px"  >Org-unit / Datasets</th>
+        <th width="100px"  >Orgunit / Datasets</th>
         <th width="100px"  id="orgUnits">Org-units</th>
         <!--<th width="100px"  id="programs">Programs</th>-->
         <th *ngFor="let head of table2HeadData" width="100px" style="background-color: white" id="{{head.id}}">{{head.name}}</th>
@@ -227,10 +247,6 @@
 
 
 <div class="snackbar {{showChangesApplied}}">Changes saved</div>
-
-
-
-
 
 
 

@@ -4,6 +4,8 @@ import {Observable} from "rxjs/Observable";
 import {OrgUnitService} from "./modules/orgUnitModel/orgUnitSettings/services/org-unit.service";
 import {OrgUnitData} from "./modules/orgUnitModel/orgUnitSettings/models/orgUnits";
 
+declare var reFreshTable:any;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -52,10 +54,11 @@ export class AppComponent implements OnInit{
   loaderMessage:string = 'Loading';
   showLoader:boolean = true;
   tableMode:string = 'default';
-  detailCount:any = {data1:'dataSets',data2:''};
+  detailCount:any = {data1:'Datasets',data2:''};
   // orgUnit: any = {};
   organisationunits: any[] = [];
   selected_orgunits: any[] = [];
+  doReloadTable:boolean = false;
 
   @Output() tellOrgUnitFilter = new EventEmitter();
 
@@ -73,24 +76,6 @@ export class AppComponent implements OnInit{
     type: 'report', // can be 'data_entry'
     selected_user_orgunit: []
   };
-
-  // // The organisation unit configuration object This will have to come from outside.
-  // @Input() orgunit_tree_config: any = {
-  //   show_search : true,
-  //   search_text : 'Search',
-  //   level: null,
-  //   loading: true,
-  //   loading_message: 'Loading Organisation units...',
-  //   multiple: true,
-  //   multiple_key: 'none', // can be control or shift
-  //   placeholder: 'Select Organisation Unit'
-  // };
-
-  user_orgunits_types: Array<any> = [
-    {id: 'USER_ORGUNIT', name: 'User Admin Unit', shown: true},
-    {id: 'USER_ORGUNIT_CHILDREN', name: 'User sub-units', shown: true},
-    {id: 'USER_ORGUNIT_GRANDCHILDREN', name: 'User sub-x2-units', shown: true}
-  ];
 
 
 
@@ -130,7 +115,7 @@ export class AppComponent implements OnInit{
     this.showFilters = true;
     this.loadOrgUnits();
     this.loaderMessage = 'Fetching data for assignment...';
-    Observable.interval(10000).take(1).subscribe(() => {
+    Observable.interval(20000).take(1).subscribe(() => {
     let initialDataHolder = [];
     this.dataSetsFromServer.forEach((datasets)=>{
       if(initialDataHolder.length <= 6){
@@ -246,7 +231,15 @@ export class AppComponent implements OnInit{
       // this.removeCheckBoxes();
       this.tableRowData = []
       this.tableHeadData = []
-      this.getNewOrgUnit(this.backedUpOrgUnits);
+
+      if(this.backedUpOrgUnits.length <1){
+        this.backedUpOrgUnits = [this.organisationunits[0]];
+        this.getNewOrgUnit(this.backedUpOrgUnits);
+      }else {
+        this.getNewOrgUnit(this.backedUpOrgUnits);
+      }
+
+
       // this.receiveData(this.backUpDataListWhenWasTop)
     }else{
       //console.log("BackUp OrgUnits  "+JSON.stringify(this.backedUpOrgUnits))
@@ -254,8 +247,14 @@ export class AppComponent implements OnInit{
       // this.removeCheckBoxes();
       this.table2RowData = []
       this.table2HeadData = []
-      // this.receiveLayoutChangesOnData(this.backUpDataListWhenReserved);
-      this.getLayoutChangesOnOrgUnit(this.backedUpOrgUnits);
+      this.receiveLayoutChangesOnData(this.backUpDataListWhenReserved);
+
+      if(this.backedUpOrgUnits.length <1){
+        this.backedUpOrgUnits = [this.organisationunits[0]];
+        this.getLayoutChangesOnOrgUnit(this.backedUpOrgUnits);
+      }else {
+        this.getLayoutChangesOnOrgUnit(this.backedUpOrgUnits);
+      }
     }
 
 
@@ -276,11 +275,11 @@ export class AppComponent implements OnInit{
 
       if(newOrgUnit.children){
         newOrgUnit.children.forEach((childOrgUnit:any)=>{
-
-          // childOrgUnit.dataSetCount = childOrgUnit.dataSets.length;
-          // childOrgUnit.programsCount = childOrgUnit.programs.length;
-          //  console.log("dataSets assigned are : "+JSON.stringify(childOrgUnit))
           tempOrg.push(childOrgUnit);
+          // sort orgUnits alphabetically
+          tempOrg.sort(function(a, b) {
+            return a.name.localeCompare(b.name);
+          });
           this.tableRowData = this.removeDuplicates(tempOrg,'id');
           // this.orgUnitOnRowsBackUp = this.tableRowData
         });
@@ -319,7 +318,7 @@ export class AppComponent implements OnInit{
     //this.backUpOrgUnits = receivedOrgUnits;
     //console.log("dataSets assigned are : "+JSON.stringify(receivedOrgUnits))
     // orgunit_model.selected_orgunits[0].name
-    this.currentOrgUnit = this.orgUnit.data.orgunit_settings.selected_orgunits[0].name;
+    //this.currentOrgUnit = this.orgUnit.data.orgunit_settings.selected_orgunits[0].name;
     if(this.orgUnit.data.orgunit_settings.selected_levels[0]){
       this.showTable = false;
       let tempOrg = [];
@@ -550,11 +549,14 @@ export class AppComponent implements OnInit{
     this.selectedFilter = '';
     this.removeCheckBoxes();
     this.tableHeadData = [];
+    this.tableRowData.forEach((tempOrg:any)=>{
+      tempOrg.assigned=[]
+    });
     dataList.forEach((dataSet)=>{
     let dataSetOrgUnit = [];
 
     if(dataSet.formType == 'dataSet'){
-      this.detailCount.data1 = 'dataSets';
+      this.detailCount.data1 = 'Datasets';
     }else if(dataSet.formType == 'program'){
       this.detailCount.data1 = 'programs';
     }
@@ -565,8 +567,11 @@ export class AppComponent implements OnInit{
      // make complex functions
     dataSetOrgUnit = dataSet.organisationUnits;
 
-      this.tableRowData.forEach((tempOrg:any)=>{
 
+
+
+      this.tableRowData.forEach((tempOrg:any)=>{
+        // delete tempOrg.assigned;
           if (dataSetOrgUnit.filter(e => e.id === tempOrg.id).length > 0) {
             tempOrg.checked = true;
 
@@ -848,6 +853,7 @@ export class AppComponent implements OnInit{
 
 
   getLayoutChangesOnOrgUnit(receivedOrgUnits){
+    // console.log("changind orgUnits "+JSON.stringify(receivedOrgUnits))
       this.showTable = false;
       this.backUpOrgUnits = receivedOrgUnits;
       let tempOrg = [];
@@ -889,8 +895,11 @@ export class AppComponent implements OnInit{
     // this.backUpDataListWhenWasTop =  dataList;
     this.backUpDataListWhenReserved = dataList;
     this.selectedFilter = '';
-    this.removeHeadings();
-    this.removeCheckBoxes();
+    // this.removeHeadings();
+    // this.removeCheckBoxes();
+    this.table2RowData.forEach((tempOrg:any)=>{
+      tempOrg.assigned=[]
+    });
     this.table2RowData = [];
     this.table2RowData = this.removeDuplicates(dataList, 'id');
     this.backedUpDataListReversed =  this.table2RowData;
@@ -982,11 +991,11 @@ export class AppComponent implements OnInit{
           let td_dst = row.id + '--';
           let td_prg = row.id + '-';
           try{
-            document.getElementById(td_id).hidden = true;
+            // document.getElementById(td_id).style.visibility= 'hidden';
             // document.getElementById(td_id).remove()
 
             if(this.detailCount.data1 == 'dataSet'){
-              document.getElementById("dataSets").hidden = true;
+              document.getElementById("Datasets").hidden = true;
             }else if(this.detailCount.data2 = 'program'){
               document.getElementById("programs").hidden = true;
             }
@@ -997,6 +1006,8 @@ export class AppComponent implements OnInit{
             document.getElementById(head.id).hidden = true;
             // document.getElementById(head.id).remove()
 
+
+
             // document.getElementById(td_prg+'lyLU2wR22tC').remove();
             // document.getElementById(td_prg+'vc6nF5yZsPR').remove();
             // document.getElementById(td_prg+'nqKkegk1y8U').remove();
@@ -1006,14 +1017,14 @@ export class AppComponent implements OnInit{
             // document.getElementById(td_prg+'TuL8IOPzpHh').remove();
             // document.getElementById(td_prg+'fiDtcNUzKI6').remove();
 
-            document.getElementById(td_prg+'lyLU2wR22tC').hidden = true;
-            document.getElementById(td_prg+'vc6nF5yZsPR').hidden = true;
-            document.getElementById(td_prg+'nqKkegk1y8U').hidden = true;
-            document.getElementById(td_prg+'BfMAe6Itzgt').hidden = true;
-            document.getElementById(td_prg+'Nyh6laLdBEJ').hidden = true;
-            document.getElementById(td_prg+'RixTh0Xs0A7').hidden = true;
-            document.getElementById(td_prg+'TuL8IOPzpHh').hidden = true;
-            document.getElementById(td_prg+'fiDtcNUzKI6').hidden = true;
+            // document.getElementById(td_prg+'lyLU2wR22tC').hidden = true;
+            // document.getElementById(td_prg+'vc6nF5yZsPR').hidden = true;
+            // document.getElementById(td_prg+'nqKkegk1y8U').hidden = true;
+            // document.getElementById(td_prg+'BfMAe6Itzgt').hidden = true;
+            // document.getElementById(td_prg+'Nyh6laLdBEJ').hidden = true;
+            // document.getElementById(td_prg+'RixTh0Xs0A7').hidden = true;
+            // document.getElementById(td_prg+'TuL8IOPzpHh').hidden = true;
+            // document.getElementById(td_prg+'fiDtcNUzKI6').hidden = true;
 
           } catch (e){
             //console.log('Error: '+e);
@@ -1021,32 +1032,22 @@ export class AppComponent implements OnInit{
         });
       }
     });
-
-    // this.tableRowData.forEach((tempOrg:any)=>{
-    //   if(tempOrg.assigned) {
-    //     tempOrg.assigned.forEach((dataSet: any) => {
-    //       let td_id = tempOrg.id + '-' + dataSet.id;
-    //
-    //       try{
-    //         document.getElementById(td_id).hidden = true;
-    //       } catch (e){
-    //         console.log('Error: '+e);
-    //       }
-    //     });
-    //   }
-    //   });
   }
 
-  removeHeadings(){
-    this.tableHeadData.forEach((head:any)=>{
-        let th = head.id;
-        try{
-          document.getElementById(th).hidden = true;
-        } catch (e){
-          //console.log('Error: '+e);
-        }
-      })
-  }
+
+
+
+
+  // removeHeadings(){
+  //   this.tableHeadData.forEach((head:any)=>{
+  //       let th = head.id;
+  //       try{
+  //         document.getElementById(th).hidden = true;
+  //       } catch (e){
+  //         //console.log('Error: '+e);
+  //       }
+  //     })
+  // }
 
   deleteCheckBoxes(){
     this.tableRowData.forEach((row:any)=>{
@@ -1061,7 +1062,7 @@ export class AppComponent implements OnInit{
             document.getElementById("assignment-table1").remove()
 
             if(this.detailCount.data1 == 'dataSet'){
-              document.getElementById("dataSets").hidden = true;
+              document.getElementById("Datasets").hidden = true;
             }else if(this.detailCount.data2 = 'program'){
               document.getElementById("programs").hidden = true;
             }
@@ -1128,7 +1129,7 @@ export class AppComponent implements OnInit{
     let val = ev.target.value;
       // filter first headers
     if(this.tableDefault){
-
+      this.doReloadTable = false;
     this.tableRowData = this.orgUnitOnRowsBackUp;
     this.tableHeadData = this.dataOnTopBackUp;
     if(val && val.trim() != ''){
@@ -1136,11 +1137,16 @@ export class AppComponent implements OnInit{
         return (data.name.toLowerCase().indexOf(val.toLowerCase()) > -1);
       })
     }else {
-      this.tableRowData = []
-      this.tableHeadData = []
-      this.removeCheckBoxes();
+
+      this.doReloadTable = true;
+      // this.tableRowData = []
+      // this.tableHeadData = []
+
+      // this.removeCheckBoxes();
       this.tableRowData = this.orgUnitOnRowsBackUp;
       this.tableHeadData = this.dataOnTopBackUp;
+      // new reFreshTable();
+      // this.initOrgUnits(this.backUpOrgUnits)
       // this.receiveData(this.backUpDataListWhenWasTop);
       // this.receiveData(this.backUpDataListWhenWasTop);
     }
@@ -1155,16 +1161,18 @@ export class AppComponent implements OnInit{
         // // this.tableHeadData = []
         // this.receiveLayoutChangesOnData(this.backedUpDataList);
         // this.getLayoutChangesOnOrgUnit(this.backedUpOrgUnits);
-
+      this.doReloadTable = false;
       this.table2RowData = this.dataOnTopBackUp;
       if(val && val.trim() != ''){
         this.table2RowData = this.table2RowData.filter((data:any) => {
           return (data.name.toLowerCase().indexOf(val.toLowerCase()) > -1);
         })
       }else {
+        this.doReloadTable = true;
         this.table2RowData = []
         this.table2HeadData = []
         this.removeCheckBoxes();
+        // new reFreshTable();
         this.table2RowData = this.dataOnTopBackUp;
         this.table2HeadData = this.backedUpOrgUnitsReversed;
         // this.receiveData(this.backUpDataListWhenWasTop);
@@ -1175,13 +1183,7 @@ export class AppComponent implements OnInit{
 
     }
 
-    // if(val && val.trim() != ''){
-    //   this.tableHeadData = this.tableHeadData.filter((data:any) => {
-    //     return (data.displayName.toLowerCase().indexOf(val.toLowerCase()) > -1);
-    //   })
-    // }else{
-    //   this.tableHeadData = this.tableHeadData;
-    // }
+
 
 
 

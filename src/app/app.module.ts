@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {NgModule, ViewRef} from '@angular/core';
 
 import { AppComponent } from './app.component';
 import {MenuModule} from "./modules/menu/menu.module";
@@ -12,12 +12,13 @@ import {OrgUnitModule} from "./modules/orgUnitModel/orgUnitSettings/orgUnit.modu
 import {DataFilterModule} from "./modules/data-filter/data-filter.module";
 import {LayoutModule} from "./modules/layout/layout.module";
 import {TourCompComponent} from "./components/tour-comp/tour-comp.component";
+import { TableDisplayComponent } from './table-display/table-display.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DataSetsComponent,
-    ProgramsComponent,TourCompComponent
+    ProgramsComponent,TourCompComponent, TableDisplayComponent
   ],
   imports: [
     BrowserModule,MenuModule,FormsModule,NgxPaginationModule,OrgUnitModule,DataFilterModule,LayoutModule
