@@ -1,5 +1,6 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {INITIAL_LAYOUT_MODEL} from './model/layout-model';
+import {DragulaService} from "ng2-dragula";
 
 @Component({
   selector: 'app-layout',
@@ -19,8 +20,10 @@ export class LayoutComponent implements OnInit {
   dimensions: any;
   columnName: string;
   rowName: string;
+  msg = '';
 
-  constructor() {
+
+  constructor(private dragula: DragulaService) {
     this.icons = {
       dx: 'assets/icons/data.png',
       ou: 'assets/icons/tree.png',
@@ -42,7 +45,23 @@ export class LayoutComponent implements OnInit {
       this.rowName = 'Categories dimensions';
       this.columnName = 'Series dimensions';
     }
+
+    this.dragula
+      .drop
+      .subscribe(value => {
+
+        setTimeout(() => {
+          if(this.columns.length <1){
+            this.rows = [...this.layoutModel.columns];
+            this.columns = [...this.layoutModel.rows];
+          }else if(this.rows.length <1){
+            this.columns = [...this.layoutModel.columns];
+            this.rows = [...this.layoutModel.rows];
+          }
+        }, 1000);
+      });
   }
+
 
   updateLayoutDimensions() {
     this.filters = [...this.layoutModel.filters];
@@ -61,4 +80,7 @@ export class LayoutComponent implements OnInit {
   close() {
     this.onLayoutClose.emit(true);
   }
+
+
+
 }

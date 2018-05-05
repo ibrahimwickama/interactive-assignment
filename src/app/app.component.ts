@@ -106,14 +106,6 @@ export class AppComponent implements OnInit{
 
   }
 
-  layOutRouter(){
-    if(this.tableMode == 'default'){
-      this.tableDefault = true;
-    }else if(this.tableMode == 'transposed'){
-      this.tableDefault = false;
-    }
-  }
-
   // initial Loader for Data
   getInitialDataToDisplay(){
 
@@ -121,7 +113,7 @@ export class AppComponent implements OnInit{
     this.loadOrgUnits();
     // this.loderbBar.width = '46%';
     this.loaderMessage = 'Fetching data for assignment...';
-    Observable.interval(20000).take(1).subscribe(() => {
+    Observable.interval(30000).take(1).subscribe(() => {
     let initialDataHolder = [];
       this.loderbBar.width = '60%';
     this.dataSetsFromServer.forEach((datasets)=>{
@@ -332,12 +324,9 @@ export class AppComponent implements OnInit{
 
 
   getNewOrgUnit(receivedOrgUnits){
-   let allFacilityHolder = []
+   let allFacilityHolder = [];
     this.removeCheckBoxes();
-    //this.backUpOrgUnits = receivedOrgUnits;
-    //console.log("dataSets assigned are : "+JSON.stringify(receivedOrgUnits))
-    // orgunit_model.selected_orgunits[0].name
-    //this.currentOrgUnit = this.orgUnit.data.orgunit_settings.selected_orgunits[0].name;
+
     if(this.orgUnit.data.orgunit_settings.selected_levels[0]){
       this.showLoader = true;
       this.loaderMessage = 'Getting Organisation Units...';
@@ -379,9 +368,6 @@ export class AppComponent implements OnInit{
               if(childOrgUnit.level == this.orgUnit.data.orgunit_settings.selected_levels[0].level ){
 
               }
-              // childOrgUnit.dataSetCount = childOrgUnit.dataSets.length;
-              // childOrgUnit.programsCount = childOrgUnit.programs.length;
-              // console.log("dataSets assigned are : "+JSON.stringify(childOrgUnit.dataSets))
               tempOrg.push(childOrgUnit);
               this.tableRowData = this.removeDuplicates(tempOrg,'id');
             });
@@ -419,9 +405,6 @@ export class AppComponent implements OnInit{
       receivedOrgUnits.forEach((newOrgUnit:any)=>{
         if(newOrgUnit.children){
           newOrgUnit.children.forEach((childOrgUnit:any)=>{
-            // childOrgUnit.dataSetCount = childOrgUnit.dataSets.length;
-            // childOrgUnit.programsCount = childOrgUnit.programs.length;
-            // console.log("dataSets assigned are : "+JSON.stringify(childOrgUnit.dataSets))
             tempOrg.push(childOrgUnit);
             this.tableRowData = this.removeDuplicates(tempOrg,'id');
           });

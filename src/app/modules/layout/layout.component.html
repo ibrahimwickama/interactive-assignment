@@ -1,5 +1,5 @@
 <div class="layout-container">
-  <h5>Table / Chart Layout</h5>
+  <h5>Table </h5>
   <table class="table table-bordered">
     <tr >
       <!--<td rowspan="2" dnd-droppable (onDropSuccess)="onDrop($event,'excluded')">-->
@@ -39,6 +39,7 @@
           [dragula]="'bag-one'"
           [dragulaModel]="columns">
           <div
+
             class="draggable"
             *ngFor="let column of columns"
           >
