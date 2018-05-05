@@ -148,14 +148,17 @@ export class AppComponent implements OnInit{
     this.orgUnitService.getOrgunitLevelsInformation()
       .subscribe(
         (data: any) => {
+
           this.loderbBar.width = '20%';
     // identify currently logged in usser
     this.orgUnitService.getUserInformation(this.orgunit_model.type).subscribe(
       userOrgunit => {
+
         this.loderbBar.width = '24%';
         const level = this.orgUnitService.getUserHighestOrgUnitlevel( userOrgunit );
         this.orgunit_model.user_orgunits = this.orgUnitService.getUserOrgUnits( userOrgunit );
         this.orgUnitService.user_orgunits = this.orgUnitService.getUserOrgUnits( userOrgunit );
+
         if (this.orgunit_model.selection_mode === 'Usr_orgUnit') {
           this.orgunit_model.selected_orgunits = this.orgunit_model.user_orgunits;
         }
@@ -167,6 +170,7 @@ export class AppComponent implements OnInit{
           (initial_data) => {
             this.loderbBar.width = '31%';
             this.organisationunits = initial_data;
+
             // this.orgunit_tree_config.loading = false;
             // a hack to make sure the user orgunit is not triggered on the first time
             //this.initial_usr_orgunit = [{id: 'USER_ORGUNIT', name: 'User org unit'}];
@@ -176,6 +180,7 @@ export class AppComponent implements OnInit{
               items => {
                 // items[0].expanded = true;
                 this.organisationunits = items;
+                // console.log("Fetched OrgUnits :" +JSON.stringify(items))
                 this.loderbBar.width = '38%';
                 this.initOrgUnits(this.organisationunits[0]);
                 // console.log("checking initially :"+JSON.stringify(this.organisationunits))
@@ -327,6 +332,7 @@ export class AppComponent implements OnInit{
 
 
   getNewOrgUnit(receivedOrgUnits){
+   let allFacilityHolder = []
     this.removeCheckBoxes();
     //this.backUpOrgUnits = receivedOrgUnits;
     //console.log("dataSets assigned are : "+JSON.stringify(receivedOrgUnits))
@@ -337,10 +343,10 @@ export class AppComponent implements OnInit{
       this.loaderMessage = 'Getting Organisation Units...';
       this.showTable = false;
       let tempOrg = [];
-        // assume level 1
+      // assume level 1
       receivedOrgUnits.forEach((newOrgUnit:any)=>{
 
-          // carries level 2
+        // carries level 2
         if(newOrgUnit.children){
 
           if(newOrgUnit.level == this.orgUnit.data.orgunit_settings.selected_levels[0].level){
@@ -359,13 +365,16 @@ export class AppComponent implements OnInit{
                     if(subChildOrgnit.level == this.orgUnit.data.orgunit_settings.selected_levels[0].level ){
                       tempOrg.push(subChildOrgnit);
                       this.tableRowData = this.removeDuplicates(tempOrg,'id');
+                    }else{
+                      allFacilityHolder = allFacilityHolder.concat(subChildOrgnit.children);
+                      this.tableRowData = this.removeDuplicates(allFacilityHolder,'id');
                     }
                   });
                 }
               }else if(childOrgUnit.level == this.orgUnit.data.orgunit_settings.selected_levels[0].level ){
-                  tempOrg.push(childOrgUnit);
-                  this.tableRowData = this.removeDuplicates(tempOrg,'id');
-                }
+                tempOrg.push(childOrgUnit);
+                this.tableRowData = this.removeDuplicates(tempOrg,'id');
+              }
 
               if(childOrgUnit.level == this.orgUnit.data.orgunit_settings.selected_levels[0].level ){
 
@@ -394,6 +403,12 @@ export class AppComponent implements OnInit{
 
         }
       });
+
+      if(this.orgUnit.data.orgunit_settings.selected_levels[0].level == 4){
+        this.tableRowData = allFacilityHolder
+      }
+
+
       this.showLoader = false;
       this.receiveData(this.backUpDataListWhenWasTop);
       this.selectedFilter == 'ORG_UNIT';
@@ -402,31 +417,31 @@ export class AppComponent implements OnInit{
       this.showTable = false;
       let tempOrg = [];
       receivedOrgUnits.forEach((newOrgUnit:any)=>{
-      if(newOrgUnit.children){
-        newOrgUnit.children.forEach((childOrgUnit:any)=>{
-          // childOrgUnit.dataSetCount = childOrgUnit.dataSets.length;
-          // childOrgUnit.programsCount = childOrgUnit.programs.length;
-          // console.log("dataSets assigned are : "+JSON.stringify(childOrgUnit.dataSets))
-          tempOrg.push(childOrgUnit);
-          this.tableRowData = this.removeDuplicates(tempOrg,'id');
-        });
-        if(newOrgUnit.level !== 1){
-          this.selectedOrgUnitWithChildren.push(newOrgUnit);
-          this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
+        if(newOrgUnit.children){
+          newOrgUnit.children.forEach((childOrgUnit:any)=>{
+            // childOrgUnit.dataSetCount = childOrgUnit.dataSets.length;
+            // childOrgUnit.programsCount = childOrgUnit.programs.length;
+            // console.log("dataSets assigned are : "+JSON.stringify(childOrgUnit.dataSets))
+            tempOrg.push(childOrgUnit);
+            this.tableRowData = this.removeDuplicates(tempOrg,'id');
+          });
+          if(newOrgUnit.level !== 1){
+            this.selectedOrgUnitWithChildren.push(newOrgUnit);
+            this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
+          }
+          if(this.selectedOrgUnitWithChildren.length >1){
+            this.tableRowData = this.selectedOrgUnitWithChildren;
+          }
+        }else {
+          tempOrg = [];
+          this.selectedOrgUnitWithChildren = this.tableRowData;
+          this.tableRowData.push(newOrgUnit);
+          this.tableRowData = this.removeDuplicates(this.tableRowData,'id');
         }
-        if(this.selectedOrgUnitWithChildren.length >1){
-          this.tableRowData = this.selectedOrgUnitWithChildren;
-        }
-      }else {
-        tempOrg = [];
-        this.selectedOrgUnitWithChildren = this.tableRowData;
-        this.tableRowData.push(newOrgUnit);
-        this.tableRowData = this.removeDuplicates(this.tableRowData,'id');
-      }
       });
       this.receiveData(this.backUpDataListWhenWasTop);
       this.selectedFilter == 'ORG_UNIT';
-       //console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(this.orgUnit.data.orgunit_settings.selected_levels[0]));
+      //console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(this.orgUnit.data.orgunit_settings.selected_levels[0]));
     }
 
     this.orgUnitOnRowsBackUp = this.tableRowData
