@@ -1,10 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {HttpProviderService} from "./services/http-provider.service";
 import {Observable} from "rxjs/Observable";
 import {OrgUnitService} from "./modules/orgUnitModel/orgUnitSettings/services/org-unit.service";
 import {OrgUnitData} from "./modules/orgUnitModel/orgUnitSettings/models/orgUnits";
 
-declare var reFreshTable:any;
 
 @Component({
   selector: 'app-root',
@@ -59,6 +58,7 @@ export class AppComponent implements OnInit{
   organisationunits: any[] = [];
   selected_orgunits: any[] = [];
   doReloadTable:boolean = false;
+  loderbBar = {width: '0%'};
 
   @Output() tellOrgUnitFilter = new EventEmitter();
 
@@ -82,6 +82,7 @@ export class AppComponent implements OnInit{
 
 
   constructor(private httpProvider: HttpProviderService, private orgUnitService: OrgUnitService){
+    // chRef.detectChanges();
     this.orgUnit = this.orgUnitService.getAallOrgUnitStructure();
     this.httpProvider.dataSetCaller().subscribe((response)=>{
       this.dataSetsFromServer = this.httpProvider.dataSetsFromServer;
@@ -94,9 +95,12 @@ export class AppComponent implements OnInit{
 
   ngOnInit(){
     this.loaderMessage = 'Initializing data...';
+    this.loderbBar.width = '13%';
     Observable.interval(10000).take(1).subscribe(() => {
       this.showFilters = true;
-      this.loaderMessage = 'Looking for Organisation Units...';
+      // this.loderbBar.width = '13%';
+      this.loaderMessage = 'Getting Organisation Units...';
+      // this.chRef.detectChanges();
       this.getInitialDataToDisplay();
     });
 
@@ -112,11 +116,14 @@ export class AppComponent implements OnInit{
 
   // initial Loader for Data
   getInitialDataToDisplay(){
+
     this.showFilters = true;
     this.loadOrgUnits();
+    // this.loderbBar.width = '46%';
     this.loaderMessage = 'Fetching data for assignment...';
     Observable.interval(20000).take(1).subscribe(() => {
     let initialDataHolder = [];
+      this.loderbBar.width = '60%';
     this.dataSetsFromServer.forEach((datasets)=>{
       if(initialDataHolder.length <= 6){
         initialDataHolder.push(datasets);
@@ -124,24 +131,28 @@ export class AppComponent implements OnInit{
     });
       this.loaderMessage = 'Finalizing...';
       this.backedUpDataList = initialDataHolder;
+      this.loderbBar.width = '100%';
       if(this.tableDefault){
         this.receiveData(initialDataHolder);
       }else{
         this.receiveLayoutChangesOnData(initialDataHolder);
       }
+      this.loderbBar.width = '100%';
     this.showLoader = false;
     });
 
   }
 
   loadOrgUnits(){
+
     this.orgUnitService.getOrgunitLevelsInformation()
       .subscribe(
         (data: any) => {
-
+          this.loderbBar.width = '20%';
     // identify currently logged in usser
     this.orgUnitService.getUserInformation(this.orgunit_model.type).subscribe(
       userOrgunit => {
+        this.loderbBar.width = '24%';
         const level = this.orgUnitService.getUserHighestOrgUnitlevel( userOrgunit );
         this.orgunit_model.user_orgunits = this.orgUnitService.getUserOrgUnits( userOrgunit );
         this.orgUnitService.user_orgunits = this.orgUnitService.getUserOrgUnits( userOrgunit );
@@ -154,6 +165,7 @@ export class AppComponent implements OnInit{
         // load inital orgiunits to speed up loading speed
         this.orgUnitService.getInitialOrgunitsForTree(orgunits).subscribe(
           (initial_data) => {
+            this.loderbBar.width = '31%';
             this.organisationunits = initial_data;
             // this.orgunit_tree_config.loading = false;
             // a hack to make sure the user orgunit is not triggered on the first time
@@ -164,7 +176,7 @@ export class AppComponent implements OnInit{
               items => {
                 // items[0].expanded = true;
                 this.organisationunits = items;
-
+                this.loderbBar.width = '38%';
                 this.initOrgUnits(this.organisationunits[0]);
                 // console.log("checking initially :"+JSON.stringify(this.organisationunits))
                 // // activate organisation units
@@ -283,6 +295,7 @@ export class AppComponent implements OnInit{
           this.tableRowData = this.removeDuplicates(tempOrg,'id');
           // this.orgUnitOnRowsBackUp = this.tableRowData
         });
+        this.loderbBar.width = '40%';
         if(newOrgUnit.level !== 1){
           this.selectedOrgUnitWithChildren.push(newOrgUnit);
           this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
@@ -301,7 +314,7 @@ export class AppComponent implements OnInit{
         this.tableRowData = this.removeDuplicates(this.tableRowData,'id');
         // this.orgUnitOnRowsBackUp = this.tableRowData
       }
-
+   this.loderbBar.width = '44%';
       this.receiveData(this.backUpDataListWhenWasTop);
       this.selectedFilter == 'ORG_UNIT';
       // console.log("initOrgUnits was fired");
@@ -320,6 +333,8 @@ export class AppComponent implements OnInit{
     // orgunit_model.selected_orgunits[0].name
     //this.currentOrgUnit = this.orgUnit.data.orgunit_settings.selected_orgunits[0].name;
     if(this.orgUnit.data.orgunit_settings.selected_levels[0]){
+      this.showLoader = true;
+      this.loaderMessage = 'Getting Organisation Units...';
       this.showTable = false;
       let tempOrg = [];
         // assume level 1
@@ -379,6 +394,7 @@ export class AppComponent implements OnInit{
 
         }
       });
+      this.showLoader = false;
       this.receiveData(this.backUpDataListWhenWasTop);
       this.selectedFilter == 'ORG_UNIT';
       //console.log("getNewOrgUnit was fired with new OrgUnits: "+JSON.stringify(this.orgUnit.data.orgunit_settings.selected_levels[0].level));
@@ -549,9 +565,11 @@ export class AppComponent implements OnInit{
     this.selectedFilter = '';
     this.removeCheckBoxes();
     this.tableHeadData = [];
+    this.loderbBar.width = '46%';
     this.tableRowData.forEach((tempOrg:any)=>{
       tempOrg.assigned=[]
     });
+    this.loderbBar.width = '51%';
     dataList.forEach((dataSet)=>{
     let dataSetOrgUnit = [];
 
@@ -594,6 +612,7 @@ export class AppComponent implements OnInit{
     });
 
     });
+    this.loderbBar.width = '69%';
     this.temp.push(this.tableRowData);
     this.totalRec = this.tableRowData.length;
     this.pulseEffect = '';

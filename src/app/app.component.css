@@ -25,7 +25,7 @@
 }
 
 .search-input{
-  width: 320px;
+  width: 336px;
 }
 
 
@@ -336,12 +336,24 @@ main:hover .bottom-section{
   right: 2px;
 }
 
+.loader-bar-holder{
+  text-align:center;
+  display: inline-block;
+  margin-right: auto;
+  margin-left: auto;
+  width: 100%;
+}
+
+
+
 .loader-holder{
   text-align:center;
   display: inline-flex;
   margin-right: auto;
   margin-left: auto;
 }
+
+
 
 .loaderInfo{
   text-align: center;
@@ -377,7 +389,7 @@ main:hover .bottom-section{
 }
 
 .assingment-table{
-  margin-left:16%;
+  margin-left:15%;
   margin-top: 3px;
   font-size: larger
 }
