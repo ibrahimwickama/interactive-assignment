@@ -1,0 +1,22 @@
+.options-item-holder{
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+.collapse-item-holder{
+  padding-left: 3px;
+  padding-right: 3px;
+  margin-bottom: 7px;
+}
+
+.circular-checkbox{
+  width: 25px;
+  height: 25px;
+}
+
+.loader-holder{
+  text-align:center;
+  display: inline-block;
+  margin-right: auto;
+  margin-left: auto;
+}

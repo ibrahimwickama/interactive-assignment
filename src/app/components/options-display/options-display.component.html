@@ -1,3 +1,72 @@
-<p>
-  options-display works!
-</p>
+<div style="margin-top: 10px;padding-left: 10px">
+  Quick settings
+</div>
+<div class="options-item-holder">
+  <ul class="list-group">
+    <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" (click)="toggleSavingMode()">Enable instant save
+      <span >
+         <img *ngIf="instantSave" class="circular-checkbox" src="./assets/tick.png" alt="" title="is enabled" >
+        <img *ngIf="!instantSave" class="circular-checkbox" src="./assets/cross.png" alt=""  title="not enabled" >
+      </span>
+    </li>
+    <li class="list-group-item list-group-item-action" data-toggle="collapse" href="#checkLocalData" role="button" aria-expanded="false" aria-controls="checkLocalData" >Check for offline assignments</li>
+    <div class="collapse collapse-item-holder" id="checkLocalData" style="">
+      <div class="card card-body">
+        <div class="loader-holder" >
+          <div class="loaderInfo">Loading data...</div>
+          <div  style="text-align:center;height: 50px">
+            <svg width='70px' height='50px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"
+                 preserveAspectRatio="xMidYMid" class="uil-balls">
+              <rect x="0" y="0" width="100" height="100" fill="none" class="bk"></rect>
+              <g transform="rotate(0 50 50)">
+                <circle r="5" cx="30" cy="50">
+                  <animateTransform attributeName="transform" type="translate" begin="0s" repeatCount="indefinite"
+                                    dur="0.5s" values="0 0;29.999999999999996 -17.320508075688775"
+                                    keyTimes="0;1"/>
+                  <animate attributeName="fill" dur="0.5s" begin="0s" repeatCount="indefinite" keyTimes="0;1"
+                           values="#c5523f;#f2b736"/>
+                </circle>
+              </g>
+              <g transform="rotate(120 50 50)">
+                <circle r="5" cx="30" cy="50">
+                  <animateTransform attributeName="transform" type="translate" begin="0s" repeatCount="indefinite"
+                                    dur="0.5s" values="0 0;29.999999999999996 -17.320508075688775"
+                                    keyTimes="0;1"/>
+                  <animate attributeName="fill" dur="0.5s" begin="0s" repeatCount="indefinite" keyTimes="0;1"
+                           values="#f2b736;#499255"/>
+                </circle>
+              </g>
+              <g transform="rotate(240 50 50)">
+                <circle r="5" cx="30" cy="50">
+                  <animateTransform attributeName="transform" type="translate" begin="0s" repeatCount="indefinite"
+                                    dur="0.5s" values="0 0;29.999999999999996 -17.320508075688775"
+                                    keyTimes="0;1"/>
+                  <animate attributeName="fill" dur="0.5s" begin="0s" repeatCount="indefinite" keyTimes="0;1"
+                           values="#499255;#c5523f"/>
+                </circle>
+              </g>
+            </svg>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <li class="list-group-item list-group-item-action" data-toggle="collapse" href="#clearCache" role="button" aria-expanded="false" aria-controls="clearCache">Clear application cache</li>
+    <div class="collapse collapse-item-holder" id="clearCache">
+      <div class="card card-body">
+
+        <div >
+          <div class="btn btn-outline-primary">Proceed</div>
+          <div class="btn btn-outline-secondary" style="margin-left: 44%">Cancel</div>
+        </div>
+
+        <!--<div >-->
+          <!---->
+        <!--</div>-->
+      </div>
+    </div>
+  </ul>
+</div>
+
+
