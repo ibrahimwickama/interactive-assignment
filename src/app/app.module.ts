@@ -12,13 +12,13 @@ import {OrgUnitModule} from "./modules/orgUnitModel/orgUnitSettings/orgUnit.modu
 import {DataFilterModule} from "./modules/data-filter/data-filter.module";
 import {LayoutModule} from "./modules/layout/layout.module";
 import {TourCompComponent} from "./components/tour-comp/tour-comp.component";
-import { TableDisplayComponent } from './table-display/table-display.component';
+import {OptionsDisplayComponent} from "./components/options-display/options-display.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     DataSetsComponent,
-    ProgramsComponent,TourCompComponent, TableDisplayComponent
+    ProgramsComponent,TourCompComponent,OptionsDisplayComponent
   ],
   imports: [
     BrowserModule,MenuModule,FormsModule,NgxPaginationModule,OrgUnitModule,DataFilterModule,LayoutModule

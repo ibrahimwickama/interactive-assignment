@@ -31,6 +31,11 @@
               title="Change layout" (click)="toggleCurrentFilter($event, 'LAYOUT')" >
         <img src="./assets/icons/layout.png" alt="">&nbsp;Layout
       </button>
+
+      <button class="dashboard-btn layout-filter-btn " [ngStyle]="{zIndex: tourSection3}"
+              title="Change layout" (click)="toggleCurrentFilter($event, 'OPTIONS')" >
+        <img src="./assets/icons/options.png" alt="">&nbsp;Options
+      </button>
     </div>
   </div>
     <div class="assingment-table"  >Assignment Table</div>
@@ -94,6 +99,9 @@
         <app-layout *ngIf="selectedFilter === 'LAYOUT'"
                       (onLayoutUpdate)="layoutChanges($event)"
                        (onLayoutClose)="closeSelection($event)" ></app-layout>
+
+        <app-options-display *ngIf="selectedFilter === 'OPTIONS'"
+        ></app-options-display>
       </div>
 
       <!--LOADER ANIMATIONS   -->
@@ -142,29 +150,8 @@
 
       </div>
 
-
-
       </div>
 
-
-
-
-    <!--<div *ngIf="!showLoader" >-->
-      <!--<app-table-display-->
-      <!--[table2HeadData]="table2HeadData.slice(0)"-->
-      <!--[table2RowData]="table2RowData.slice(0)"-->
-      <!--[tableDefault]="tableDefault"-->
-      <!--[tableHeadData]="tableHeadData.slice(0)"-->
-      <!--[tableRowData]="tableRowData.slice(0)"-->
-      <!--[showTable]="showTable"-->
-      <!--[dataSetsFromServer]="dataSetsFromServer"-->
-      <!--[programsFromServer]="programsFromServer"-->
-      <!--[detailCount]="detailCount"-->
-      <!--[doReloadTable]="doReloadTable"-->
-      <!--[backedUpOrgUnits]="backedUpOrgUnits"-->
-      <!--&gt;-->
-      <!--</app-table-display>-->
-    <!--</div>-->
 
     <div class="card-block p-0" *ngIf="tableDefault">
 
@@ -239,7 +226,7 @@
 
 
     <!--card-footer p-0-->
-    <div class="  below-section"  style=" background-color: white">
+    <div class="below-section"  style=" background-color: white">
       <nav aria-label="..." >
         <ul class="pagination float-right bottom-section" *ngIf="totalRec>20">
           <div class="justify-content-end" style="display: inline-flex; padding: 5px">Show

@@ -64,17 +64,6 @@ tbody tr td:nth-child(2){
   background-color: #f7f7f7;
 }
 
-/*thead tr th:nth-child(3),*/
-/*tbody tr td:nth-child(3){*/
-  /*width: 2em;*/
-  /*min-width: 2em;*/
-  /*max-width: 2em;*/
-  /*word-break: normal;*/
-  /*padding: 0 2px 1px 2px;*/
-  /*text-align: center;*/
-  /*background-color: #f7f7f7;*/
-/*}*/
-
 thead tr th:nth-child(1),
 tbody tr td:nth-child(1){
   width: 3em;
