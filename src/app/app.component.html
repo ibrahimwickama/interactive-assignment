@@ -186,8 +186,9 @@
           <td title="{{orgUnit.name}} is assigned to {{(detailCount.data1 == 'Datasets')?getDataSetToOrgUnitCount(orgUnit.id):getProgramsToOrgUnitCount(orgUnit.id)}} {{detailCount.data1}}" id="{{orgUnit.id+'--'}}">{{(detailCount.data1 == 'Datasets')?getDataSetToOrgUnitCount(orgUnit.id):getProgramsToOrgUnitCount(orgUnit.id)}}</td>
           <td *ngFor="let dataOrgUnit of orgUnit.assigned" id="{{orgUnit.id+'-'+dataOrgUnit.id}}" >
             <div style="height: 29px;">
-            <img *ngIf="dataOrgUnit.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >
-            <img *ngIf="!dataOrgUnit.assigned" class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >
+            <img *ngIf="dataOrgUnit.assigned && !dataOrgUnit.onprocess" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >
+              <img *ngIf="dataOrgUnit.onprocess" class="circular-checkbox" src="./assets/yellow.png" alt=""  title="Saving on process" >
+            <img *ngIf="!dataOrgUnit.assigned && !dataOrgUnit.onprocess" class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChanged(orgUnit,dataOrgUnit,dataOrgUnit.assigned,$event)" title="{{orgUnit.name+','+dataOrgUnit.displayName}}" >
             </div>
             </td>
           </tr>
@@ -218,8 +219,9 @@
         <!--<td title="{{row.displayName}} is assigned to {{getProgramsToOrgUnitCount(row)}} Programs" id="{{row.id+'-'}}" >{{getProgramsToOrgUnitCount(row)}}</td>-->
         <td *ngFor="let rowDataOnHead of row.assigned" id="{{row.id+'-'+rowDataOnHead.id}}" style="background-color: white" >
           <div style="height: 29px;">
-            <img *ngIf="rowDataOnHead.assigned" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChangedOnLayOutChanged(row,rowDataOnHead,rowDataOnHead.assigned,$event)" title="{{row.displayName+','+rowDataOnHead.displayName}}" >
-            <img *ngIf="!rowDataOnHead.assigned" class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChangedOnLayOutChanged(row,rowDataOnHead,rowDataOnHead.assigned,$event)" title="{{row.displayName+','+rowDataOnHead.displayName}}" >
+            <img *ngIf="rowDataOnHead.assigned && !rowDataOnHead.onprocess" class="circular-checkbox" src="./assets/tick.png" alt="" (click)="checkBoxChangedOnLayOutChanged(row,rowDataOnHead,rowDataOnHead.assigned,$event)" title="{{row.displayName+','+rowDataOnHead.displayName}}" >
+            <img *ngIf="rowDataOnHead.assigned" class="circular-checkbox" src="./assets/yellow.png" alt=""  title="Saving on process" >
+            <img *ngIf="!rowDataOnHead.assigned && !rowDataOnHead.onprocess"  class="circular-checkbox" src="./assets/cross.png" alt="" (click)="checkBoxChangedOnLayOutChanged(row,rowDataOnHead,rowDataOnHead.assigned,$event)" title="{{row.displayName+','+rowDataOnHead.displayName}}" >
           </div>
         </td>
       </tr>

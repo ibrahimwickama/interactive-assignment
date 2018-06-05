@@ -566,7 +566,7 @@ export class AppComponent implements OnInit{
     this.tableHeadData = [];
     this.loderbBar.width = '46%';
     this.tableRowData.forEach((tempOrg:any)=>{
-      tempOrg.assigned=[]
+      tempOrg.assigned=[];
     });
     this.loderbBar.width = '51%';
     dataList.forEach((dataSet)=>{
@@ -591,18 +591,18 @@ export class AppComponent implements OnInit{
             tempOrg.checked = true;
 
             if(!tempOrg.assigned){
-              tempOrg.assigned = [{id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: true}]
+              tempOrg.assigned = [{id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: true, onprocess: false}]
             }else {
-              tempOrg.assigned.push({id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: true})
+              tempOrg.assigned.push({id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: true,onprocess: false})
               tempOrg.assigned = this.removeDuplicates(tempOrg.assigned,'id');
             }
 
           }else {
             tempOrg.checked = false;
             if(!tempOrg.assigned){
-              tempOrg.assigned = [{id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: false}]
+              tempOrg.assigned = [{id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: false,onprocess: false}]
             }else {
-              tempOrg.assigned.push({id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: false})
+              tempOrg.assigned.push({id:dataSet.id, displayName:dataSet.displayName, formType:dataSet.formType, assigned: false,onprocess: false})
               tempOrg.assigned = this.removeDuplicates(tempOrg.assigned,'id');
             }
           }
@@ -625,10 +625,13 @@ export class AppComponent implements OnInit{
       if(tempOrg.id == orgUnit.id){
         tempOrg.assigned.forEach((orgUnitAssigned:any)=>{
           if(orgUnitAssigned.id == dataOrgUnit.id ){
+
             if(orgUnitAssigned.assigned){
-              orgUnitAssigned.assigned = false
+              // orgUnitAssigned.assigned = false;
+              orgUnitAssigned.onprocess = true;
             }else{
-              orgUnitAssigned.assigned = true;
+              // orgUnitAssigned.assigned = true;
+              orgUnitAssigned.onprocess = true;
             }
           }
         })
@@ -675,6 +678,23 @@ export class AppComponent implements OnInit{
 
           this.httpProvider.addFacilityToForm(this.dataSetToUpdate).subscribe(response=>{
             this.showChangesSaved();
+              //to change the icon later when complete
+            this.tableRowData.forEach((tempOrg:any)=>{
+              if(tempOrg.id == orgUnit.id){
+                tempOrg.assigned.forEach((orgUnitAssigned:any)=>{
+                  if(orgUnitAssigned.id == dataOrgUnit.id ){
+
+                    if(orgUnitAssigned.assigned){
+                      orgUnitAssigned.assigned = false;
+                      orgUnitAssigned.onprocess = false;
+                    }else{
+                      orgUnitAssigned.assigned = true;
+                      orgUnitAssigned.onprocess = false;
+                    }
+                  }
+                })
+              }
+            });
             //console.log("did it work dataSet: "+JSON.stringify(this.dataSetToUpdate));
           })
         }
