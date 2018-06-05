@@ -342,6 +342,7 @@ export class AppComponent implements OnInit{
             tempOrg.push(newOrgUnit);
             this.tableRowData = this.removeDuplicates(tempOrg,'id');
           }else{
+            // tempOrg.push(newOrgUnit);
             // goes to level 3
             newOrgUnit.children.forEach((childOrgUnit:any)=>{
               // checks level 3 if has level 4
@@ -390,7 +391,7 @@ export class AppComponent implements OnInit{
         }
       });
 
-      if(this.orgUnit.data.orgunit_settings.selected_levels[0].level == 4){
+      if(this.orgUnit.data.orgunit_settings.selected_levels[0].level == 4 && receivedOrgUnits[0].level == 1){
         this.tableRowData = allFacilityHolder
       }
 
@@ -408,10 +409,10 @@ export class AppComponent implements OnInit{
             tempOrg.push(childOrgUnit);
             this.tableRowData = this.removeDuplicates(tempOrg,'id');
           });
-          if(newOrgUnit.level !== 1){
+          // if(newOrgUnit.level !== 1){
             this.selectedOrgUnitWithChildren.push(newOrgUnit);
             this.selectedOrgUnitWithChildren = this.removeDuplicates(this.selectedOrgUnitWithChildren, 'id');
-          }
+          // }
           if(this.selectedOrgUnitWithChildren.length >1){
             this.tableRowData = this.selectedOrgUnitWithChildren;
           }
@@ -582,8 +583,6 @@ export class AppComponent implements OnInit{
    this.dataOnTopBackUp =  this.tableHeadData;
      // make complex functions
     dataSetOrgUnit = dataSet.organisationUnits;
-
-
 
 
       this.tableRowData.forEach((tempOrg:any)=>{
